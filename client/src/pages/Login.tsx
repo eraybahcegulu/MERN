@@ -8,7 +8,7 @@ const Login = () => {
 
   const [isChecked, setChecked] = useState(false);
   const [isRegisterModalOpen, setisRegisterModalOpen] = useState(false);
-  const [registerFornm] = Form.useForm();
+  const [registerForm] = Form.useForm();
 
   const onFinishRegister = async (values) => {
     try {
@@ -23,11 +23,22 @@ const Login = () => {
       );
       setisRegisterModalOpen(false);
       setTimeout(() => {
-        registerFornm.resetFields();
+        registerForm.resetFields();
       }, 200);
 
     } catch (error) {
-      console.log(error);
+      if (error.response && error.response.status === 400) {
+        message.error(
+
+          <span>
+            <strong>This username is already registered</strong>
+          </span>
+
+        );
+      } else {
+        console.error(error);
+      }
+
     }
   };
 
@@ -98,7 +109,7 @@ const Login = () => {
           className="mt-4 flex flex-col gap-2"
           layout="vertical"
           onFinish={onFinishRegister}
-          form={registerFornm}
+          form={registerForm}
         >
 
           <Form.Item
@@ -155,8 +166,6 @@ const Login = () => {
                 Register
               </Button>
             </Form.Item>
-
-
 
           </div>
         </Form>
