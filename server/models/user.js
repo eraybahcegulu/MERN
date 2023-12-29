@@ -4,6 +4,10 @@ const UserSchema = mongoose.Schema(
     {
         username: String,
         password: String,
+        securityStamp: {
+            type: String,
+            default: '-'
+        },
     },
 );
 
