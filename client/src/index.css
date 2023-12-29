@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Electrolize&display=swap');
+
+.ant-btn,
+.ant-input,
+.ant-card,
+.ant-modal,
+.ant-select,
+.ant-table-container,
+.ant-message-notice,
+.ant-notification-notice,
+.ant-form,
+.ant-form-item-required,
+.ant-alert,
+.ant-result,
+.ant-badge,
+.ant-popover {
+  font-family: 'Electrolize', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: 'Electrolize', sans-serif;
+}
+
+.ant-btn-primary {
+  background-color: #1677ff;
+}
+
+span {
+  word-wrap: break-word;
+}
+
+.categories-all-products.active {
+  @apply text-black
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.menu::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+.menu::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.categories::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+.categories::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.products::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+.products::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.cart-products::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+.cart-products::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.cart::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+.cart::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+/* .categories::-webkit-scrollbar-track {
+  background-color: #d1d5db; 
+} */
+
+
+/* .menu::-webkit-scrollbar{
+  display: none;
+} */
