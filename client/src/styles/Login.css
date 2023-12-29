@@ -1,9 +1,0 @@
-.ant-switch:hover{
-    border: solid 1px rgb(43, 122, 241);
-    scale: 1.2;
-}
-
-.ant-switch{
-    background: gray;
-    border: solid 1px rgb(43, 122, 241);
-}
