@@ -15,8 +15,10 @@ const Company: React.FC = () => {
     const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
     const [addCompanyForm] = Form.useForm();
+    const [editCompanyForm] = Form.useForm();
 
     const [isAddCompanyModalOpen, setIsAddCompanyModalOpen] = useState<boolean>(false);
+    const [isEditCompanyModalOpen, setIsEditCompanyModalOpen] = useState<boolean>(false);
 
     const location = useLocation();
     const token = location.state?.token?.toString() || localStorage.getItem('token');
@@ -26,7 +28,7 @@ const Company: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
         getUserInfo();
-    }, []);
+    },);
 
     const getUserInfo = async (): Promise<void> => {
         try {
@@ -104,6 +106,44 @@ const Company: React.FC = () => {
         }
     };
 
+    const isEditCompany = async () => {
+        if (selectedRowKeys.length !== 1) {
+            message.info(
+                <span>
+                    Please select <strong> only one company </strong> want to edit
+                </span>
+            );
+            return;
+        }
+
+        const firstSelectedRow = selectedRows[0];
+        editCompanyForm.setFieldsValue({
+            companyname: firstSelectedRow.companyname,
+            crn: firstSelectedRow.crn,
+            country: firstSelectedRow.country,
+            website: firstSelectedRow.website,
+        });
+        setIsEditCompanyModalOpen(true);
+    };
+
+    const onFinishEditCompany = async (values : any) => {
+        try {
+            await axios.put(process.env.REACT_APP_API_URL + `/api/company/update/${selectedRowKeys}`, values);
+            message.success(
+                <span>
+                    <strong> Company updated </strong>
+                </span>
+            );
+            dispatch(fetchCompanyData());
+            editCompanyForm.resetFields();
+            setselectedRowKeys([]);
+            setSelectedRows([]);
+            setIsEditCompanyModalOpen(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     const logout = (): void => {
         localStorage.clear();
         sessionStorage.clear();
@@ -139,7 +179,7 @@ const Company: React.FC = () => {
 
                         <UserAddOutlined onClick={() => setIsAddCompanyModalOpen(true)} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
 
-                        <EditOutlined className="hover:cursor-pointer text-blue-600 hover:text-blue-500 transition-all text-2xl" />
+                        <EditOutlined onClick={isEditCompany} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 transition-all text-2xl" />
 
                         <DeleteOutlined onClick={deleteCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 transition-all text-2xl" />
 
@@ -170,8 +210,8 @@ const Company: React.FC = () => {
                                 name="companyname"
                                 label="Company Name"
                                 rules={[
-                                    { required: true, message: "Ad boş bırakılamaz" },
-                                    { max: 20, message: "Ad en fazla 20 karakter olabilir" }
+                                    { required: true, message: "Company Name required" },
+                                    { max: 20, message: "Max. 20 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -180,8 +220,8 @@ const Company: React.FC = () => {
                             <Form.Item
                                 name="crn"
                                 label="Company Registration Number"
-                                rules={[{ required: true, message: "Soyad boş bırakılamaz" },
-                                { max: 20, message: "Soyad en fazla 20 karakter olabilir" }
+                                rules={[{ required: true, message: "CRN required" },
+                                { max: 20, message: "Max. 20 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -190,8 +230,8 @@ const Company: React.FC = () => {
                             <Form.Item
                                 name="country"
                                 label="Country"
-                                rules={[{ required: true, message: "Telefon No boş bırakılamaz" },
-                                { max: 20, message: "Telefon No en fazla 20 karakter olabilir" }
+                                rules={[{ required: true, message: "Country required" },
+                                { max: 20, message: "Max. 20 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -201,8 +241,8 @@ const Company: React.FC = () => {
                             <Form.Item
                                 name="website"
                                 label="WEB Site"
-                                rules={[{ required: true, message: "Telefon No boş bırakılamaz" },
-                                { max: 20, message: "Telefon No en fazla 20 karakter olabilir" }
+                                rules={[{ required: true, message: "WEB Site required" },
+                                { max: 20, message: "Max. 20 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -220,6 +260,75 @@ const Company: React.FC = () => {
                             </Form.Item>
                         </Form>
                     </Modal>
+
+                    <Modal
+                            open={isEditCompanyModalOpen}
+                            onCancel={() => setIsEditCompanyModalOpen(false)}
+                            footer={false}
+                        >
+                            <h2>
+                                <strong>EDIT COMPANY</strong>
+                            </h2>
+                            <Form
+                            className="mt-4 flex flex-col gap-4"
+                            layout="vertical"
+                            onFinish={onFinishEditCompany}
+                            form={editCompanyForm}
+                        >
+                            <Form.Item
+                                name="companyname"
+                                label="Company Name"
+                                rules={[
+                                    { required: true, message: "Company Name required" },
+                                    { max: 20, message: "Max. 20 characters." }
+                                ]}
+                            >
+                                <Input style={{ borderRadius: "0" }} size="large" />
+                            </Form.Item>
+
+                            <Form.Item
+                                name="crn"
+                                label="Company Registration Number"
+                                rules={[{ required: true, message: "CRN required" },
+                                { max: 20, message: "Max. 20 characters." }
+                                ]}
+                            >
+                                <Input style={{ borderRadius: "0" }} size="large" />
+                            </Form.Item>
+
+                            <Form.Item
+                                name="country"
+                                label="Country"
+                                rules={[{ required: true, message: "Country required" },
+                                { max: 20, message: "Max. 20 characters." }
+                                ]}
+                            >
+                                <Input style={{ borderRadius: "0" }} size="large" />
+                            </Form.Item>
+
+
+                            <Form.Item
+                                name="website"
+                                label="WEB Site"
+                                rules={[{ required: true, message: "WEB Site required" },
+                                { max: 20, message: "Max. 20 characters." }
+                                ]}
+                            >
+                                <Input style={{ borderRadius: "0" }} size="large" />
+                            </Form.Item>
+
+                            <Form.Item className="flex justify-end mb-0">
+                                <Button
+                                    style={{ borderRadius: "0" }}
+                                    type="primary"
+                                    htmlType="submit"
+                                    size="large"
+                                >
+                                    <strong> UPDATE </strong>
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                        </Modal>
                 </div>
 
             )}

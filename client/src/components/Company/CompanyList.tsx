@@ -25,8 +25,9 @@ const CompanyList: FC<CompanyListProps> = ({
     interface DataType {
         key: React.Key;
         name: string;
-        age: number;
-        address: string;
+        crn: string;
+        country: string;
+        website: string;
     }
 
     const rowSelection: TableRowSelection<DataType> = {
