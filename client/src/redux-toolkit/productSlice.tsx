@@ -1,16 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {GET_COMPANIES_API_URL} from '../constants/apiConstant';
+import {GET_PRODUCTS_API_URL} from '../constants/apiConstant';
 
-interface CompanyState {
+interface ProductState {
     data: any[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error?: string;
 }
 
-export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async () => {
+export const fetchProductData = createAsyncThunk('fetchProductData', async () => {
     try {
-        const response = await axios.get(GET_COMPANIES_API_URL);
+        const response = await axios.get(GET_PRODUCTS_API_URL);
         return response.data;
     } catch (error) {
         console.error(error);
@@ -18,32 +18,32 @@ export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async () =>
     }
 });
 
-const initialState: CompanyState = {
+const initialState: ProductState = {
     data: [],
     status: 'idle',
 };
 
-const companySlice = createSlice({
-    name: 'company',
+const productSlice = createSlice({
+    name: 'product',
     initialState,
 
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCompanyData.pending, (state) => {
+            .addCase(fetchProductData.pending, (state) => {
                 state.status = 'loading';
             }) 
 
-            .addCase(fetchCompanyData.fulfilled, (state, action) => {
+            .addCase(fetchProductData.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.data = action.payload;
             })
             
-            .addCase(fetchCompanyData.rejected, (state, action) => {
+            .addCase(fetchProductData.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             });
     },
 });
 
-export default companySlice.reducer;
+export default productSlice.reducer;

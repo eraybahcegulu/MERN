@@ -17,7 +17,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
             form={registerForm}
         >
             <Form.Item
-                name="username"
+                name="userName"
                 rules={[{ required: true, message: 'Please input your Username!' }]}
             >
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />

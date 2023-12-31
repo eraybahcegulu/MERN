@@ -1,13 +1,14 @@
 import React, { FC } from 'react';
 
-import { useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
+
 
 import { Spin, Table, Alert } from 'antd';
-import { RootState } from '../../store';
+import {  RootState } from '../../store';
 import type { ColumnsType } from 'antd/es/table';
 import type { TableRowSelection } from 'antd/es/table/interface';
 
-interface CompanyListProps {
+interface ProductListProps {
     search: string;
     selectedRowKeys: string[];
     setSelectedRowKeys: (keys: string[]) => void;
@@ -15,7 +16,7 @@ interface CompanyListProps {
     setSelectedRows: (rows: any[]) => void;
 }
 
-const CompanyList: FC<CompanyListProps> = ({
+const ProductList: FC<ProductListProps> = ({
     search,
     selectedRowKeys,
     setSelectedRowKeys,
@@ -24,10 +25,7 @@ const CompanyList: FC<CompanyListProps> = ({
 
     interface DataType {
         key: React.Key;
-        companyName: string;
-        crn: string;
-        country: string;
-        webSite: string;
+
     }
 
     const rowSelection: TableRowSelection<DataType> = {
@@ -41,33 +39,44 @@ const CompanyList: FC<CompanyListProps> = ({
         },
     };
 
-    const company = useSelector((state: RootState) => state.company.data);
-    const status = useSelector((state: RootState) => state.company.status);
+
+
+    const product = useSelector((state: RootState) => state.product.data);
+    const status = useSelector((state: RootState) => state.product.status);
+
+
 
     const columns: ColumnsType<DataType> = [
         {
             title: 'Name',
-            dataIndex: 'companyName',
+            dataIndex: 'productName',
         },
         {
-            title: 'CRN',
-            dataIndex: 'crn',
+            title: 'Category',
+            dataIndex: 'productCategory',
         },
         {
-            title: 'Country',
-            dataIndex: 'country',
+            title: 'Product Amount',
+            dataIndex: 'productAmount',
         },
         {
-            title: 'WEB Site',
-            dataIndex: 'webSite',
+            title: 'Amount Unit',
+            dataIndex: 'amountUnit',
+        },
+        {
+            title: 'Company',
+            dataIndex: 'company',
+            render: (company) => company?.companyName,
         },
     ];
 
-    const filteredCompanies = company.filter(
+    const filteredProducts = product.filter(
         (item: any) =>
-            item.companyName.includes(search.trim()) ||
-            item.crn.includes(search.trim()) ||
-            item.country.includes(search.trim())
+            item.productName.includes(search.trim()) ||
+            item.productCategory.includes(search.trim()) ||
+            item.productAmount.includes(search.trim()) ||
+            item.amountUnit.includes(search.trim()) ||
+            item.company.includes(search.trim()) 
     );
 
     return (
@@ -79,7 +88,7 @@ const CompanyList: FC<CompanyListProps> = ({
                 </div>
             )}
 
-            {status === 'succeeded' && filteredCompanies.length > 0 && (
+            {status === 'succeeded' && filteredProducts.length > 0 && (
                 <Table
                     scroll={{ y: 400 }}
                     className="md:max-w-[750px] max-w-[450px]"
@@ -89,12 +98,12 @@ const CompanyList: FC<CompanyListProps> = ({
                     }}
                     rowKey="_id"
                     columns={columns}
-                    dataSource={filteredCompanies}
+                    dataSource={filteredProducts}
                 />
             )}
 
-            {status === 'succeeded' && filteredCompanies.length === 0 && (
-                <Alert message="Company not found" type="warning" />
+            {status === 'succeeded' && filteredProducts.length === 0 && (
+                <Alert message="Product not found" type="warning" />
             )}
 
             {status === 'failed' && (
@@ -104,4 +113,4 @@ const CompanyList: FC<CompanyListProps> = ({
     );
 };
 
-export default CompanyList;
+export default ProductList;

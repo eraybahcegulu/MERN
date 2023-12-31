@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { ArrowRightOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Form, Modal, message } from 'antd';
-import axios from 'axios';
+import { Form, Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import RegisterForm from '../components/Login/RegisterForm';
 import LoginForm from '../components/Login/LoginForm';
+
+import {register, login} from '../services/userService'
+import { successRegister, errorRegister, invalidLogin} from '../constants/notifyConstant'
 
 interface LoginProps { }
 
@@ -19,23 +21,15 @@ const Login: React.FC<LoginProps> = () => {
 
   const onFinishRegister = async (values: any) => {
     try {
-      await axios.post(process.env.REACT_APP_API_URL + '/api/user/register', values);
-      message.success(
-        <span>
-          <strong>You have successfully registered</strong>
-        </span>
-      );
+      const res = await register(values);
+      successRegister(res.data.message);
       setisRegisterModalOpen(false);
       setTimeout(() => {
         registerForm.resetFields();
       }, 200);
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
-        message.error(
-          <span>
-            <strong>This username is already registered</strong>
-          </span>
-        );
+        errorRegister(error.response.data.message);
       } else {
         console.error(error);
       }
@@ -44,7 +38,7 @@ const Login: React.FC<LoginProps> = () => {
 
   const onFinishLogin = async (values: any) => {
     try {
-      const res = await axios.post(process.env.REACT_APP_API_URL + '/api/user/login', values);
+      const res = await login(values);
       const token = res.data.token;
       const securityStamp = res.data.securityStamp;
 
@@ -59,11 +53,7 @@ const Login: React.FC<LoginProps> = () => {
       navigate(`/home`, { state: { token } });
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
-        message.error(
-          <span>
-            <strong>Invalid username or password</strong>
-          </span>
-        );
+        invalidLogin(error.response.data.message)
       } else {
         console.error(error);
       }

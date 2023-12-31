@@ -1,13 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, message, Modal, Result } from 'antd';
-import axios, { AxiosResponse } from 'axios';
+import { Button, Form, Input, Modal, Result } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import CompanyList from '../components/Company/CompanyList'
 
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 import { fetchCompanyData } from '../redux-toolkit/companySlice';
+
+import { userInfo } from '../services/userService'
+import { createCompany, removeCompany, updateCompany } from '../services/companyService'
+
+import {
+    failedServer,
+    failedGetUserInfo,
+    successAddCompany,
+    errorAddCompany,
+    infoDeleteCompany,
+    infoEditCompany,
+    successEditCompany,
+    errorEditCompany
+} from '../constants/notifyConstant'
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -23,12 +36,15 @@ const Company: React.FC = () => {
     const location = useLocation();
     const token = location.state?.token?.toString() || localStorage.getItem('token');
     const [failedAuth, setFailedAuth] = useState<boolean>(false);
+    const [userId, setUserId] = useState<String>('');
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
+        dispatch(fetchCompanyData());
         getUserInfo();
-    },);
+    }, [dispatch]);
 
     const getUserInfo = async (): Promise<void> => {
         try {
@@ -38,10 +54,8 @@ const Company: React.FC = () => {
                 },
             };
 
-            const res: AxiosResponse = await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/user/userInfo`,
-                userToken
-            );
+            const res = await userInfo(userToken);
+            setUserId(res.data.id)
 
             if (res.data.securitystamp !== (localStorage.getItem('securityStamp') || sessionStorage.getItem('securityStamp'))) {
                 localStorage.clear();
@@ -52,15 +66,12 @@ const Company: React.FC = () => {
 
         } catch (error: any) {
             if (error.response && error.response.status === 404) {
+                failedGetUserInfo(error.response.data.message)
                 sessionStorage.clear();
                 localStorage.clear();
                 return setFailedAuth(true);
             } else {
-                message.error(
-                    <span>
-                        <strong> Server Error. </strong>
-                    </span>
-                );
+                failedServer(error.message)
             }
 
             console.error(error);
@@ -69,78 +80,75 @@ const Company: React.FC = () => {
 
 
     const onFinishAddCompany = async (values: any) => {
+        values.creatorId = userId;
         try {
-            await axios.post(process.env.REACT_APP_API_URL + "/api/company/add", values);
-            message.success(
-                <span>
-                    <strong>{values.companyname} </strong> added to companies list.
-                </span>
-            );
+            const res = await createCompany(values);
+            successAddCompany(res.data.message)
             dispatch(fetchCompanyData());
             setIsAddCompanyModalOpen(false);
             setTimeout(() => {
                 addCompanyForm.resetFields();
             }, 100);
 
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            if (error.response && error.response.status === 400) {
+                errorAddCompany(error.response.data.message)
+            }
+            else {
+                failedServer(error.message)
+            }
+
         }
     };
 
     const deleteCompany = async () => {
         try {
             if (selectedRowKeys.length === 0) {
-                message.info(
-                    <span>
-                        <strong>Please select the companies to be deleted.</strong>
-                    </span>
-                );
+                infoDeleteCompany();
                 return;
             }
             setselectedRowKeys([]);
-            await Promise.all(selectedRowKeys.map(id => axios.delete(process.env.REACT_APP_API_URL + `/api/company/delete/${id}`)));
+            await Promise.all(selectedRowKeys.map(id => removeCompany(id)));
             dispatch(fetchCompanyData());
 
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            failedServer(error.message)
         }
     };
 
     const isEditCompany = async () => {
         if (selectedRowKeys.length !== 1) {
-            message.info(
-                <span>
-                    Please select <strong> only one company </strong> want to edit
-                </span>
-            );
+            infoEditCompany();
             return;
         }
 
         const firstSelectedRow = selectedRows[0];
         editCompanyForm.setFieldsValue({
-            companyname: firstSelectedRow.companyname,
+            companyName: firstSelectedRow.companyName,
             crn: firstSelectedRow.crn,
             country: firstSelectedRow.country,
-            website: firstSelectedRow.website,
+            webSite: firstSelectedRow.webSite,
         });
         setIsEditCompanyModalOpen(true);
     };
 
-    const onFinishEditCompany = async (values : any) => {
+    const onFinishEditCompany = async (values: any) => {
+        values.lastUpdaterId = userId;
         try {
-            await axios.put(process.env.REACT_APP_API_URL + `/api/company/update/${selectedRowKeys}`, values);
-            message.success(
-                <span>
-                    <strong> Company updated </strong>
-                </span>
-            );
+            const res = await updateCompany(selectedRowKeys, values);
+            successEditCompany(res.data.message);
             dispatch(fetchCompanyData());
             editCompanyForm.resetFields();
             setselectedRowKeys([]);
             setSelectedRows([]);
             setIsEditCompanyModalOpen(false);
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            if (error.response && error.response.status === 400) {
+                errorEditCompany(error.response.data.message)
+            }
+            else {
+                failedServer(error.message)
+            }
         }
     };
 
@@ -161,9 +169,9 @@ const Company: React.FC = () => {
             {failedAuth === true || !(sessionStorage.getItem('token') || localStorage.getItem('token')) ? (
                 <>
                     <Result
-                        status="404"
-                        title="404"
-                        subTitle="Failed."
+                        status="403"
+                        title="403"
+                        subTitle="Sorry, you are not authorized to access this page."
                         extra={<Button onClick={handle404} type="primary">Go Login</Button>}
                     />
                 </>
@@ -177,7 +185,7 @@ const Company: React.FC = () => {
 
                         <Input onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
 
-                        <UserAddOutlined onClick={() => setIsAddCompanyModalOpen(true)} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
+                        <PlusOutlined onClick={() => setIsAddCompanyModalOpen(true)} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
 
                         <EditOutlined onClick={isEditCompany} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 transition-all text-2xl" />
 
@@ -207,7 +215,7 @@ const Company: React.FC = () => {
                             form={addCompanyForm}
                         >
                             <Form.Item
-                                name="companyname"
+                                name="companyName"
                                 label="Company Name"
                                 rules={[
                                     { required: true, message: "Company Name required" },
@@ -239,7 +247,7 @@ const Company: React.FC = () => {
 
 
                             <Form.Item
-                                name="website"
+                                name="webSite"
                                 label="WEB Site"
                                 rules={[{ required: true, message: "WEB Site required" },
                                 { max: 20, message: "Max. 20 characters." }
@@ -262,21 +270,21 @@ const Company: React.FC = () => {
                     </Modal>
 
                     <Modal
-                            open={isEditCompanyModalOpen}
-                            onCancel={() => setIsEditCompanyModalOpen(false)}
-                            footer={false}
-                        >
-                            <h2>
-                                <strong>EDIT COMPANY</strong>
-                            </h2>
-                            <Form
+                        open={isEditCompanyModalOpen}
+                        onCancel={() => setIsEditCompanyModalOpen(false)}
+                        footer={false}
+                    >
+                        <h2>
+                            <strong>EDIT COMPANY</strong>
+                        </h2>
+                        <Form
                             className="mt-4 flex flex-col gap-4"
                             layout="vertical"
                             onFinish={onFinishEditCompany}
                             form={editCompanyForm}
                         >
                             <Form.Item
-                                name="companyname"
+                                name="companyName"
                                 label="Company Name"
                                 rules={[
                                     { required: true, message: "Company Name required" },
@@ -308,7 +316,7 @@ const Company: React.FC = () => {
 
 
                             <Form.Item
-                                name="website"
+                                name="webSite"
                                 label="WEB Site"
                                 rules={[{ required: true, message: "WEB Site required" },
                                 { max: 20, message: "Max. 20 characters." }
@@ -328,7 +336,7 @@ const Company: React.FC = () => {
                                 </Button>
                             </Form.Item>
                         </Form>
-                        </Modal>
+                    </Modal>
                 </div>
 
             )}

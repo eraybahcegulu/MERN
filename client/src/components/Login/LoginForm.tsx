@@ -1,6 +1,6 @@
 import React from 'react';
-import { ArrowRightOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Switch } from 'antd';
+import { InfoCircleOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Popover, Switch } from 'antd';
 
 interface LoginFormProps {
     onFinishLogin: (values: any) => void;
@@ -19,7 +19,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
             initialValues={{ remember: true }}
         >
             <Form.Item
-                name="username"
+                name="userName"
                 rules={[{ required: true, message: 'Please input your Username!' }]}
             >
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
@@ -35,9 +35,28 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
                 />
             </Form.Item>
 
-            <div className='flex flex-row gap-2'>
-                <span>Remember Me <ArrowRightOutlined /></span>
-                <Switch defaultChecked={isChecked} onChange={onChange} />
+            <div className='flex flex-row gap-1'>
+                <Popover placement="left"
+                    content={
+                        <div className='flex flex-col gap-2 text-xs'>
+                            <span><strong>Enabled:</strong> Stay open until your session is terminated</span>
+                            <span><strong>Disabled:</strong> Stay open until your close the browser window </span>
+                        </div>
+                    }
+                >
+
+                    <InfoCircleOutlined className='text-md' />
+                </Popover>
+                <span>Remember Me</span>
+                {
+                    isChecked
+                        ?
+                        <span className='ml-0'>Enabled</span>
+                        :
+                        <span>Disabled</span>
+                }
+                <Switch className='ml-auto' defaultChecked={isChecked} onChange={onChange} />
+
             </div>
 
             <div className='flex flex-row gap-2 mt-4'>

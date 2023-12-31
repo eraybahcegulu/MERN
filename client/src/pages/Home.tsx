@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Button, message, Result } from 'antd';
-import axios, { AxiosResponse } from 'axios';
+import { Button, Result } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import UserInfo from '../components/Home/UserInfo';
 import Panels from '../components/Home/Panels';
 
-interface UserInfo {
-    username: string;
-    id: string;
-    securitystamp: string;
-}
+import { fetchCompanyData } from '../redux-toolkit/companySlice';
+import { fetchProductData } from '../redux-toolkit/productSlice';
+
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../store';
+
+import { userInfo } from '../services/userService'
+import { failedServer, failedGetUserInfo } from '../constants/notifyConstant'
+
+
 
 const Home: React.FC = () => {
     const location = useLocation();
-    const token = location.state?.token?.toString() || localStorage.getItem('token');
+    const token = location.state?.token?.toString() || localStorage.getItem('token') || sessionStorage.getItem('token');
     const [failedAuth, setFailedAuth] = useState<boolean>(false);
     const [userInfoLoading, setUserInfoLoading] = useState<boolean>(true);
 
@@ -23,9 +27,13 @@ const Home: React.FC = () => {
 
     const navigate = useNavigate();
 
+    const dispatch = useDispatch<AppDispatch>();
+
     useEffect(() => {
         getUserInfo();
-    }, []);
+        dispatch(fetchCompanyData());
+        dispatch(fetchProductData());
+    },[dispatch]);
 
     const getUserInfo = async (): Promise<void> => {
         try {
@@ -35,10 +43,7 @@ const Home: React.FC = () => {
                 },
             };
 
-            const res: AxiosResponse<UserInfo> = await axios.post(
-                `${process.env.REACT_APP_API_URL}/api/user/userInfo`,
-                userToken
-            );
+            const res = await userInfo(userToken);
 
             if (res.data.securitystamp !== (localStorage.getItem('securityStamp') || sessionStorage.getItem('securityStamp'))) {
                 localStorage.clear();
@@ -46,24 +51,20 @@ const Home: React.FC = () => {
                 return setFailedAuth(true);
             }
 
-            setUserName(res.data.username);
+            setUserName(res.data.userName);
             setUserId(res.data.id);
             setsecurityStamp(res.data.securitystamp);
             setUserInfoLoading(false);
         } catch (error: any) {
             if (error.response && error.response.status === 404) {
+                console.log(error)
+                failedGetUserInfo(error.response.data.message)
                 sessionStorage.clear();
                 localStorage.clear();
                 return setFailedAuth(true);
             } else {
-                message.error(
-                    <span>
-                        <strong> Server Error. </strong>
-                    </span>
-                );
+                failedServer(error.message)
             }
-
-            console.error(error);
         }
     };
 
@@ -74,13 +75,13 @@ const Home: React.FC = () => {
     };
 
     return (
-        <div className="bg-slate-500 h-screen w-screen flex flex-col items-center pt-20">
+        <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
             {failedAuth === true || !(sessionStorage.getItem('token') || localStorage.getItem('token')) ? (
                 <>
                     <Result
-                        status="404"
-                        title="404"
-                        subTitle="Failed."
+                        status="403"
+                        title="403"
+                        subTitle="Sorry, you are not authorized to access this page."
                         extra={<Button onClick={handle404} type="primary">Go Login</Button>}
                     />
                 </>

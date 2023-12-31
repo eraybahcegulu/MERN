@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Home from "./pages/Home";
 import Company from "./pages/Company";
 import Product from "./pages/Product";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
     return (
@@ -14,6 +15,7 @@ const App = () => {
                 <Route path="/home" element={<Home />} />
                 <Route path="/companies" element={<Company />} />
                 <Route path="/products" element={<Product />} />
+                <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
     )
