@@ -1,31 +1,33 @@
 const mongoose = require("mongoose");
 const BaseModel = require("./baseModel");
 
-const CompanySchema = mongoose.Schema(
+const ProductSchema = mongoose.Schema(
     {
-
-        companyName: {
+        productName: {
             type: String,
             required: true,
         },
 
-        crn: {
+        productCategory: {
             type: String,
             required: true,
         },
 
-        country: {
+        productAmount: {
+            type: String,
+            required: true,
+        },
+        amountUnit: {
             type: String,
             required: true,
         },
 
-        webSite: {
-            type: String,
-            required: true,
+        company: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Company'
         },
-
         ...BaseModel
     },
 );
 
-module.exports = mongoose.model('Company', CompanySchema);
+module.exports = mongoose.model('Product', ProductSchema);
