@@ -52,7 +52,7 @@ const ProductList: FC<ProductListProps> = ({
             {status === 'succeeded' && filteredProducts.length > 0 && (
                 <Table
                     scroll={{ y: 400 }}
-                    className="md:max-w-[750px] max-w-[450px]"
+                    className="md:max-w-[750px] max-w-[470px]"
                     rowSelection={{
                         type: 'checkbox',
                         ...rowSelection,
