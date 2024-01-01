@@ -7,7 +7,7 @@ const getAllCompanies = async (req, res) => {
         res.status(200).json(companies);
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return res.status(500).json({ status: 500, message: 'Error', error: error.message });
     }
 };
 
@@ -39,9 +39,12 @@ const addCompany = async (req, res) => {
 
 const deleteCompany = async (req, res) => {
     const id = req.params.id;
+    const userId = req.body.userId;
+
     try {
         const company = await Company.findById(id, { status: Status.ACTIVE });
         company.status = Status.DELETED;
+        company.lastDeleterId = userId;
 
         await company.save();
         res.status(200).json({ message: "Company deleted successfully." });
@@ -54,17 +57,17 @@ const deleteCompany = async (req, res) => {
 const updateCompany = async (req, res) => {
     const id = req.params.id;
     try {
-        const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName, _id: { $ne: id } });
+        const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName, status: Status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyNameControl) {
             return res.status(400).json({ message: "Failed. This Company Name is already registered" });
         }
 
-        const existingCompanyCRNControl = await Company.findOne({ crn: req.body.crn, _id: { $ne: id } });
+        const existingCompanyCRNControl = await Company.findOne({ crn: req.body.crn, status: Status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyCRNControl) {
             return res.status(400).json({ message: "Failed. This CRN is already registered" });
         }
 
-        const existingCompanyWEBSiteControl = await Company.findOne({ webSite: req.body.webSite, _id: { $ne: id } });
+        const existingCompanyWEBSiteControl = await Company.findOne({ webSite: req.body.webSite, status: Status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyWEBSiteControl) {
             return res.status(400).json({ message: "Failed. This WEB Site is already registered" });
         }

@@ -2,6 +2,7 @@ const User = require("../models/user.js");
 const generateJWT = require('../utils/generateJWT.js');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 const register = async (req, res) => {
     try {
@@ -11,28 +12,38 @@ const register = async (req, res) => {
             return res.status(400).json({ message: "This User Name is already registered" })
         }
 
-        const newUser = new User(req.body);
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        const newUser = new User({
+            userName: req.body.userName,
+            password: hashedPassword,
+        });
+
         await newUser.save();
         return res.status(200).json({ message: "Successfully registered" });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        console.error('Error', error);
+        res.status(500).json({ status: 500, message: 'Error', error: error.message });
     }
 };
 
 const login = async (req, res) => {
     const { userName, password } = req.body;
     try {
-        const user = await User.findOne({ userName, password });
+        const user = await User.findOne({ userName });
+
         if (user) {
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (isPasswordValid) {
+                const newSessionSecurityStamp = crypto.randomBytes(30).toString('base64');
+                user.securityStamp = newSessionSecurityStamp;
+                await user.save();
 
-            const newSessionSecurityStamp = crypto.randomBytes(30).toString('base64');
-            user.securityStamp = newSessionSecurityStamp;
-            await user.save();
-
-            const token = generateJWT.generateJWT(user);
-            return res.status(200).json({ message: 'Login successful', token: token, securityStamp: newSessionSecurityStamp });
+                const token = generateJWT.generateJWT(user);
+                return res.status(200).json({ message: 'Login successful', token: token, securityStamp: newSessionSecurityStamp });
+            }
         }
-        return res.status(400).json({ message: 'Invalid User Name or Passowrod' });
+        return res.status(400).json({ message: 'Invalid User Name or Password' });
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ status: 500, message: 'Error', error: error.message });
@@ -41,7 +52,7 @@ const login = async (req, res) => {
 
 const userInfo = async (req, res) => {
     try {
-        const token = req.body.headers.Authorization.split(' ')[1];
+        const token = req.body.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
         const user = await User.findById(decodedToken.userId);
@@ -51,13 +62,45 @@ const userInfo = async (req, res) => {
 
         const userName = decodedToken.userName;
         const id = decodedToken.userId;
+        const userRole = decodedToken.userRole;
         const securitystamp = user.securityStamp;
 
         return res.json({
             userName,
             id,
-            securitystamp
+            userRole,
+            securitystamp,
+
         });
+
+    } catch (error) {
+        console.error('Error', error);
+        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+    }
+};
+
+const changePassword = async (req, res) => {
+    const id = req.params.id;
+    try {
+        
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(req.body.currentPassword, user.password);
+
+        if(!isPasswordValid)
+        {
+            return res.status(400).json({ message: 'Invalid Current Password' });
+        }
+
+        const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+
+        user.password = hashedPassword;
+        await user.save();
+
+        return res.status(200).json({ message: 'Your password has been changed successfully'});
 
     } catch (error) {
         console.error('Error', error);
@@ -68,5 +111,6 @@ const userInfo = async (req, res) => {
 module.exports = {
     register,
     login,
-    userInfo
+    userInfo,
+    changePassword
 };

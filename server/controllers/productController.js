@@ -9,7 +9,6 @@ const getAllProducts = async (req, res) => {
                 select: 'companyName',
             })
 
-        console.log(products);
         res.status(200).json(products);
     } catch (error) {
         console.error('Error', error);
@@ -36,9 +35,12 @@ const addProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     const id = req.params.id;
+    const userId = req.body.userId;
+    
     try {
         const product = await Product.findById(id, { status: Status.ACTIVE });
         product.status = Status.DELETED;
+        product.lastDeleterId = userId;
 
         await product.save();
 

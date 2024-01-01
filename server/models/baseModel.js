@@ -14,6 +14,11 @@ const BaseModel = {
         ref: 'User',
     },
 
+    lastDeleterId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
+
     createdAt: {
         type: Date,
         default: Date.now

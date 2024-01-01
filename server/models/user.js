@@ -8,7 +8,10 @@ const UserSchema = mongoose.Schema(
             required: true,
         },
 
-        password: String,
+        password: {
+            type: String,
+            required: true,
+        },
 
         securityStamp: {
             required: true,
@@ -20,7 +23,7 @@ const UserSchema = mongoose.Schema(
             type: Date,
             default: Date.now
         },
-        
+
         userRole: {
             required: true,
             type: String,
