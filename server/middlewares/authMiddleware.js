@@ -16,7 +16,7 @@ const auth = async (req, res, next) => {
             });
         } else {
             res.status(401).json({
-                message: 'User auth not available',
+                message: 'User auth token not available',
             });
         }
     } catch (error) {
