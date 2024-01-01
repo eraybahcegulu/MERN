@@ -22,7 +22,8 @@ import {
     infoDeleteCompany,
     infoEditCompany,
     successEditCompany,
-    errorEditCompany
+    errorEditCompany,
+    successDeleteCompany
 } from '../constants/notifyConstant'
 
 const Company: React.FC = () => {
@@ -105,8 +106,25 @@ const Company: React.FC = () => {
                 infoDeleteCompany();
                 return;
             }
+
+            const res = await Promise.all(selectedRowKeys.map(id => removeCompany(id, userId, token)));
+
+            if (res.length > 1) {
+                successDeleteCompany(
+                    <span>
+                    {res.length} companies deleted successfully
+                    </span>
+                );
+            }
+            if (res.length === 1) {
+                successDeleteCompany(
+                    <span>
+                    Company deleted successfully
+                    </span>
+                );
+            }
+
             setselectedRowKeys([]);
-            await Promise.all(selectedRowKeys.map(id => removeCompany(id, userId, token)));
             dispatch(fetchCompanyData());
 
         } catch (error: any) {
@@ -223,7 +241,7 @@ const Company: React.FC = () => {
                                 label="Company Name"
                                 rules={[
                                     { required: true, message: "Company Name required" },
-                                    { max: 20, message: "Max. 20 characters." }
+                                    { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -233,7 +251,7 @@ const Company: React.FC = () => {
                                 name="crn"
                                 label="Company Registration Number"
                                 rules={[{ required: true, message: "CRN required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -243,7 +261,7 @@ const Company: React.FC = () => {
                                 name="country"
                                 label="Country"
                                 rules={[{ required: true, message: "Country required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -254,7 +272,7 @@ const Company: React.FC = () => {
                                 name="webSite"
                                 label="WEB Site"
                                 rules={[{ required: true, message: "WEB Site required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -292,7 +310,7 @@ const Company: React.FC = () => {
                                 label="Company Name"
                                 rules={[
                                     { required: true, message: "Company Name required" },
-                                    { max: 20, message: "Max. 20 characters." }
+                                    { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -302,7 +320,7 @@ const Company: React.FC = () => {
                                 name="crn"
                                 label="Company Registration Number"
                                 rules={[{ required: true, message: "CRN required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -312,7 +330,7 @@ const Company: React.FC = () => {
                                 name="country"
                                 label="Country"
                                 rules={[{ required: true, message: "Country required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -323,7 +341,7 @@ const Company: React.FC = () => {
                                 name="webSite"
                                 label="WEB Site"
                                 rules={[{ required: true, message: "WEB Site required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />

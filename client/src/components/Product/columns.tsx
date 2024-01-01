@@ -1,5 +1,8 @@
 import type { ColumnsType } from 'antd/es/table';
 import { ProductDataType } from './types';
+import React from 'react';
+import { Popover } from 'antd';
+import { InfoCircleOutlined, SwapRightOutlined } from '@ant-design/icons';
 
 export const productColumns: ColumnsType<ProductDataType> = [
     {
@@ -43,7 +46,39 @@ export const productColumns: ColumnsType<ProductDataType> = [
     {
         title: 'Company',
         dataIndex: 'company',
-        render: (company) => company?.companyName,
+        render: (company) =>
+            <div className='flex flex-row gap-1'>
+                <span>
+                    <Popover className='text-xl' placement="left"
+                        content={
+                            <div className='flex flex-col gap-2 text-xs'>
+                                <span className='text-xs '> <strong>Company Registration Number</strong>  <SwapRightOutlined /> {company?.crn} </span>
+                                <span className='text-xs '> <strong>Incorporation Country</strong>  <SwapRightOutlined /> {company.country} </span>
+                                <span className='text-xs '>
+                                    <strong>WEB Site</strong>
+                                    <SwapRightOutlined />
+                                    <a className='text-blue-600' href={addDefaultProtocol(company.webSite)} target="_blank" rel="noopener noreferrer" > {company.webSite} </a>
+                                </span>
+                            </div>
+                        }
+                    >
+
+                        <InfoCircleOutlined className='text-md hover:scale-125 transition-all text-blue-600' />
+                    </Popover>
+                </span>
+                <span>
+                    {company?.companyName}
+                </span>
+
+
+            </div>,
         width: '20%',
     },
 ];
+
+function addDefaultProtocol(url: string) {
+    if (!/^https?:\/\//i.test(url)) {
+        return `https://${url}`;
+    }
+    return url;
+}

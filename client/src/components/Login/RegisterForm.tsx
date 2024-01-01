@@ -18,14 +18,18 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
         >
             <Form.Item
                 name="userName"
-                rules={[{ required: true, message: 'Please input your Username!' }]}
+                rules={[{ required: true, message: 'Please input your Username!' },
+                { max: 40, message: "Max. 40 characters." }
+                ]}
             >
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
             </Form.Item>
 
             <Form.Item
                 name="email"
-                rules={[{ type: 'email', required: true, message: 'Please input your Email!' }]}
+                rules={[{ type: 'email', required: true, message: 'Please input your Email!' },
+                { max: 40, message: "Max. 40 characters." }
+                ]}
             >
                 <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
             </Form.Item>
@@ -36,7 +40,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
                     {
                         required: true,
                         message: 'Please input your password!',
+                        
                     },
+                    { max: 40, message: "Max. 40 characters." }
                 ]}
                 hasFeedback
             >
@@ -55,6 +61,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
                         required: true,
                         message: 'Please confirm your password!',
                     },
+                    { max: 40, message: "Max. 40 characters." },
                     ({ getFieldValue }) => ({
                         validator(_, value) {
                             if (!value || getFieldValue('password') === value) {

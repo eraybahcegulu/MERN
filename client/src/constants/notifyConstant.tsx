@@ -1,8 +1,6 @@
 import { message, notification } from 'antd';
 import React from 'react';
 
-
-
 const failedServer = (data: any) => {
     message.open({
         type: 'error',
@@ -11,9 +9,7 @@ const failedServer = (data: any) => {
     }
 
     );
-
 }
-
 
 const failedGetUserInfo = (data: any) =>
     message.open({
@@ -21,7 +17,6 @@ const failedGetUserInfo = (data: any) =>
         content: data,
         duration: 3,
     });
-
 
 const successRegister = (data: any) =>
     message.open({
@@ -95,7 +90,6 @@ const errorEditCompany = (data: any) =>
         content: data,
         duration: 3,
     });
-
 
 const successAddProduct = (data: any) =>
     message.open({
@@ -176,6 +170,20 @@ const notFoundCompany = () => {
     });
 };
 
+const successDeleteCompany = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
+const successDeleteProduct = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -196,5 +204,7 @@ export {
     errorEditProduct,
     errorChangePassword,
     successChangePassword,
-    notFoundCompany
+    notFoundCompany,
+    successDeleteCompany,
+    successDeleteProduct
 };

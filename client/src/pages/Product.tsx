@@ -23,7 +23,8 @@ import {
     infoEditProduct,
     successEditProduct,
     errorEditProduct,
-    notFoundCompany
+    notFoundCompany,
+    successDeleteProduct
 } from '../constants/notifyConstant'
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -112,7 +113,23 @@ const Product: React.FC = () => {
                 return;
             }
 
-            await Promise.all(selectedRowKeys.map(id => removeProduct(id, userId, token)));
+            const res = await Promise.all(selectedRowKeys.map(id => removeProduct(id, userId, token)));
+
+            if (res.length > 1) {
+                successDeleteProduct(
+                    <span>
+                    {res.length} products deleted successfully
+                    </span>
+                );
+            }
+            if (res.length === 1) {
+                successDeleteProduct(
+                    <span>
+                    Product deleted successfully
+                    </span>
+                );
+            }
+
             setselectedRowKeys([]);
             dispatch(fetchProductData());
 
@@ -240,7 +257,7 @@ const Product: React.FC = () => {
                                 label="Product Name"
                                 rules={[
                                     { required: true, message: "Product Name required" },
-                                    { max: 20, message: "Max. 20 characters." }
+                                    { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -250,7 +267,7 @@ const Product: React.FC = () => {
                                 name="productCategory"
                                 label="Category"
                                 rules={[{ required: true, message: "Category required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -260,7 +277,7 @@ const Product: React.FC = () => {
                                 name="productAmount"
                                 label="Product Amount"
                                 rules={[{ required: true, message: "Product Amount required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -271,7 +288,7 @@ const Product: React.FC = () => {
                                 name="amountUnit"
                                 label="Amount Unit"
                                 rules={[{ required: true, message: "Amount Unit required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -320,7 +337,7 @@ const Product: React.FC = () => {
                                 label="Product Name"
                                 rules={[
                                     { required: true, message: "Product Name required" },
-                                    { max: 20, message: "Max. 20 characters." }
+                                    { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -330,7 +347,7 @@ const Product: React.FC = () => {
                                 name="productCategory"
                                 label="Category"
                                 rules={[{ required: true, message: "Category required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -340,7 +357,7 @@ const Product: React.FC = () => {
                                 name="productAmount"
                                 label="Product Amount"
                                 rules={[{ required: true, message: "Product Amount required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />
@@ -351,7 +368,7 @@ const Product: React.FC = () => {
                                 name="amountUnit"
                                 label="Amount Unit"
                                 rules={[{ required: true, message: "Amount Unit required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />

@@ -6,7 +6,6 @@ const getAllProducts = async (req, res) => {
         const products = await Product.find({ status: Status.ACTIVE })
             .populate({
                 path: 'company',
-                select: 'companyName',
             })
 
         res.status(200).json(products);

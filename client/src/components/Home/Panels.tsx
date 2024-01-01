@@ -14,6 +14,7 @@ const Panels = () => {
                 <Popover placement="right"
                     content={
                         <div className='flex flex-col gap-2 text-xs'>
+                            <span className='text-xs text-center'> <a className='text-blue-600' href={addDefaultProtocol(product.company.webSite)} target="_blank" rel="noopener noreferrer" > {product.company.webSite} </a> </span>
                             <span className='text-xs '> <strong>Company</strong>  <SwapRightOutlined /> {product.company.companyName} </span>
                             <span className='text-xs '> <strong>Product Category</strong>  <SwapRightOutlined /> {product.productCategory} </span>
                             <span className='text-xs '> <strong>Product Amount</strong>  <SwapRightOutlined /> {product.productAmount} </span>
@@ -30,21 +31,27 @@ const Panels = () => {
     const company = useSelector((state: RootState) => state.company.data);
     const lastAddedThreeCompanies = company.slice(-3);
     const companyStepsData = lastAddedThreeCompanies.map((company) => ({
-        title: 
-        <span className='text-md'>{company.companyName}
-        <Popover placement="right"
-            content={
-                <div className='flex flex-col gap-2 text-xs'>
-                    <span className='text-xs '> <strong>Company Registration Number</strong>  <SwapRightOutlined /> {company.crn} </span>
-                    <span className='text-xs '> <strong>Incorporation Country</strong>  <SwapRightOutlined /> {company.country} </span>
-                    <span className='text-xs '> <strong>WEB Site</strong>  <SwapRightOutlined /> {company.webSite} </span>
-                </div>
-            }
-        >
+        title:
+            <span className='text-md'>{company.companyName}
+                <Popover placement="right"
+                    content={
+                        <div className='flex flex-col gap-2 text-xs'>
+                            <span className='text-xs '> <strong>Company Registration Number</strong>  <SwapRightOutlined /> {company.crn} </span>
+                            <span className='text-xs '> <strong>Incorporation Country</strong>  <SwapRightOutlined /> {company.country} </span>
+                            <span className='text-xs '> <strong>WEB Site</strong>
+                                <SwapRightOutlined />
+                                <a className='text-blue-600' href={addDefaultProtocol(company.webSite)} target="_blank" rel="noopener noreferrer"
+                                >
+                                    {company.webSite}
+                                </a>
+                            </span>
+                        </div>
+                    }
+                >
 
-            <InfoCircleOutlined className='text-md ml-1 hover:scale-125 transition-all' />
-        </Popover>
-    </span>
+                    <InfoCircleOutlined className='text-md ml-1 hover:scale-125 transition-all' />
+                </Popover>
+            </span>
 
     }));
 
@@ -155,6 +162,13 @@ const Panels = () => {
 
 
     )
+}
+
+function addDefaultProtocol(url: string) {
+    if (!/^https?:\/\//i.test(url)) {
+        return `https://${url}`;
+    }
+    return url;
 }
 
 export default Panels

@@ -20,13 +20,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
         >
             <Form.Item
                 name="userNameEmail"
-                rules={[{ required: true, message: 'Please input your Username or Email!' }]}
+                rules={[{ required: true, message: 'Please input your Username or Email!' },
+                { max: 40, message: "Max. 40 characters." }
+                ]}
             >
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username or Email" />
             </Form.Item>
             <Form.Item
                 name="password"
-                rules={[{ required: true, message: 'Please input your Password!' }]}
+                rules={[{ required: true, message: 'Please input your Password!' },
+                { max: 40, message: "Max. 40 characters." }
+                ]}
             >
                 <Input.Password
                     prefix={<LockOutlined className="site-form-item-icon" />}
