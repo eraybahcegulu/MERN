@@ -22,7 +22,7 @@ const Panels = () => {
                     }
                 >
 
-                    <InfoCircleOutlined className='text-md ml-1' />
+                    <InfoCircleOutlined className='text-md ml-1 hover:scale-125 transition-all' />
                 </Popover>
             </span>
     }));
@@ -42,7 +42,7 @@ const Panels = () => {
             }
         >
 
-            <InfoCircleOutlined className='text-md ml-1' />
+            <InfoCircleOutlined className='text-md ml-1 hover:scale-125 transition-all' />
         </Popover>
     </span>
 
@@ -57,7 +57,7 @@ const Panels = () => {
         <div className='w-[80vw] flex flex-col items-center justify-center gap-4'>
 
             <div className="grid grid-cols-2 gap-4">
-                <Card className='bg-red-400'>
+                <Card className='bg-red-400 hover:scale-105 transition-all'>
                     <div className='flex flex-row items-center gap-2'>
                         <HomeOutlined className='text-6xl' />
                         <Divider type="vertical" className='h-16' />
@@ -78,7 +78,7 @@ const Panels = () => {
                         </div>
                     </div>
                 </Card>
-                <Card className='bg-violet-300'>
+                <Card className='bg-violet-300 hover:scale-105 transition-all'>
                     <div className='flex flex-row items-center gap-2'>
                         <InboxOutlined className='text-6xl' />
                         <Divider type="vertical" className='h-16' />
@@ -102,7 +102,7 @@ const Panels = () => {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <Card className='bg-orange-200 flex flex-col items-center justify-center text-center'>
+                <Card className='bg-orange-200 flex flex-col text-center hover:scale-105 transition-all'>
                     <div className='flex flex-row items-center justify-center gap-4'>
                         <OrderedListOutlined className='text-6xl' />
                         <HomeOutlined className='text-6xl' />
@@ -125,7 +125,7 @@ const Panels = () => {
                         />
                     </div>
                 </Card>
-                <Card className='bg-sky-300 flex flex-col items-center justify-center text-center'>
+                <Card className='bg-sky-300 flex flex-col text-center hover:scale-105 transition-all'>
                     <div className='flex flex-row items-center justify-center gap-4'>
                         <OrderedListOutlined className='text-6xl' />
                         <InboxOutlined className='text-6xl' />

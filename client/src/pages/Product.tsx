@@ -25,6 +25,8 @@ import {
     errorEditProduct,
     notFoundCompany
 } from '../constants/notifyConstant'
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -46,6 +48,8 @@ const Product: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const company = useSelector((state: RootState) => state.company.data);
+    const product = useSelector((state: RootState) => state.product.data);
+
     const selectedCompany = company.map(company => ({
         value: company._id,
         label: company.companyName,
@@ -195,7 +199,14 @@ const Product: React.FC = () => {
 
                         <Input onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
 
-                        <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
+                        {
+                            product.length === 0
+                            ?
+                            <FontAwesomeIcon onClick={() => setIsAddProductModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
+                            :
+                            <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
+                        }
+
 
                         <EditOutlined onClick={isEditProduct} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 transition-all text-2xl" />
 

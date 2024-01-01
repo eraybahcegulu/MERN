@@ -8,6 +8,7 @@ import { successChangePassword, errorChangePassword, failedServer } from '../../
 
 interface UserInfoProps {
     token: string;
+    email: string;
     userName: string;
     userId: string;
     securityStamp: string;
@@ -18,6 +19,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
     token,
     userId,
     userName,
+    email,
     userInfoLoading,
 
 }) => {
@@ -65,18 +67,22 @@ const UserInfo: React.FC<UserInfoProps> = ({
                 title=
                 {
 
-                    !userInfoLoading && <span> WELCOME {userName}</span>
-                }
-                extra=
-                {
                     !userInfoLoading &&
-                    <>
-                        <SettingOutlined onClick={() => setIsChangePasswordModalOpen(true)} className='ml-2 hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
-                        <LogoutOutlined
-                            onClick={logout}
-                            className='ml-2 text-2xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-300 transition-all'
-                        />
-                    </>
+                    <div className='flex flex-col items-center p-2 gap-2'>
+                        <div className='flex flex-col items-center'>
+                            <span> WELCOME {userName} </span>
+                            <span> {email} </span>
+                        </div>
+
+                        <div>
+                            <SettingOutlined onClick={() => setIsChangePasswordModalOpen(true)} className='ml-2 hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
+                            <LogoutOutlined
+                                onClick={logout}
+                                className='ml-2 text-2xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-300 transition-all'
+                            />
+                        </div>
+
+                    </div>
                 }
             >
                 <div className='flex flex-col items-center justify-center'>
@@ -89,10 +95,10 @@ const UserInfo: React.FC<UserInfoProps> = ({
                             :
                             (
                                 <Radio.Group>
-                                    <Radio.Button onClick={() => navigate('/companies', { state: { token } })} value="large">
+                                    <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/companies', { state: { token } })} value="large">
                                         Companies
                                     </Radio.Button>
-                                    <Radio.Button onClick={() => navigate('/products', { state: { token } })} value="default">Products</Radio.Button>
+                                    <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/products', { state: { token } })} value="default">Products</Radio.Button>
                                 </Radio.Group>
                             )
                     }

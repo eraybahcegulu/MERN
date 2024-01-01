@@ -4,8 +4,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import CompanyList from '../components/Company/CompanyList'
 
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../store';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
+
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store';
 import { fetchCompanyData } from '../redux-toolkit/companySlice';
 
 import { userInfo } from '../services/userService';
@@ -40,6 +43,8 @@ const Company: React.FC = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
+
+    const company = useSelector((state: RootState) => state.company.data);
 
     useEffect(() => {
         dispatch(fetchCompanyData());
@@ -174,17 +179,23 @@ const Company: React.FC = () => {
                     <span><strong className='text-2xl'>COMPANIES</strong></span>
 
                     <div className="flex flex-row item-center justify-center mt-10 gap-4">
-                        <ArrowLeftOutlined onClick={() => navigate('/home', { state: { token } })} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl mr-4" />
+                        <ArrowLeftOutlined onClick={() => navigate('/home', { state: { token } })} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl mr-4" />
 
                         <Input onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
 
-                        <PlusOutlined onClick={() => setIsAddCompanyModalOpen(true)} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
+                        {
+                            company.length === 0
+                                ?
+                                <FontAwesomeIcon onClick={() => setIsAddCompanyModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
+                                :
+                                <PlusOutlined onClick={() => setIsAddCompanyModalOpen(true)} className="hover:cursor-pointer text-green-700 hover:text-green-600 hover:scale-125 transition-all text-2xl" />
+                        }
 
-                        <EditOutlined onClick={isEditCompany} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 transition-all text-2xl" />
+                        <EditOutlined onClick={isEditCompany} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 hover:scale-125 transition-all text-2xl" />
 
-                        <DeleteOutlined onClick={deleteCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 transition-all text-2xl" />
+                        <DeleteOutlined onClick={deleteCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
 
-                        <LogoutOutlined onClick={logout} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl" />
+                        <LogoutOutlined onClick={logout} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl" />
                     </div>
 
                     <div>
