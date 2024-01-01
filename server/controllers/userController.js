@@ -1,7 +1,8 @@
-const User = require("../models/user.js");
-const generateJWT = require('../utils/generateJWT.js');
+const User = require("../models/user");
+const generate = require('../utils/generate');
+
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
+
 const bcrypt = require('bcrypt');
 
 const register = async (req, res) => {
@@ -35,11 +36,11 @@ const login = async (req, res) => {
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (isPasswordValid) {
-                const newSessionSecurityStamp = crypto.randomBytes(30).toString('base64');
+                const newSessionSecurityStamp = generate.securityStamp();
                 user.securityStamp = newSessionSecurityStamp;
                 await user.save();
 
-                const token = generateJWT.generateJWT(user);
+                const token = generate.token(user);
                 return res.status(200).json({ message: 'Login successful', token: token, securityStamp: newSessionSecurityStamp });
             }
         }
