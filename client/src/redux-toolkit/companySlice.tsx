@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {GET_COMPANIES_API_URL} from '../constants/apiConstant';
+import { GET_COMPANIES_API_URL } from '../constants/apiconstant';
+import { failedServer } from '../constants/notifyConstant';
 
 interface CompanyState {
     data: any[];
@@ -10,10 +11,14 @@ interface CompanyState {
 
 export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async () => {
     try {
-        const response = await axios.get(GET_COMPANIES_API_URL);
+        const response = await axios.get
+            (
+                GET_COMPANIES_API_URL,
+            
+            );
         return response.data;
-    } catch (error) {
-        console.error(error);
+    } catch (error: any) {
+        failedServer(error.message)
         throw error;
     }
 });
@@ -32,13 +37,13 @@ const companySlice = createSlice({
         builder
             .addCase(fetchCompanyData.pending, (state) => {
                 state.status = 'loading';
-            }) 
+            })
 
             .addCase(fetchCompanyData.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.data = action.payload;
             })
-            
+
             .addCase(fetchCompanyData.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;

@@ -8,8 +8,8 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 import { fetchCompanyData } from '../redux-toolkit/companySlice';
 
-import { userInfo } from '../services/userService'
-import { createCompany, removeCompany, updateCompany } from '../services/companyService'
+import { userInfo } from '../services/userService';
+import { createCompany, removeCompany, updateCompany } from '../services/companyService';
 
 import {
     failedServer,
@@ -48,14 +48,8 @@ const Company: React.FC = () => {
 
     const getUserInfo = async (): Promise<void> => {
         try {
-            const userToken = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
-
-            const res = await userInfo(userToken);
-            setUserId(res.data.id)
+            const res = await userInfo(token);
+            setUserId(res.data.id);
 
             if (res.data.securitystamp !== (localStorage.getItem('securityStamp') || sessionStorage.getItem('securityStamp'))) {
                 localStorage.clear();
@@ -78,11 +72,10 @@ const Company: React.FC = () => {
         }
     };
 
-
     const onFinishAddCompany = async (values: any) => {
         values.creatorId = userId;
         try {
-            const res = await createCompany(values);
+            const res = await createCompany(values, token);
             successAddCompany(res.data.message)
             dispatch(fetchCompanyData());
             setIsAddCompanyModalOpen(false);
@@ -108,7 +101,7 @@ const Company: React.FC = () => {
                 return;
             }
             setselectedRowKeys([]);
-            await Promise.all(selectedRowKeys.map(id => removeCompany(id)));
+            await Promise.all(selectedRowKeys.map(id => removeCompany(id, userId, token)));
             dispatch(fetchCompanyData());
 
         } catch (error: any) {
@@ -135,7 +128,7 @@ const Company: React.FC = () => {
     const onFinishEditCompany = async (values: any) => {
         values.lastUpdaterId = userId;
         try {
-            const res = await updateCompany(selectedRowKeys, values);
+            const res = await updateCompany(selectedRowKeys, values, token);
             successEditCompany(res.data.message);
             dispatch(fetchCompanyData());
             editCompanyForm.resetFields();
@@ -178,7 +171,7 @@ const Company: React.FC = () => {
             ) : (
                 <div className='flex flex-col items-center gap-4'>
 
-                    <span><strong>COMPANIES</strong></span>
+                    <span><strong className='text-2xl'>COMPANIES</strong></span>
 
                     <div className="flex flex-row item-center justify-center mt-10 gap-4">
                         <ArrowLeftOutlined onClick={() => navigate('/home', { state: { token } })} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl mr-4" />

@@ -2,19 +2,12 @@ import React, { FC } from 'react';
 
 import {  useSelector } from 'react-redux';
 
-
 import { Spin, Table, Alert } from 'antd';
 import {  RootState } from '../../store';
-import type { ColumnsType } from 'antd/es/table';
-import type { TableRowSelection } from 'antd/es/table/interface';
 
-interface ProductListProps {
-    search: string;
-    selectedRowKeys: string[];
-    setSelectedRowKeys: (keys: string[]) => void;
-    selectedRows: any[];
-    setSelectedRows: (rows: any[]) => void;
-}
+import type { TableRowSelection } from 'antd/es/table/interface';
+import { productColumns } from './columns';
+import { ProductDataType, ProductListProps } from './types';
 
 const ProductList: FC<ProductListProps> = ({
     search,
@@ -23,14 +16,9 @@ const ProductList: FC<ProductListProps> = ({
     setSelectedRows,
 }) => {
 
-    interface DataType {
-        key: React.Key;
-
-    }
-
-    const rowSelection: TableRowSelection<DataType> = {
+    const rowSelection: TableRowSelection<ProductDataType> = {
         selectedRowKeys,
-        onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+        onChange: (selectedRowKeys: React.Key[], selectedRows: ProductDataType[]) => {
 
             const stringKeys: string[] = selectedRowKeys.map(key => String(key));
 
@@ -39,44 +27,17 @@ const ProductList: FC<ProductListProps> = ({
         },
     };
 
-
-
     const product = useSelector((state: RootState) => state.product.data);
     const status = useSelector((state: RootState) => state.product.status);
 
-
-
-    const columns: ColumnsType<DataType> = [
-        {
-            title: 'Name',
-            dataIndex: 'productName',
-        },
-        {
-            title: 'Category',
-            dataIndex: 'productCategory',
-        },
-        {
-            title: 'Product Amount',
-            dataIndex: 'productAmount',
-        },
-        {
-            title: 'Amount Unit',
-            dataIndex: 'amountUnit',
-        },
-        {
-            title: 'Company',
-            dataIndex: 'company',
-            render: (company) => company?.companyName,
-        },
-    ];
+    
 
     const filteredProducts = product.filter(
         (item: any) =>
             item.productName.includes(search.trim()) ||
             item.productCategory.includes(search.trim()) ||
-            item.productAmount.includes(search.trim()) ||
             item.amountUnit.includes(search.trim()) ||
-            item.company.includes(search.trim()) 
+            item.company.companyName.includes(search.trim()) 
     );
 
     return (
@@ -97,7 +58,7 @@ const ProductList: FC<ProductListProps> = ({
                         ...rowSelection,
                     }}
                     rowKey="_id"
-                    columns={columns}
+                    columns={productColumns}
                     dataSource={filteredProducts}
                 />
             )}

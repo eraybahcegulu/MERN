@@ -10,10 +10,8 @@ import { fetchProductData } from '../redux-toolkit/productSlice';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 
-import { userInfo } from '../services/userService'
-import { failedServer, failedGetUserInfo } from '../constants/notifyConstant'
-
-
+import { userInfo } from '../services/userService';
+import { failedServer, failedGetUserInfo } from '../constants/notifyConstant';
 
 const Home: React.FC = () => {
     const location = useLocation();
@@ -37,13 +35,8 @@ const Home: React.FC = () => {
 
     const getUserInfo = async (): Promise<void> => {
         try {
-            const userToken = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
 
-            const res = await userInfo(userToken);
+            const res = await userInfo(token);
 
             if (res.data.securitystamp !== (localStorage.getItem('securityStamp') || sessionStorage.getItem('securityStamp'))) {
                 localStorage.clear();

@@ -18,9 +18,12 @@
 .ant-result,
 .ant-badge,
 .ant-radio-button-wrapper,
-.ant-popover {
+.ant-popover,
+.ant-steps-item-title,
+.ant-steps-item-description {
   font-family: 'Electrolize', sans-serif;
 }
+
 
 body {
   margin: 0;

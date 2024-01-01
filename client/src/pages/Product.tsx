@@ -11,8 +11,8 @@ import { AppDispatch, RootState } from '../store';
 import { fetchProductData } from '../redux-toolkit/productSlice';
 import { fetchCompanyData } from '../redux-toolkit/companySlice';
 
-import { createProduct, removeProduct, updateProduct } from '../services/productService'
-import { userInfo } from '../services/userService'
+import { createProduct, removeProduct, updateProduct } from '../services/productService';
+import { userInfo } from '../services/userService';
 
 import {
     failedServer,
@@ -22,7 +22,8 @@ import {
     infoDeleteProduct,
     infoEditProduct,
     successEditProduct,
-    errorEditProduct
+    errorEditProduct,
+    notFoundCompany
 } from '../constants/notifyConstant'
 
 const Product: React.FC = () => {
@@ -58,13 +59,7 @@ const Product: React.FC = () => {
 
     const getUserInfo = async (): Promise<void> => {
         try {
-            const userToken = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            };
-
-            const res = await userInfo(userToken);
+            const res = await userInfo(token);
             setUserId(res.data.id)
 
             if (res.data.securitystamp !== (localStorage.getItem('securityStamp') || sessionStorage.getItem('securityStamp'))) {
@@ -88,7 +83,7 @@ const Product: React.FC = () => {
     const onFinishAddProduct = async (values: any) => {
         values.creatorId = userId;
         try {
-            const res = await createProduct(values);
+            const res = await createProduct(values, token);
             successAddProduct(res.data.message)
             dispatch(fetchProductData());
             setIsAddProductModalOpen(false);
@@ -113,12 +108,12 @@ const Product: React.FC = () => {
                 return;
             }
 
-            await Promise.all(selectedRowKeys.map(id => removeProduct(id)));
+            await Promise.all(selectedRowKeys.map(id => removeProduct(id, userId, token)));
             setselectedRowKeys([]);
             dispatch(fetchProductData());
 
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            failedServer(error.message)
         }
     };
 
@@ -134,7 +129,7 @@ const Product: React.FC = () => {
             productCategory: firstSelectedRow.productCategory,
             productAmount: firstSelectedRow.productAmount,
             amountUnit: firstSelectedRow.amountUnit,
-            company: firstSelectedRow.company.companyName,
+            company: firstSelectedRow.company._id,
         });
         setIsEditProductModalOpen(true);
     };
@@ -142,7 +137,7 @@ const Product: React.FC = () => {
     const onFinishEditProduct = async (values: any) => {
         values.lastUpdaterId = userId;
         try {
-            const res = await updateProduct(selectedRowKeys, values);
+            const res = await updateProduct(selectedRowKeys, values, token);
             successEditProduct(res.data.message);
             dispatch(fetchProductData());
             editProductForm.resetFields();
@@ -171,6 +166,14 @@ const Product: React.FC = () => {
         navigate('/');
     };
 
+    const handleOpenAddProductModal = (): void => {
+        setIsAddProductModalOpen(true);
+        if(company.length === 0)
+        {
+            notFoundCompany();
+        }
+    };
+
     return (
         <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
             {failedAuth === true || !(sessionStorage.getItem('token') || localStorage.getItem('token')) ? (
@@ -185,14 +188,14 @@ const Product: React.FC = () => {
             ) : (
                 <div className='flex flex-col items-center gap-4'>
 
-                    <span><strong>PRODUCTS</strong></span>
+                    <span><strong className='text-2xl'>PRODUCTS</strong></span>
 
                     <div className="flex flex-row item-center justify-center mt-10 gap-4">
                         <ArrowLeftOutlined onClick={() => navigate('/home', { state: { token } })} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl mr-4" />
 
                         <Input onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
 
-                        <PlusOutlined onClick={() => setIsAddProductModalOpen(true)} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
+                        <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
 
                         <EditOutlined onClick={isEditProduct} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 transition-all text-2xl" />
 

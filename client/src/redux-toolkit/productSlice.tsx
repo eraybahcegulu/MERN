@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {GET_PRODUCTS_API_URL} from '../constants/apiConstant';
+import { GET_PRODUCTS_API_URL } from '../constants/apiconstant';
+import { failedServer } from '../constants/notifyConstant';
 
 interface ProductState {
     data: any[];
@@ -10,10 +11,14 @@ interface ProductState {
 
 export const fetchProductData = createAsyncThunk('fetchProductData', async () => {
     try {
-        const response = await axios.get(GET_PRODUCTS_API_URL);
+        const response = await axios.get
+            (
+                GET_PRODUCTS_API_URL,
+
+            );
         return response.data;
-    } catch (error) {
-        console.error(error);
+    } catch (error: any) {
+        failedServer(error.message)
         throw error;
     }
 });
@@ -32,13 +37,13 @@ const productSlice = createSlice({
         builder
             .addCase(fetchProductData.pending, (state) => {
                 state.status = 'loading';
-            }) 
+            })
 
             .addCase(fetchProductData.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.data = action.payload;
             })
-            
+
             .addCase(fetchProductData.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;

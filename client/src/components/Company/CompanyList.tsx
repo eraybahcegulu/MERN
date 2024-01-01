@@ -4,16 +4,11 @@ import { useSelector } from 'react-redux';
 
 import { Spin, Table, Alert } from 'antd';
 import { RootState } from '../../store';
-import type { ColumnsType } from 'antd/es/table';
+
 import type { TableRowSelection } from 'antd/es/table/interface';
 
-interface CompanyListProps {
-    search: string;
-    selectedRowKeys: string[];
-    setSelectedRowKeys: (keys: string[]) => void;
-    selectedRows: any[];
-    setSelectedRows: (rows: any[]) => void;
-}
+import { CompanyDataType, CompanyListProps } from './types';
+import { companyColumns } from './columns';
 
 const CompanyList: FC<CompanyListProps> = ({
     search,
@@ -22,17 +17,10 @@ const CompanyList: FC<CompanyListProps> = ({
     setSelectedRows,
 }) => {
 
-    interface DataType {
-        key: React.Key;
-        companyName: string;
-        crn: string;
-        country: string;
-        webSite: string;
-    }
 
-    const rowSelection: TableRowSelection<DataType> = {
+    const rowSelection: TableRowSelection<CompanyDataType> = {
         selectedRowKeys,
-        onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+        onChange: (selectedRowKeys: React.Key[], selectedRows: CompanyDataType[]) => {
 
             const stringKeys: string[] = selectedRowKeys.map(key => String(key));
 
@@ -44,24 +32,7 @@ const CompanyList: FC<CompanyListProps> = ({
     const company = useSelector((state: RootState) => state.company.data);
     const status = useSelector((state: RootState) => state.company.status);
 
-    const columns: ColumnsType<DataType> = [
-        {
-            title: 'Name',
-            dataIndex: 'companyName',
-        },
-        {
-            title: 'CRN',
-            dataIndex: 'crn',
-        },
-        {
-            title: 'Country',
-            dataIndex: 'country',
-        },
-        {
-            title: 'WEB Site',
-            dataIndex: 'webSite',
-        },
-    ];
+
 
     const filteredCompanies = company.filter(
         (item: any) =>
@@ -88,7 +59,7 @@ const CompanyList: FC<CompanyListProps> = ({
                         ...rowSelection,
                     }}
                     rowKey="_id"
-                    columns={columns}
+                    columns={companyColumns}
                     dataSource={filteredCompanies}
                 />
             )}
