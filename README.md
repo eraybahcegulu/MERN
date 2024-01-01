@@ -11,5 +11,6 @@
 ```
 - Security Stamp + JWT Auth
 - Remember My Session
+- Soft Delete
 ```
 
