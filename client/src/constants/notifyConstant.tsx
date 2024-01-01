@@ -1,12 +1,19 @@
-import { message } from 'antd';
+import { message, notification } from 'antd';
 import React from 'react';
 
-const failedServer = (data: any) =>
+
+
+const failedServer = (data: any) => {
     message.open({
         type: 'error',
         content: data,
         duration: 3,
-    });
+    }
+
+    );
+
+}
+
 
 const failedGetUserInfo = (data: any) =>
     message.open({
@@ -143,6 +150,32 @@ const errorEditProduct = (data: any) =>
         duration: 3,
     });
 
+const errorChangePassword = (data: any) =>
+    message.open({
+        type: 'error',
+        content: data,
+        duration: 3,
+    });
+
+const successChangePassword = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
+const notFoundCompany = () => {
+    notification.open({
+        type: 'info',
+        message: (
+            <span>
+                <strong> Company not found. You must add company for new products </strong>
+            </span>
+        ),
+        duration: 3,
+    });
+};
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -160,5 +193,8 @@ export {
     infoDeleteProduct,
     infoEditProduct,
     successEditProduct,
-    errorEditProduct
+    errorEditProduct,
+    errorChangePassword,
+    successChangePassword,
+    notFoundCompany
 };

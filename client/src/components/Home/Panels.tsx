@@ -1,62 +1,159 @@
 import React from 'react';
-import { Alert, Card, Divider, Spin } from 'antd'
-import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
+import { Alert, Card, Divider, Popover, Spin, Steps } from 'antd'
+import { HomeOutlined, InboxOutlined, InfoCircleOutlined, OrderedListOutlined, SwapRightOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 
 const Panels = () => {
+
     const product = useSelector((state: RootState) => state.product.data);
+    const lastAddedThreeProduct = product.slice(-3);
+    const productStepsData = lastAddedThreeProduct.map((product) => ({
+        title:
+            <span className='text-md'>{product.productName}
+                <Popover placement="right"
+                    content={
+                        <div className='flex flex-col gap-2 text-xs'>
+                            <span className='text-xs '> <strong>Company</strong>  <SwapRightOutlined /> {product.company.companyName} </span>
+                            <span className='text-xs '> <strong>Product Category</strong>  <SwapRightOutlined /> {product.productCategory} </span>
+                            <span className='text-xs '> <strong>Product Amount</strong>  <SwapRightOutlined /> {product.productAmount} </span>
+                            <span className='text-xs '> <strong>Amount Unit</strong>  <SwapRightOutlined /> {product.amountUnit} </span>
+                        </div>
+                    }
+                >
+
+                    <InfoCircleOutlined className='text-md ml-1' />
+                </Popover>
+            </span>
+    }));
+
     const company = useSelector((state: RootState) => state.company.data);
+    const lastAddedThreeCompanies = company.slice(-3);
+    const companyStepsData = lastAddedThreeCompanies.map((company) => ({
+        title: 
+        <span className='text-md'>{company.companyName}
+        <Popover placement="right"
+            content={
+                <div className='flex flex-col gap-2 text-xs'>
+                    <span className='text-xs '> <strong>Company Registration Number</strong>  <SwapRightOutlined /> {company.crn} </span>
+                    <span className='text-xs '> <strong>Incorporation Country</strong>  <SwapRightOutlined /> {company.country} </span>
+                    <span className='text-xs '> <strong>WEB Site</strong>  <SwapRightOutlined /> {company.webSite} </span>
+                </div>
+            }
+        >
+
+            <InfoCircleOutlined className='text-md ml-1' />
+        </Popover>
+    </span>
+
+    }));
 
     const productStatus = useSelector((state: RootState) => state.product.status);
+
     const companyStatus = useSelector((state: RootState) => state.company.status);
 
+
     return (
-        <div className='w-[80vw] flex flex-wrap items-center justify-center gap-4'>
+        <div className='w-[80vw] flex flex-col items-center justify-center gap-4'>
 
-            <Card >
-                <div className='flex flex-row items-center gap-2'>
-                    <HomeOutlined className='text-6xl' />
-                    <Divider type="vertical" className='h-16' />
-                    <div className='flex flex-col gap-2 '>
-                        <span className='text-xl'>TOTAL COMPANY</span>
-                        <span className='text-2xl'>
-                            <strong>
-                                {companyStatus === 'loading' && <div> <Spin size="large" /> </div>}
-                                {companyStatus === 'succeeded' &&
-                                    (
-                                        <span>{company.length}</span>
-                                    )}
-                                {companyStatus === 'failed' &&
-                                    <Alert message="Error" type="error" />}
-                            </strong>
-                        </span>
+            <div className="grid grid-cols-2 gap-4">
+                <Card className='bg-red-400'>
+                    <div className='flex flex-row items-center gap-2'>
+                        <HomeOutlined className='text-6xl' />
+                        <Divider type="vertical" className='h-16' />
+                        <div className='flex flex-col gap-2 '>
+                            <span className='text-md'>TOTAL COMPANY</span>
+                            <span className='text-2xl'>
+                                <strong>
+                                    {companyStatus === 'loading' && <div> <Spin size="large" /> </div>}
+                                    {companyStatus === 'succeeded' &&
+                                        (
+                                            <span>{company.length}</span>
+
+                                        )}
+                                    {companyStatus === 'failed' &&
+                                        <Alert message="Error" type="error" />}
+                                </strong>
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </Card>
-
-            <Card>
-                <div className='flex flex-row items-center gap-2'>
-                    <InboxOutlined className='text-6xl' />
-                    <Divider type="vertical" className='h-16' />
-                    <div className='flex flex-col gap-2 '>
-                        <span className='text-xl'>TOTAL PRODUCTS</span>
-                        <span className='text-2xl'>
-                            <strong>
-                                {productStatus === 'loading' && <div> <Spin size="large" /> </div>}
-                                {productStatus === 'succeeded' &&
-                                    (
-                                        <span>{product.length}</span>
-                                    )}
-                                {productStatus === 'failed' &&
-                                    <Alert message="Error" type="error" />}
-                            </strong>
-                        </span>
+                </Card>
+                <Card className='bg-violet-300'>
+                    <div className='flex flex-row items-center gap-2'>
+                        <InboxOutlined className='text-6xl' />
+                        <Divider type="vertical" className='h-16' />
+                        <div className='flex flex-col gap-2 '>
+                            <span className='text-md'>TOTAL PRODUCT</span>
+                            <span className='text-2xl'>
+                                <strong>
+                                    {productStatus === 'loading' && <div> <Spin size="large" /> </div>}
+                                    {productStatus === 'succeeded' &&
+                                        (
+                                            <span>{product.length}</span>
+                                        )}
+                                    {productStatus === 'failed' &&
+                                        <Alert message="Error" type="error" />}
+                                </strong>
+                            </span>
+                        </div>
                     </div>
-                </div>
 
-            </Card>
+                </Card>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+                <Card className='bg-orange-200 flex flex-col items-center justify-center text-center'>
+                    <div className='flex flex-row items-center justify-center gap-4'>
+                        <OrderedListOutlined className='text-6xl' />
+                        <HomeOutlined className='text-6xl' />
+                    </div>
+                    <Divider />
+                    <div className='flex flex-col items-center gap-2 '>
+                        <span className='text-xl '>LAST ADDED 3 COMPANIES</span>
+                        {
+                            (companyStepsData.length === 0)
+                            &&
+                            <span>TOTAL COMPANY 0</span>
+                        }
+                        <span>  </span>
+                        <Steps
+                            className='flex flex-row items-start'
+                            progressDot
+                            direction="vertical"
+                            current={0}
+                            items={companyStepsData.reverse()}
+                        />
+                    </div>
+                </Card>
+                <Card className='bg-sky-300 flex flex-col items-center justify-center text-center'>
+                    <div className='flex flex-row items-center justify-center gap-4'>
+                        <OrderedListOutlined className='text-6xl' />
+                        <InboxOutlined className='text-6xl' />
+                    </div>
+
+                    <Divider />
+                    <div className='flex flex-col items-center gap-2 '>
+                        <span className='text-xl '>LAST ADDED 3 PRODUCTS</span>
+                        {
+                            (productStepsData.length === 0)
+                            &&
+                            <span>TOTAL PRODUCT 0</span>
+                        }
+                        <Steps
+                            className='flex flex-row items-start '
+                            progressDot
+                            direction="vertical"
+                            current={0}
+                            items={productStepsData.reverse()}
+                        />
+                    </div>
+                </Card>
+            </div>
+
+
         </div>
+
+
     )
 }
 
