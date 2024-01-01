@@ -1,5 +1,5 @@
 import React from 'react';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 
 interface RegisterFormProps {
@@ -21,6 +21,13 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
                 rules={[{ required: true, message: 'Please input your Username!' }]}
             >
                 <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+            </Form.Item>
+
+            <Form.Item
+                name="email"
+                rules={[{ type: 'email', required: true, message: 'Please input your Email!' }]}
+            >
+                <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
             </Form.Item>
 
             <Form.Item
@@ -66,7 +73,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
 
             <div className='flex flex-row gap-2 mt-auto'>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="register-form-button">
+                    <Button type="primary" htmlType="submit" className="register-form-button hover:scale-105 transition duration-700">
                         Register
                     </Button>
                 </Form.Item>

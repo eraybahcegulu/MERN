@@ -19,10 +19,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
             initialValues={{ remember: true }}
         >
             <Form.Item
-                name="userName"
-                rules={[{ required: true, message: 'Please input your Username!' }]}
+                name="userNameEmail"
+                rules={[{ required: true, message: 'Please input your Username or Email!' }]}
             >
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username or Email" />
             </Form.Item>
             <Form.Item
                 name="password"
@@ -45,7 +45,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
                     }
                 >
 
-                    <InfoCircleOutlined className='text-md' />
+                    <InfoCircleOutlined className='text-md hover:scale-125 transition-all' />
                 </Popover>
                 <span>Remember Me</span>
                 {
@@ -61,12 +61,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
 
             <div className='flex flex-row gap-2 mt-4'>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
+                    <Button type="primary" htmlType="submit" className="login-form-button hover:scale-105 transition duration-700">
                         Log in
                     </Button>
                 </Form.Item>
 
-                <Button type="primary" ghost onClick={() => setisRegisterModalOpen(true)}>
+                <Button className='hover:scale-105 transition duration-700' type="primary" ghost onClick={() => setisRegisterModalOpen(true)}>
                     Register
                 </Button>
             </div>

@@ -19,6 +19,7 @@ const Home: React.FC = () => {
     const [failedAuth, setFailedAuth] = useState<boolean>(false);
     const [userInfoLoading, setUserInfoLoading] = useState<boolean>(true);
 
+    const [email, setEmail] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
     const [userId, setUserId] = useState<string>('');
     const [securityStamp, setsecurityStamp] = useState<string>('');
@@ -44,6 +45,7 @@ const Home: React.FC = () => {
                 return setFailedAuth(true);
             }
 
+            setEmail(res.data.email);
             setUserName(res.data.userName);
             setUserId(res.data.id);
             setsecurityStamp(res.data.securitystamp);
@@ -82,6 +84,7 @@ const Home: React.FC = () => {
                 <div className='flex flex-col items-center gap-4'>
                     <UserInfo
                         token={token}
+                        email={email}
                         userName={userName}
                         userId={userId}
                         securityStamp={securityStamp}

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
 function token(user) {
-    return jwt.sign({ userId: user._id, userName: user.userName, userRole: user.userRole }, process.env.JWT_SECRET);
+    return jwt.sign({ userId: user._id, userName: user.userName, email: user.email, userRole: user.userRole }, process.env.JWT_SECRET);
 }
 
 function securityStamp() {

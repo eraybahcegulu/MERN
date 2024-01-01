@@ -7,16 +7,21 @@ const bcrypt = require('bcrypt');
 
 const register = async (req, res) => {
     try {
-        const existingUserControl = await User.findOne({ userName: req.body.userName });
-
-        if (existingUserControl) {
+        const existingUserNameControl = await User.findOne({ userName: req.body.userName });
+        if (existingUserNameControl) {
             return res.status(400).json({ message: "This User Name is already registered" })
+        }
+
+        const existingEmailControl = await User.findOne({ email: req.body.email });
+        if (existingEmailControl) {
+            return res.status(400).json({ message: "This Email is already registered" })
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
         const newUser = new User({
             userName: req.body.userName,
+            email: req.body.email,
             password: hashedPassword,
         });
 
@@ -29,9 +34,9 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    const { userName, password } = req.body;
+    const { userNameEmail, password } = req.body;
     try {
-        const user = await User.findOne({ userName });
+        const user = await User.findOne({ $or: [{ userName: userNameEmail }, { email: userNameEmail }] });
 
         if (user) {
             const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -61,17 +66,18 @@ const userInfo = async (req, res) => {
             return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
         }
 
-        const userName = decodedToken.userName;
         const id = decodedToken.userId;
+        const userName = decodedToken.userName;
+        const email = decodedToken.email;
         const userRole = decodedToken.userRole;
         const securitystamp = user.securityStamp;
 
         return res.json({
-            userName,
             id,
+            userName,
+            email,
             userRole,
             securitystamp,
-
         });
 
     } catch (error) {
