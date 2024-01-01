@@ -34,10 +34,10 @@ const ProductList: FC<ProductListProps> = ({
 
     const filteredProducts = product.filter(
         (item: any) =>
-            item.productName.includes(search.trim()) ||
-            item.productCategory.includes(search.trim()) ||
-            item.amountUnit.includes(search.trim()) ||
-            item.company.companyName.includes(search.trim()) 
+            item.productName.toLowerCase().includes(search.trim()) ||
+            item.productCategory.toLowerCase().includes(search.trim()) ||
+            item.amountUnit.toLowerCase().includes(search.trim()) ||
+            item.company.companyName.toLowerCase().includes(search.trim()) 
     );
 
     return (
@@ -52,7 +52,7 @@ const ProductList: FC<ProductListProps> = ({
             {status === 'succeeded' && filteredProducts.length > 0 && (
                 <Table
                     scroll={{ y: 400 }}
-                    className="md:max-w-[750px] max-w-[470px]"
+                    className="max-w-[475px] md:max-w-[750px] xl:max-w-[1200px]"
                     rowSelection={{
                         type: 'checkbox',
                         ...rowSelection,

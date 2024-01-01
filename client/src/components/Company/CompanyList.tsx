@@ -36,9 +36,10 @@ const CompanyList: FC<CompanyListProps> = ({
 
     const filteredCompanies = company.filter(
         (item: any) =>
-            item.companyName.includes(search.trim()) ||
-            item.crn.includes(search.trim()) ||
-            item.country.includes(search.trim())
+            item.companyName.toLowerCase().includes(search.trim()) ||
+            item.crn.toLowerCase().includes(search.trim()) ||
+            item.country.toLowerCase().includes(search.trim()) ||
+            item.webSite.toLowerCase().includes(search.trim())
     );
 
     return (
@@ -53,7 +54,7 @@ const CompanyList: FC<CompanyListProps> = ({
             {status === 'succeeded' && filteredCompanies.length > 0 && (
                 <Table
                     scroll={{ y: 400 }}
-                    className="md:max-w-[750px] max-w-[450px]"
+                    className="max-w-[475px] md:max-w-[750px] xl:max-w-[1200px]"
                     rowSelection={{
                         type: 'checkbox',
                         ...rowSelection,
