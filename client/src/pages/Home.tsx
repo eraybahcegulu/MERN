@@ -44,7 +44,7 @@ const Home: React.FC = () => {
         dispatch(fetchCompanyData());
         dispatch(fetchProductData());
  //
-    },[dispatch]);
+    },);
 
     const getUserInfo = async (): Promise<void> => {
         try {

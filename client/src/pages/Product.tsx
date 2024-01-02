@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 
 import { fetchProductData } from '../redux-toolkit/productSlice';
-import { fetchCompanyData } from '../redux-toolkit/companySlice';
+
 
 import { createProduct, removeProduct, updateProduct } from '../services/productService';
 import { userInfo } from '../services/userService';
@@ -58,9 +58,8 @@ const Product: React.FC = () => {
 
     useEffect(() => {
         getUserInfo();
-        dispatch(fetchCompanyData());
-        dispatch(fetchProductData());
-    }, [dispatch]);
+
+    }, );
 
     const getUserInfo = async (): Promise<void> => {
         try {

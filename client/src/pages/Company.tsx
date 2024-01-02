@@ -49,9 +49,8 @@ const Company: React.FC = () => {
     const company = useSelector((state: RootState) => state.company.data);
 
     useEffect(() => {
-        dispatch(fetchCompanyData());
         getUserInfo();
-    }, [dispatch]);
+    }, );
 
     const getUserInfo = async (): Promise<void> => {
         try {
