@@ -18,7 +18,7 @@ const getAllProducts = async (req, res) => {
 
 const addProduct = async (req, res) => {
     try {
-        const existingProductNameControl = await Product.findOne({ productName: req.body.productName, status: Status.ACTIVE, company: req.body.company });
+        const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: Status.ACTIVE, company: req.body.company.trim() });
         if (existingProductNameControl) {
             req.body.productAmount = Number(req.body.productAmount);
             existingProductNameControl.productAmount += req.body.productAmount;
@@ -56,7 +56,7 @@ const deleteProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
     const id = req.params.id;
     try {
-        const existingProductNameControl = await Product.findOne({ productName: req.body.productName, status: Status.ACTIVE, company: req.body.company, _id: { $ne: id } });
+        const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: Status.ACTIVE, company: req.body.company.trim(), _id: { $ne: id } });
         if (existingProductNameControl) {
             return res.status(400).json({ message: "Failed. This Product Name is already registered for this Company" });
         }
