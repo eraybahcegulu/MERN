@@ -43,7 +43,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     useEffect(() => {
         rememberMe();
-    }, );
+    }, []);
 
     return (
         <UserContext.Provider
