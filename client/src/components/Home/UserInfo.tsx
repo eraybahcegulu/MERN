@@ -13,6 +13,7 @@ interface UserInfoProps {
     userId: string;
     securityStamp: string;
     userInfoLoading: boolean;
+    //user: any; //if userContext use 
 }
 
 const UserInfo: React.FC<UserInfoProps> = ({
@@ -21,6 +22,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
     userName,
     email,
     userInfoLoading,
+    //user, //if userContext use 
 
 }) => {
 
@@ -72,6 +74,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
                         <div className='flex flex-col items-center'>
                             <span> WELCOME {userName} </span>
                             <span> {email} </span>
+                            {/* if userContext use <span> {user.userName}</span>*/} 
                         </div>
 
                         <div>

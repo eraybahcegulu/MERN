@@ -13,6 +13,8 @@ import { AppDispatch } from '../store';
 import { userInfo } from '../services/userService';
 import { failedServer, failedGetUserInfo } from '../constants/notifyConstant';
 
+//import { useUserData } from "../contexts/userContext"; //if userContext use
+
 const Home: React.FC = () => {
     const location = useLocation();
     const token = location.state?.token?.toString() || localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -28,10 +30,20 @@ const Home: React.FC = () => {
 
     const dispatch = useDispatch<AppDispatch>();
 
+
+    //const { user, getUser } = useUserData();  //if userContext use
+
+    
+
     useEffect(() => {
+        /* if userContext use
+        getUser();
+        console.log(user);
+        */ 
         getUserInfo();
         dispatch(fetchCompanyData());
         dispatch(fetchProductData());
+ //
     },[dispatch]);
 
     const getUserInfo = async (): Promise<void> => {
@@ -89,6 +101,7 @@ const Home: React.FC = () => {
                         userId={userId}
                         securityStamp={securityStamp}
                         userInfoLoading={userInfoLoading}
+                        //user={user} //if userContext use
                     />
 
                     <Panels />
