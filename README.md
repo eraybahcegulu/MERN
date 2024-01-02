@@ -9,7 +9,7 @@
 ```
 
 ```
-- Security Stamp + JWT Auth
+- JWT Auth
 - Remember My Session
 - Soft Delete
 ```
