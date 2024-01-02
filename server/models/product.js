@@ -14,7 +14,7 @@ const ProductSchema = mongoose.Schema(
         },
 
         productAmount: {
-            type: String,
+            type: Number,
             required: true,
         },
         amountUnit: {
