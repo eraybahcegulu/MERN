@@ -9,6 +9,8 @@ import LoginForm from '../components/Login/LoginForm';
 import { register, login } from '../services/userService';
 import { successRegister, errorRegister, invalidLogin } from '../constants/notifyConstant/notifyUser'
 
+import { useUserData } from "../contexts/userContext";
+
 interface LoginProps { }
 
 const Login: React.FC<LoginProps> = () => {
@@ -18,6 +20,8 @@ const Login: React.FC<LoginProps> = () => {
   const navigate = useNavigate();
 
   const token = localStorage.getItem('token');
+
+  const { getUser } = useUserData();
 
   const onFinishRegister = async (values: any) => {
     try {
@@ -49,8 +53,9 @@ const Login: React.FC<LoginProps> = () => {
         sessionStorage.setItem('token', token);
         sessionStorage.setItem('securityStamp', securityStamp);
       }
+      await getUser(token);
+      navigate(`/home`,)
 
-      navigate(`/home`, { state: { token } });
     } catch (error: any) {
       if (error.response && error.response.status === 400) {
         invalidLogin(error.response.data.message)
@@ -78,7 +83,7 @@ const Login: React.FC<LoginProps> = () => {
             <p className='text-2xl'>Open session found</p>
             <div className='flex gap-5'>
               <ArrowRightOutlined
-                onClick={() => navigate('/home', { state: { token } })}
+                onClick={() => navigate('/home')}
                 className='text-5xl hover:scale-125 cursor-pointer text-blue-500 hover:text-blue-400 transition-all'
               />
               <LogoutOutlined

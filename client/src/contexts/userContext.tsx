@@ -1,38 +1,31 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
-
-import {GET_USER_INFO_API_URL} from '../constants/apiConstant/apiUser';
+import { userInfo } from '../services/userService';
 
 interface UserProviderProps {
     children: ReactNode;
 }
 
 interface User {
-    userName: string;
+
 }
 
 interface UserContextType {
     user: User[];
-    getUser: () => Promise<void>;
+    getUser: (token: any) => Promise<void>;
 }
-const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
 const UserContext = createContext<UserContextType | any>(null);
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User[]>([]);
 
-    const fetchUserData = async (url: any, token: any, setData: any) => {
+    const fetchUserData = async (token: string ) => {
         try {
-            const response = await axios.post(url,
-
-                {
-                    headers: {
-                        authorization: `Bearer ${token}`,
-                    }
-                }
-
-            );
-            setData(response.data);
+            const response = await userInfo(token);
+            token = response.data.token;
+            console.log(response.data)
+            setUser(response.data);
         } catch (error: any) {
             console.error("Error User Data:", error);
             if (axios.isAxiosError(error) && error.response) {
@@ -41,15 +34,22 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
     };
 
+    const rememberMe = () => {
+        const rememberMeToken = localStorage.getItem('token')|| sessionStorage.getItem('token');
+        if (rememberMeToken) {
+            fetchUserData(rememberMeToken);
+        }
+    };
+
     useEffect(() => {
-        fetchUserData(GET_USER_INFO_API_URL, token, setUser);
-    }, []);
+        rememberMe();
+    }, );
 
     return (
         <UserContext.Provider
             value={{
                 user,
-                getUser: () => fetchUserData(GET_USER_INFO_API_URL, token, setUser),
+                getUser: (token: any) => fetchUserData(token),
             }}
         >
             {children}

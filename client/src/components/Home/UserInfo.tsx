@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Spin, Card, Radio, Modal, Form, Button, Input } from 'antd';
+import { Card, Radio, Modal, Form, Button, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { ArrowDownOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 
@@ -7,22 +7,12 @@ import { changePassword } from '../../services/userService';
 import { errorChangePassword, successChangePassword, failedServer } from '../../constants/notifyConstant/notifyUser';
 
 interface UserInfoProps {
-    token: string;
-    email: string;
-    userName: string;
-    userId: string;
-    securityStamp: string;
-    userInfoLoading: boolean;
-    //user: any; //if userContext use 
+    user: any;
 }
 
 const UserInfo: React.FC<UserInfoProps> = ({
-    token,
-    userId,
-    userName,
-    email,
-    userInfoLoading,
-    //user, //if userContext use 
+
+    user,
 
 }) => {
 
@@ -38,7 +28,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
                     <span>Current password and new password cannot be the same</span>
                 );
             }
-            const res = await changePassword(userId, values, token);
+            const res = await changePassword(user.userId, values, user.token);
             successChangePassword(res.data.message);
             setIsChangePasswordModalOpen(false);
             setTimeout(() => {
@@ -68,13 +58,11 @@ const UserInfo: React.FC<UserInfoProps> = ({
                 className='min-w-[300px] min-h-[150px]'
                 title=
                 {
-
-                    !userInfoLoading &&
                     <div className='flex flex-col items-center p-2 gap-2'>
                         <div className='flex flex-col items-center'>
-                            <span> WELCOME {userName} </span>
-                            <span> {email} </span>
-                            {/* if userContext use <span> {user.userName}</span>*/} 
+                            <span> WELCOME {user.userName} </span>
+                            <span> {user.email} </span>
+                            <span> {user.userName}</span>
                         </div>
 
                         <div>
@@ -90,20 +78,14 @@ const UserInfo: React.FC<UserInfoProps> = ({
             >
                 <div className='flex flex-col items-center justify-center'>
                     {
-                        userInfoLoading
-                            ?
-                            (
-                                <Spin size="large" />
-                            )
-                            :
-                            (
-                                <Radio.Group>
-                                    <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/companies', { state: { token } })} value="large">
-                                        Companies
-                                    </Radio.Button>
-                                    <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/products', { state: { token } })} value="default">Products</Radio.Button>
-                                </Radio.Group>
-                            )
+
+                        <Radio.Group>
+                            <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/companies')} value="large">
+                                Companies
+                            </Radio.Button>
+                            <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/products')} value="default">Products</Radio.Button>
+                        </Radio.Group>
+
                     }
                 </div>
             </Card>

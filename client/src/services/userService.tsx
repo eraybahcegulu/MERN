@@ -16,7 +16,7 @@ const userInfo = async (token: any) => {
 
             {
                 headers: {
-                    authorization: `Bearer ${token}`,
+                    authorization: `${token}`,
                 }
             }
         )
@@ -31,7 +31,7 @@ const changePassword = async (id: any, data: any, token: any) => {
 
             {
                 headers: {
-                    authorization: `Bearer ${token}`,
+                    authorization: `${token}`,
                 }
             }
         )

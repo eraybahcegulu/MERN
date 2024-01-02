@@ -58,7 +58,8 @@ const login = async (req, res) => {
 
 const userInfo = async (req, res) => {
     try {
-        const token = req.body.headers.authorization.split(' ')[1];
+        console.log(req.body.headers);
+        const token = req.body.headers.authorization;
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
         const user = await User.findById(decodedToken.userId);
@@ -66,18 +67,19 @@ const userInfo = async (req, res) => {
             return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
         }
 
-        const id = decodedToken.userId;
+        const userId = decodedToken.userId;
         const userName = decodedToken.userName;
         const email = decodedToken.email;
         const userRole = decodedToken.userRole;
-        const securitystamp = user.securityStamp;
+        const securityStamp = user.securityStamp;
 
         return res.json({
-            id,
+            userId,
             userName,
             email,
             userRole,
-            securitystamp,
+            securityStamp,
+            token
         });
 
     } catch (error) {

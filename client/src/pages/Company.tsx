@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Result } from 'antd';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import CompanyList from '../components/Company/CompanyList';
 
@@ -11,10 +11,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 import { fetchCompanyData } from '../redux-toolkit/companySlice';
 
-import { userInfo } from '../services/userService';
 import { createCompany, removeCompany, updateCompany } from '../services/companyService';
 
-import { failedGetUserInfo, failedServer } from '../constants/notifyConstant/notifyUser';
+import { failedServer } from '../constants/notifyConstant/notifyUser';
 import {
     successAddCompany,
     errorAddCompany,
@@ -24,6 +23,8 @@ import {
     successEditCompany,
     errorEditCompany
 } from '../constants/notifyConstant/notifyCompany';
+
+import { useUserData } from "../contexts/userContext";
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -36,50 +37,23 @@ const Company: React.FC = () => {
     const [isAddCompanyModalOpen, setIsAddCompanyModalOpen] = useState<boolean>(false);
     const [isEditCompanyModalOpen, setIsEditCompanyModalOpen] = useState<boolean>(false);
 
-    const location = useLocation();
-    const token = location.state?.token?.toString() || localStorage.getItem('token');
-    const [failedAuth, setFailedAuth] = useState<boolean>(false);
-    const [userId, setUserId] = useState<String>('');
+
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
     const company = useSelector((state: RootState) => state.company.data);
 
+    const { user } = useUserData();
+
     useEffect(() => {
-        getUserInfo();
-    },);
-
-    const getUserInfo = async (): Promise<void> => {
-        try {
-            const res = await userInfo(token);
-            setUserId(res.data.id);
-
-            if (res.data.securitystamp !== (localStorage.getItem('securityStamp') || sessionStorage.getItem('securityStamp'))) {
-                localStorage.clear();
-                sessionStorage.clear();
-                return setFailedAuth(true);
-            }
-
-
-        } catch (error: any) {
-            if (error.response && error.response.status === 404) {
-                failedGetUserInfo(error.response.data.message)
-                sessionStorage.clear();
-                localStorage.clear();
-                return setFailedAuth(true);
-            } else {
-                failedServer(error.message)
-            }
-
-            console.error(error);
-        }
-    };
+        dispatch(fetchCompanyData());
+    }, []);
 
     const onFinishAddCompany = async (values: any) => {
-        values.creatorId = userId;
+        values.creatorId = user.userId;
         try {
-            const res = await createCompany(values, token);
+            const res = await createCompany(values, user.token);
             successAddCompany(res.data.message)
             dispatch(fetchCompanyData());
             setIsAddCompanyModalOpen(false);
@@ -105,7 +79,7 @@ const Company: React.FC = () => {
                 return;
             }
 
-            const res = await Promise.all(selectedRowKeys.map(id => removeCompany(id, userId, token)));
+            const res = await Promise.all(selectedRowKeys.map(id => removeCompany(id, user.userId, user.token)));
             const messages = res.map(res => res.data.message);
 
             messages.forEach(message => {
@@ -139,9 +113,9 @@ const Company: React.FC = () => {
     };
 
     const onFinishEditCompany = async (values: any) => {
-        values.lastUpdaterId = userId;
+        values.lastUpdaterId = user.userId;
         try {
-            const res = await updateCompany(selectedRowKeys, values, token);
+            const res = await updateCompany(selectedRowKeys, values, user.token);
             successEditCompany(res.data.message);
             dispatch(fetchCompanyData());
             editCompanyForm.resetFields();
@@ -172,7 +146,7 @@ const Company: React.FC = () => {
 
     return (
         <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
-            {failedAuth === true || !(sessionStorage.getItem('token') || localStorage.getItem('token')) ? (
+            {!(sessionStorage.getItem('token') || localStorage.getItem('token')) ? (
                 <>
                     <Result
                         status="403"
@@ -187,7 +161,7 @@ const Company: React.FC = () => {
                     <span><strong className='text-2xl'>COMPANIES</strong></span>
 
                     <div className="flex flex-row item-center justify-center mt-10 gap-4">
-                        <ArrowLeftOutlined onClick={() => navigate('/home', { state: { token } })} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl mr-4" />
+                        <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl mr-4" />
 
                         <Input onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
 

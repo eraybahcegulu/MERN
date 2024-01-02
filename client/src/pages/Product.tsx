@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Result, Select } from 'antd';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import ProductList from '../components/Product/ProductList';
 
@@ -9,12 +9,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 
 import { fetchProductData } from '../redux-toolkit/productSlice';
-
+import { fetchCompanyData } from '../redux-toolkit/companySlice';
 
 import { createProduct, removeProduct, updateProduct } from '../services/productService';
-import { userInfo } from '../services/userService';
 
-import { failedGetUserInfo, failedServer } from '../constants/notifyConstant/notifyUser';
+
+import { failedServer } from '../constants/notifyConstant/notifyUser';
 import {
     successAddProduct,
     errorAddProduct,
@@ -29,6 +29,8 @@ import {
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { useUserData } from "../contexts/userContext";
+
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
     const [selectedRowKeys, setselectedRowKeys] = useState<string[]>([]);
@@ -39,11 +41,6 @@ const Product: React.FC = () => {
 
     const [isAddProductModalOpen, setIsAddProductModalOpen] = useState<boolean>(false);
     const [isEditProductModalOpen, setIsEditProductModalOpen] = useState<boolean>(false);
-
-    const location = useLocation();
-    const token = location.state?.token?.toString() || localStorage.getItem('token');
-    const [failedAuth, setFailedAuth] = useState<boolean>(false);
-    const [userId, setUserId] = useState<String>('');
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -56,38 +53,19 @@ const Product: React.FC = () => {
         label: company.companyName,
     }));
 
+    const { user } = useUserData();
+
     useEffect(() => {
-        getUserInfo();
+        dispatch(fetchCompanyData());
+        dispatch(fetchProductData());
+    }, []);
 
-    }, );
 
-    const getUserInfo = async (): Promise<void> => {
-        try {
-            const res = await userInfo(token);
-            setUserId(res.data.id)
-
-            if (res.data.securitystamp !== (localStorage.getItem('securityStamp') || sessionStorage.getItem('securityStamp'))) {
-                localStorage.clear();
-                sessionStorage.clear();
-                return setFailedAuth(true);
-            }
-
-        } catch (error: any) {
-            if (error.response && error.response.status === 404) {
-                failedGetUserInfo(error.response.data.message)
-                sessionStorage.clear();
-                localStorage.clear();
-                return setFailedAuth(true);
-            } else {
-                failedServer(error.message)
-            }
-        }
-    };
 
     const onFinishAddProduct = async (values: any) => {
-        values.creatorId = userId;
+        values.creatorId = user.userId;
         try {
-            const res = await createProduct(values, token);
+            const res = await createProduct(values, user.token);
             successAddProduct(res.data.message)
             dispatch(fetchProductData());
             setIsAddProductModalOpen(false);
@@ -112,19 +90,19 @@ const Product: React.FC = () => {
                 return;
             }
 
-            const res = await Promise.all(selectedRowKeys.map(id => removeProduct(id, userId, token)));
+            const res = await Promise.all(selectedRowKeys.map(id => removeProduct(id, user.userId, user.token)));
 
             if (res.length > 1) {
                 successDeleteProduct(
                     <span>
-                    {res.length} products deleted successfully
+                        {res.length} products deleted successfully
                     </span>
                 );
             }
             if (res.length === 1) {
                 successDeleteProduct(
                     <span>
-                    Product deleted successfully
+                        Product deleted successfully
                     </span>
                 );
             }
@@ -155,9 +133,9 @@ const Product: React.FC = () => {
     };
 
     const onFinishEditProduct = async (values: any) => {
-        values.lastUpdaterId = userId;
+        values.lastUpdaterId = user.userId;
         try {
-            const res = await updateProduct(selectedRowKeys, values, token);
+            const res = await updateProduct(selectedRowKeys, values, user.token);
             successEditProduct(res.data.message);
             dispatch(fetchProductData());
             editProductForm.resetFields();
@@ -188,15 +166,14 @@ const Product: React.FC = () => {
 
     const handleOpenAddProductModal = (): void => {
         setIsAddProductModalOpen(true);
-        if(company.length === 0)
-        {
+        if (company.length === 0) {
             notFoundCompany();
         }
     };
 
     return (
         <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
-            {failedAuth === true || !(sessionStorage.getItem('token') || localStorage.getItem('token')) ? (
+            {!(sessionStorage.getItem('token') || localStorage.getItem('token')) ? (
                 <>
                     <Result
                         status="403"
@@ -207,20 +184,19 @@ const Product: React.FC = () => {
                 </>
             ) : (
                 <div className='flex flex-col items-center gap-4'>
-
                     <span><strong className='text-2xl'>PRODUCTS</strong></span>
 
                     <div className="flex flex-row item-center justify-center mt-10 gap-4">
-                        <ArrowLeftOutlined onClick={() => navigate('/home', { state: { token } })} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl mr-4" />
+                        <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl mr-4" />
 
                         <Input onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
 
                         {
                             product.length === 0
-                            ?
-                            <FontAwesomeIcon onClick={() => setIsAddProductModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
-                            :
-                            <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
+                                ?
+                                <FontAwesomeIcon onClick={() => setIsAddProductModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
+                                :
+                                <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
                         }
 
 
@@ -276,7 +252,11 @@ const Product: React.FC = () => {
                                 name="productAmount"
                                 label="Product Amount"
                                 rules={[{ required: true, message: "Product Amount required" },
-                                { max: 40, message: "Max. 40 characters." }
+                                { max: 40, message: "Max. 40 characters." },
+                                {
+                                    pattern: /^[0-9]+$/,
+                                    message: "Only number for Product Amount",
+                                },
                                 ]}
                             >
                                 <Input style={{ borderRadius: "0" }} size="large" />

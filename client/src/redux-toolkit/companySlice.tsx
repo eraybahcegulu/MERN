@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+
 import { failedServer } from '../constants/notifyConstant/notifyCompany';
-import { GET_COMPANIES_API_URL } from '../constants/apiConstant/apiCompany';
+
+import { getCompanies} from '../services/companyService'
 
 interface CompanyState {
     data: any[];
@@ -11,17 +12,16 @@ interface CompanyState {
 
 export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async () => {
     try {
-        const response = await axios.get
-            (
-                GET_COMPANIES_API_URL,
-            
-            );
+        const response = await getCompanies();
         return response.data;
     } catch (error: any) {
         failedServer(error.message)
         throw error;
     }
 });
+
+
+
 
 const initialState: CompanyState = {
     data: [],

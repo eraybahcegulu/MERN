@@ -1,5 +1,12 @@
 import axios from "axios";
-import { ADD_COMPANY_API_URL, DELETE_COMPANY_API_URL, UPDATE_COMPANY_API_URL } from '../constants/apiConstant/apiCompany';
+import { ADD_COMPANY_API_URL, DELETE_COMPANY_API_URL, GET_COMPANIES_API_URL, UPDATE_COMPANY_API_URL } from '../constants/apiConstant/apiCompany';
+
+const getCompanies = async () => {
+    return await axios.get
+        (
+            GET_COMPANIES_API_URL,
+        );
+};
 
 const createCompany = async (data: any, token: any) => {
     return await axios.post
@@ -10,7 +17,7 @@ const createCompany = async (data: any, token: any) => {
 
             {
                 headers: {
-                    authorization: `Bearer ${token}`,
+                    authorization: `${token}`,
                 }
             }
 
@@ -30,7 +37,7 @@ const removeCompany = async (id: any, userId: any, token: any) => {
                 },
 
                 headers: {
-                    authorization: `Bearer ${token}`,
+                    authorization: `${token}`,
                 }
             }
         );
@@ -45,11 +52,11 @@ const updateCompany = async (id: any, data: any, token: any) => {
 
             {
                 headers: {
-                    authorization: `Bearer ${token}`,
+                    authorization: `${token}`,
                 }
             }
 
         );
 };
 
-export { createCompany, removeCompany, updateCompany };
+export { getCompanies, createCompany, removeCompany, updateCompany };
