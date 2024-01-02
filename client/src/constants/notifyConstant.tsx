@@ -170,19 +170,25 @@ const notFoundCompany = () => {
     });
 };
 
-const successDeleteCompany = (data: any) =>
-    message.open({
-        type: 'success',
-        content: data,
-        duration: 3,
+const successDeleteCompany = (data: any) => {
+    notification.open({
+        type: 'info',
+        message: (
+            data
+        ),
+        duration: 8,
     });
+};
 
-const successDeleteProduct = (data: any) =>
-    message.open({
-        type: 'success',
-        content: data,
-        duration: 3,
+const successDeleteProduct = (data: any) => {
+    notification.open({
+        type: 'info',
+        message: (
+            data
+        ),
+        duration: 8,
     });
+};
 
 export {
     failedServer,

@@ -23,7 +23,8 @@ import {
     infoEditCompany,
     successEditCompany,
     errorEditCompany,
-    successDeleteCompany
+    successDeleteCompany,
+
 } from '../constants/notifyConstant'
 
 const Company: React.FC = () => {
@@ -108,21 +109,13 @@ const Company: React.FC = () => {
             }
 
             const res = await Promise.all(selectedRowKeys.map(id => removeCompany(id, userId, token)));
+            const messages = res.map(res => res.data.message);
 
-            if (res.length > 1) {
-                successDeleteCompany(
-                    <span>
-                    {res.length} companies deleted successfully
-                    </span>
-                );
-            }
-            if (res.length === 1) {
-                successDeleteCompany(
-                    <span>
-                    Company deleted successfully
-                    </span>
-                );
-            }
+            messages.forEach(message => {
+
+                successDeleteCompany(message);
+
+            });
 
             setselectedRowKeys([]);
             dispatch(fetchCompanyData());
@@ -204,13 +197,13 @@ const Company: React.FC = () => {
                         {
                             company.length === 0
                                 ?
-                                <FontAwesomeIcon onClick={() => setIsAddCompanyModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
+                                <FontAwesomeIcon onClick={() => setIsAddCompanyModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600 ' icon={faPlus} bounce />
                                 :
                                 <PlusOutlined onClick={() => setIsAddCompanyModalOpen(true)} className="hover:cursor-pointer text-green-700 hover:text-green-600 hover:scale-125 transition-all text-2xl" />
                         }
 
                         <EditOutlined onClick={isEditCompany} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 hover:scale-125 transition-all text-2xl" />
-
+                        
                         <DeleteOutlined onClick={deleteCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
 
                         <LogoutOutlined onClick={logout} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl" />

@@ -1,4 +1,5 @@
 const Company = require("../models/company");
+const Product = require("../models/product")
 const Status = require("../models/enums/status");
 
 const getAllCompanies = async (req, res) => {
@@ -42,12 +43,33 @@ const deleteCompany = async (req, res) => {
     const userId = req.body.userId;
 
     try {
-        const company = await Company.findById(id, { status: Status.ACTIVE });
-        company.status = Status.DELETED;
-        company.lastDeleterId = userId;
+        const company = await Company.findById(id);
+        const products = await Product.find({ company: id, status: Status.ACTIVE });
 
-        await company.save();
-        res.status(200).json({ message: "Company deleted successfully." });
+        if (products && products.length > 0) {
+
+            company.status = Status.DELETED;
+            company.lastDeleterId = userId;
+            await company.save();
+            
+            products.forEach(async product => {
+                product.status = Status.DELETED;
+                product.lastDeleterId = userId;
+                await product.save();
+            });
+
+            const isPlural = products.length > 1 ? 's' : '';
+            res.status(200).json({ message: `${company.companyName} company had ${products.length} product${isPlural}. Company and product${isPlural} was deleted successfully`});
+            
+        } else {
+
+            company.status = Status.DELETED;
+            company.lastDeleterId = userId;
+            await company.save();
+
+            res.status(200).json({ message: `${company.companyName} company had no product. Company was deleted successfully` });
+        }
+
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ status: 500, message: 'Error', error: error.message });
