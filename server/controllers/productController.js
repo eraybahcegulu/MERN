@@ -20,8 +20,8 @@ const addProduct = async (req, res) => {
     try {
         const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: Status.ACTIVE, company: req.body.company.trim() });
         if (existingProductNameControl) {
-            req.body.productAmount = Number(req.body.productAmount);
-            existingProductNameControl.productAmount += req.body.productAmount;
+
+            existingProductNameControl.productAmount = Number(existingProductNameControl.productAmount) + Number(req.body.productAmount)
             await existingProductNameControl.save();
             return res.status(200).json({ message: `The product is already registered for this company. New amount added` });
         }
@@ -38,7 +38,7 @@ const addProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     const id = req.params.id;
     const userId = req.body.userId;
-    
+
     try {
         const product = await Product.findById(id, { status: Status.ACTIVE });
         product.status = Status.DELETED;
