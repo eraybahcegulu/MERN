@@ -1,6 +1,5 @@
 import axios from "axios";
-
-import { REGISTER_API_URL, LOGIN_API_URL, GET_USER_INFO_API_URL, CHANGE_PASSWORD_API_URL } from '../constants/apiconstant';
+import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL } from '../constants/apiConstant/apiUser';
 
 const register = async (data: any) => {
     return await axios.post(`${REGISTER_API_URL}`, data)

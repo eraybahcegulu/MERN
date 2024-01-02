@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Result } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import CompanyList from '../components/Company/CompanyList'
+import CompanyList from '../components/Company/CompanyList';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
@@ -14,18 +14,16 @@ import { fetchCompanyData } from '../redux-toolkit/companySlice';
 import { userInfo } from '../services/userService';
 import { createCompany, removeCompany, updateCompany } from '../services/companyService';
 
+import { failedGetUserInfo, failedServer } from '../constants/notifyConstant/notifyUser';
 import {
-    failedServer,
-    failedGetUserInfo,
     successAddCompany,
     errorAddCompany,
     infoDeleteCompany,
     infoEditCompany,
-    successEditCompany,
-    errorEditCompany,
     successDeleteCompany,
-
-} from '../constants/notifyConstant'
+    successEditCompany,
+    errorEditCompany
+} from '../constants/notifyConstant/notifyCompany';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -50,7 +48,7 @@ const Company: React.FC = () => {
 
     useEffect(() => {
         getUserInfo();
-    }, );
+    },);
 
     const getUserInfo = async (): Promise<void> => {
         try {
@@ -202,7 +200,7 @@ const Company: React.FC = () => {
                         }
 
                         <EditOutlined onClick={isEditCompany} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 hover:scale-125 transition-all text-2xl" />
-                        
+
                         <DeleteOutlined onClick={deleteCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
 
                         <LogoutOutlined onClick={logout} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl" />

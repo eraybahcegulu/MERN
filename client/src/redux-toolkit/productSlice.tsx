@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { GET_PRODUCTS_API_URL } from '../constants/apiconstant';
-import { failedServer } from '../constants/notifyConstant';
+import { failedServer } from '../constants/notifyConstant/notifyProduct';
+import { GET_PRODUCTS_API_URL } from '../constants/apiConstant/apiProduct';
 
 interface ProductState {
     data: any[];

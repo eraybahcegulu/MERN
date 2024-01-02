@@ -1,6 +1,5 @@
 import axios from "axios";
-
-import { ADD_COMPANY_API_URL, DELETE_COMPANY_API_URL, UPDATE_COMPANY_API_URL } from '../constants/apiconstant';
+import { ADD_COMPANY_API_URL, DELETE_COMPANY_API_URL, UPDATE_COMPANY_API_URL } from '../constants/apiConstant/apiCompany';
 
 const createCompany = async (data: any, token: any) => {
     return await axios.post

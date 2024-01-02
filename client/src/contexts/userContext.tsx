@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
-import { GET_USER_INFO_API_URL } from '../constants/apiconstant';
+
+import {GET_USER_INFO_API_URL} from '../constants/apiConstant/apiUser';
 
 interface UserProviderProps {
     children: ReactNode;

@@ -7,7 +7,7 @@ import RegisterForm from '../components/Login/RegisterForm';
 import LoginForm from '../components/Login/LoginForm';
 
 import { register, login } from '../services/userService';
-import { successRegister, errorRegister, invalidLogin } from '../constants/notifyConstant';
+import { successRegister, errorRegister, invalidLogin } from '../constants/notifyConstant/notifyUser'
 
 interface LoginProps { }
 

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowDownOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 
 import { changePassword } from '../../services/userService';
-import { successChangePassword, errorChangePassword, failedServer } from '../../constants/notifyConstant'
+import { errorChangePassword, successChangePassword, failedServer } from '../../constants/notifyConstant/notifyUser';
 
 interface UserInfoProps {
     token: string;

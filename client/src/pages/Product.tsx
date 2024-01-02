@@ -14,18 +14,18 @@ import { fetchProductData } from '../redux-toolkit/productSlice';
 import { createProduct, removeProduct, updateProduct } from '../services/productService';
 import { userInfo } from '../services/userService';
 
+import { failedGetUserInfo, failedServer } from '../constants/notifyConstant/notifyUser';
 import {
-    failedServer,
-    failedGetUserInfo,
     successAddProduct,
     errorAddProduct,
     infoDeleteProduct,
+    successDeleteProduct,
     infoEditProduct,
     successEditProduct,
     errorEditProduct,
-    notFoundCompany,
-    successDeleteProduct
-} from '../constants/notifyConstant'
+    notFoundCompany
+} from '../constants/notifyConstant/notifyProduct';
+
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 

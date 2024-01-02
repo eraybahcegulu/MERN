@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
 
 import { userInfo } from '../services/userService';
-import { failedServer, failedGetUserInfo } from '../constants/notifyConstant';
+import { failedGetUserInfo, failedServer} from '../constants/notifyConstant/notifyUser';
 
 //import { useUserData } from "../contexts/userContext"; //if userContext use
 

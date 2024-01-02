@@ -1,6 +1,5 @@
 import axios from "axios";
-
-import { ADD_PRODUCT_API_URL, DELETE_PRODUCT_API_URL, UPDATE_PRODUCT_API_URL } from '../constants/apiconstant';
+import { ADD_PRODUCT_API_URL, DELETE_PRODUCT_API_URL, UPDATE_PRODUCT_API_URL } from '../constants/apiConstant/apiProduct';
 
 const createProduct = async (data: any, token: any) => {
     return await axios.post

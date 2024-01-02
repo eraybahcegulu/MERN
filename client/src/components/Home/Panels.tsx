@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Card, Divider, Popover, Spin, Steps } from 'antd'
+import { Alert, Card, Divider, Popover, Spin, Steps } from 'antd';
 import { HomeOutlined, InboxOutlined, InfoCircleOutlined, OrderedListOutlined, SwapRightOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';

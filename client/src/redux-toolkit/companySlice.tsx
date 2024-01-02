@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { GET_COMPANIES_API_URL } from '../constants/apiconstant';
-import { failedServer } from '../constants/notifyConstant';
+import { failedServer } from '../constants/notifyConstant/notifyCompany';
+import { GET_COMPANIES_API_URL } from '../constants/apiConstant/apiCompany';
 
 interface CompanyState {
     data: any[];
