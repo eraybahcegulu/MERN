@@ -62,7 +62,6 @@ const UserInfo: React.FC<UserInfoProps> = ({
                         <div className='flex flex-col items-center'>
                             <span> WELCOME {user.userName} </span>
                             <span> {user.email} </span>
-                            <span> {user.userName}</span>
                         </div>
 
                         <div>

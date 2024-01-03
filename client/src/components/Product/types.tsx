@@ -2,7 +2,7 @@ export interface ProductDataType {
     key: React.Key;
     productName: string;
     productCategory: string;
-    productAmount: number;
+    productAmount: any;
     amountUnit: string;
     company: {
         companyName: string;

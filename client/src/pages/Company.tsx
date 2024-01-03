@@ -25,6 +25,7 @@ import {
 } from '../constants/notifyConstant/notifyCompany';
 
 import { useUserData } from "../contexts/userContext";
+import { fetchProductData } from '../redux-toolkit/productSlice';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -91,6 +92,7 @@ const Company: React.FC = () => {
             });
 
             setselectedRowKeys([]);
+            dispatch(fetchProductData(user.token));
             dispatch(fetchCompanyData(user.token));
 
         } catch (error: any) {

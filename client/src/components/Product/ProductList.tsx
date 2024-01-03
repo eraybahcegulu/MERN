@@ -6,7 +6,7 @@ import { Spin, Table, Alert } from 'antd';
 import {  RootState } from '../../store';
 
 import type { TableRowSelection } from 'antd/es/table/interface';
-import { productColumns } from './columns';
+import { columns  } from './columns';
 import { ProductDataType, ProductListProps } from './types';
 
 const ProductList: FC<ProductListProps> = ({
@@ -39,6 +39,9 @@ const ProductList: FC<ProductListProps> = ({
             item.amountUnit.toLowerCase().includes(search.trim()) ||
             item.company.companyName.toLowerCase().includes(search.trim()) 
     );
+
+    const productColumns = columns(filteredProducts); 
+
 
     return (
         <>
