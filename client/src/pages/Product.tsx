@@ -62,8 +62,6 @@ const Product: React.FC = () => {
         dispatch(fetchProductData(token));
     }, []);
 
-
-
     const onFinishAddProduct = async (values: any) => {
         values.creatorId = user.userId;
         try {
@@ -168,9 +166,11 @@ const Product: React.FC = () => {
 
     const handleOpenAddProductModal = (): void => {
         setIsAddProductModalOpen(true);
+        
         if (company.length === 0) {
             notFoundCompany();
         }
+        
     };
 
     return (
@@ -196,7 +196,7 @@ const Product: React.FC = () => {
                         {
                             product.length === 0
                                 ?
-                                <FontAwesomeIcon onClick={() => setIsAddProductModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
+                                <FontAwesomeIcon onClick={handleOpenAddProductModal} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
                                 :
                                 <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
                         }
