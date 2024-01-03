@@ -55,9 +55,11 @@ const Product: React.FC = () => {
 
     const { user } = useUserData();
 
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
     useEffect(() => {
-        dispatch(fetchCompanyData());
-        dispatch(fetchProductData());
+        dispatch(fetchCompanyData(token));
+        dispatch(fetchProductData(token));
     }, []);
 
 
@@ -67,7 +69,7 @@ const Product: React.FC = () => {
         try {
             const res = await createProduct(values, user.token);
             successAddProduct(res.data.message)
-            dispatch(fetchProductData());
+            dispatch(fetchProductData(token));
             setIsAddProductModalOpen(false);
             setTimeout(() => {
                 addProductForm.resetFields();
@@ -108,7 +110,7 @@ const Product: React.FC = () => {
             }
 
             setselectedRowKeys([]);
-            dispatch(fetchProductData());
+            dispatch(fetchProductData(token));
 
         } catch (error: any) {
             failedServer(error.message)
@@ -137,7 +139,7 @@ const Product: React.FC = () => {
         try {
             const res = await updateProduct(selectedRowKeys, values, user.token);
             successEditProduct(res.data.message);
-            dispatch(fetchProductData());
+            dispatch(fetchProductData(token));
             editProductForm.resetFields();
             setselectedRowKeys([]);
             setSelectedRows([]);

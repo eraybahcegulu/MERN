@@ -16,7 +16,7 @@ import { useUserData } from "../contexts/userContext";
 
 
 const Home: React.FC = () => {
-
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     const navigate = useNavigate();
 
     const dispatch = useDispatch<AppDispatch>();
@@ -24,8 +24,8 @@ const Home: React.FC = () => {
     const { user } = useUserData();
 
     useEffect(() => {
-        dispatch(fetchCompanyData());
-        dispatch(fetchProductData());
+        dispatch(fetchCompanyData(token));
+        dispatch(fetchProductData(token));
     },[]);
 
 

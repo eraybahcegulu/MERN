@@ -10,9 +10,9 @@ interface ProductState {
     error?: string;
 }
 
-export const fetchProductData = createAsyncThunk('fetchProductData', async () => {
+export const fetchProductData = createAsyncThunk('fetchProductData', async (token: any) => {
     try {
-        const response = await getProducts();
+        const response = await getProducts(token);
         return response.data;
     } catch (error: any) {
         failedServer(error.message)

@@ -10,9 +10,9 @@ interface CompanyState {
     error?: string;
 }
 
-export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async () => {
+export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async (token: any) => {
     try {
-        const response = await getCompanies();
+        const response = await getCompanies(token);
         return response.data;
     } catch (error: any) {
         failedServer(error.message)

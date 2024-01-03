@@ -1,10 +1,16 @@
 import axios from "axios";
 import { GET_PRODUCTS_API_URL, ADD_PRODUCT_API_URL, DELETE_PRODUCT_API_URL, UPDATE_PRODUCT_API_URL } from '../constants/apiConstant/apiProduct';
 
-const getProducts = async () => {
+const getProducts = async (token : any) => {
     return await axios.get
         (
             GET_PRODUCTS_API_URL,
+
+            {
+                headers: {
+                    authorization: `${token}`,
+                }
+            }
         );
 };
 
