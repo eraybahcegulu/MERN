@@ -110,7 +110,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
                             name="currentPassword"
                             rules={[
                                 { required: true, message: "Current Password required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                             ]}
                         >
                             <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='Current Password' />
@@ -122,7 +122,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
                             name="newPassword"
                             rules={[
                                 { required: true, message: "Current Password required" },
-                                { max: 20, message: "Max. 20 characters." }
+                                { max: 40, message: "Max. 40 characters." }
                             ]}
 
                         >
@@ -134,7 +134,7 @@ const UserInfo: React.FC<UserInfoProps> = ({
                             dependencies={['newPassword']}
                             rules={[
                                 { required: true, message: "Current Password Confirm required" },
-                                { max: 20, message: "Max. 20 characters." },
+                                { max: 40, message: "Max. 40 characters." },
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
                                         if (!value || getFieldValue('newPassword') === value) {
