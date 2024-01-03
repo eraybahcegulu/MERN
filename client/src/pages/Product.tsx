@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store';
 
 import { fetchProductData } from '../redux-toolkit/productSlice';
-import { fetchCompanyData } from '../redux-toolkit/companySlice';
+
 
 import { createProduct, removeProduct, updateProduct } from '../services/productService';
 
@@ -55,11 +55,10 @@ const Product: React.FC = () => {
 
     const { user } = useUserData();
 
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
 
     useEffect(() => {
-        dispatch(fetchCompanyData(token));
-        dispatch(fetchProductData(token));
+
     }, []);
 
     const onFinishAddProduct = async (values: any) => {
@@ -67,7 +66,7 @@ const Product: React.FC = () => {
         try {
             const res = await createProduct(values, user.token);
             successAddProduct(res.data.message)
-            dispatch(fetchProductData(token));
+            dispatch(fetchProductData(user.token));
             setIsAddProductModalOpen(false);
             setTimeout(() => {
                 addProductForm.resetFields();
@@ -108,7 +107,7 @@ const Product: React.FC = () => {
             }
 
             setselectedRowKeys([]);
-            dispatch(fetchProductData(token));
+            dispatch(fetchProductData(user.token));
 
         } catch (error: any) {
             failedServer(error.message)
@@ -137,7 +136,7 @@ const Product: React.FC = () => {
         try {
             const res = await updateProduct(selectedRowKeys, values, user.token);
             successEditProduct(res.data.message);
-            dispatch(fetchProductData(token));
+            dispatch(fetchProductData(user.token));
             editProductForm.resetFields();
             setselectedRowKeys([]);
             setSelectedRows([]);

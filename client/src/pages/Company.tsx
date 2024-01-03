@@ -46,10 +46,10 @@ const Company: React.FC = () => {
 
     const { user } = useUserData();
 
-    const token = localStorage.getItem('token');
+
     
     useEffect(() => {
-        dispatch(fetchCompanyData(token));
+
     }, []);
 
     const onFinishAddCompany = async (values: any) => {
@@ -57,7 +57,7 @@ const Company: React.FC = () => {
         try {
             const res = await createCompany(values, user.token);
             successAddCompany(res.data.message)
-            dispatch(fetchCompanyData(token));
+            dispatch(fetchCompanyData(user.token));
             setIsAddCompanyModalOpen(false);
             setTimeout(() => {
                 addCompanyForm.resetFields();
@@ -91,7 +91,7 @@ const Company: React.FC = () => {
             });
 
             setselectedRowKeys([]);
-            dispatch(fetchCompanyData(token));
+            dispatch(fetchCompanyData(user.token));
 
         } catch (error: any) {
             failedServer(error.message)
@@ -119,7 +119,8 @@ const Company: React.FC = () => {
         try {
             const res = await updateCompany(selectedRowKeys, values, user.token);
             successEditCompany(res.data.message);
-            dispatch(fetchCompanyData(token));
+            
+            dispatch(fetchCompanyData(user.token));
             editCompanyForm.resetFields();
             setselectedRowKeys([]);
             setSelectedRows([]);

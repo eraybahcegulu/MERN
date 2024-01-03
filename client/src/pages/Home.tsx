@@ -4,11 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import UserInfo from '../components/Home/UserInfo';
 import Panels from '../components/Home/Panels';
 
-import { fetchCompanyData } from '../redux-toolkit/companySlice';
-import { fetchProductData } from '../redux-toolkit/productSlice';
-
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../store';
 
 
 
@@ -16,16 +11,15 @@ import { useUserData } from "../contexts/userContext";
 
 
 const Home: React.FC = () => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
     const navigate = useNavigate();
 
-    const dispatch = useDispatch<AppDispatch>();
+
 
     const { user } = useUserData();
 
     useEffect(() => {
-        dispatch(fetchCompanyData(token));
-        dispatch(fetchProductData(token));
+
     },[]);
 
 
