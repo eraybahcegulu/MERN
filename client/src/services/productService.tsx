@@ -8,7 +8,8 @@ const getProducts = async (token : any) => {
 
             {
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${GET_PRODUCTS_API_URL}`
                 }
             }
         );
@@ -23,7 +24,8 @@ const createProduct = async (data: any, token: any) => {
 
             {
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${ADD_PRODUCT_API_URL}`
                 }
             }
 
@@ -42,7 +44,8 @@ const removeProduct = async (id: any, userId: any, token: any) => {
                 },
 
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${DELETE_PRODUCT_API_URL}`
                 }
             }
 
@@ -58,7 +61,8 @@ const updateProduct = async (id: any, data: any, token: any) => {
 
             {
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${UPDATE_PRODUCT_API_URL}`
                 }
             }
 

@@ -117,11 +117,9 @@ const Panels = () => {
                     <Divider />
                     <div className='flex flex-col items-center gap-2 '>
                         <span className='text-xl '>LAST ADDED 3 COMPANIES</span>
-                        {
-                            (companyStepsData.length === 0)
-                            &&
-                            <span>TOTAL COMPANY 0</span>
-                        }
+                        {companyStatus === 'loading' && <div> <Spin size="large" /> </div>}
+                        {companyStatus === 'failed' &&
+                                        <Alert message="Error" type="error" />}
                         <span>  </span>
                         <Steps
                             className='flex flex-row items-start'
@@ -141,11 +139,9 @@ const Panels = () => {
                     <Divider />
                     <div className='flex flex-col items-center gap-2 '>
                         <span className='text-xl '>LAST ADDED 3 PRODUCTS</span>
-                        {
-                            (productStepsData.length === 0)
-                            &&
-                            <span>TOTAL PRODUCT 0</span>
-                        }
+                        {productStatus === 'loading' && <div> <Spin size="large" /> </div>}
+                        {productStatus === 'failed' &&
+                                        <Alert message="Error" type="error" />}
                         <Steps
                             className='flex flex-row items-start '
                             progressDot

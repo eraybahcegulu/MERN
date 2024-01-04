@@ -8,7 +8,8 @@ const getCompanies = async (token : any) => {
 
             {
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${GET_COMPANIES_API_URL}`
                 }
             }
         );
@@ -23,7 +24,8 @@ const createCompany = async (data: any, token: any) => {
 
             {
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${ADD_COMPANY_API_URL}`
                 }
             }
 
@@ -43,7 +45,8 @@ const removeCompany = async (id: any, userId: any, token: any) => {
                 },
 
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${DELETE_COMPANY_API_URL}`
                 }
             }
         );
@@ -58,7 +61,8 @@ const updateCompany = async (id: any, data: any, token: any) => {
 
             {
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${UPDATE_COMPANY_API_URL}`
                 }
             }
 

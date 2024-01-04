@@ -16,7 +16,8 @@ const userInfo = async (token: any) => {
 
             {
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${GET_USER_INFO_API_URL}`
                 }
             }
         )
@@ -31,7 +32,8 @@ const changePassword = async (id: any, data: any, token: any) => {
 
             {
                 headers: {
-                    authorization: `${token}`,
+                    authorization: `Bearer ${token}`,
+                    api_source: `${CHANGE_PASSWORD_API_URL}`
                 }
             }
         )
