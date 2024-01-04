@@ -130,7 +130,7 @@ const UserInfo: React.FC = () => {
                         <Form.Item
                             name="newPassword"
                             rules={[
-                                { required: true, message: "Current Password required" },
+                                { required: true, message: "New Password required" },
                                 { max: 40, message: "Max. 40 characters." }
                             ]}
 
@@ -142,7 +142,7 @@ const UserInfo: React.FC = () => {
                             name="newPasswordConfirm"
                             dependencies={['newPassword']}
                             rules={[
-                                { required: true, message: "Current Password Confirm required" },
+                                { required: true, message: "Confirm New Password required" },
                                 { max: 40, message: "Max. 40 characters." },
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {

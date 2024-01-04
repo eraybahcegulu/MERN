@@ -142,9 +142,9 @@ const Company: React.FC = () => {
                 <span><strong className='text-2xl'>COMPANIES</strong></span>
 
                 <div className="flex flex-row item-center justify-center mt-10 gap-4">
-                    <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl mr-4" />
+                    <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer hover:opacity-50 hover:scale-125 transition-all text-2xl mr-4" />
 
-                    <Input onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
+                    <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
 
                     {
                         company.length === 0

@@ -33,7 +33,7 @@ const auth = async (req, res, next) => {
 const requireAdmin = (req, res, next) => {
     //console.log(req.user);
     try {
-        console.log(req.user.userRole);
+        //console.log(req.user.userRole);
         if (req.user.userRole !== userRole.ADMIN) {
             return res.status(401).json({ message: "Required Admin Authority" });
         }
