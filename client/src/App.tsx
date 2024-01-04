@@ -1,24 +1,44 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React from 'react'
+
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
-import Home from "./pages/Home";
-import Company from "./pages/Company";
-import Product from "./pages/Product";
-import NotFound from "./pages/NotFound";
+import Home from './pages/Home';
+import Company from './pages/Company';
+import Product from './pages/Product';
+import NotFound from './pages/NotFound';
+import { PrivateRoute } from './helpers/PrivateRoute';
 
 const App = () => {
+
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/home" element={<Home />} />
-                <Route path="/companies" element={<Company />} />
-                <Route path="/products" element={<Product />} />
                 <Route path="*" element={<NotFound />} />
+
+                <Route path="/home" element={
+                    <PrivateRoute>
+                        <Home />
+                    </PrivateRoute>
+                } />
+
+
+                <Route path="/companies" element={
+                    <PrivateRoute>
+                        <Company />
+                    </PrivateRoute>
+                } />
+
+                <Route path="/products" element={
+                    <PrivateRoute>
+                        <Product />
+                    </PrivateRoute>
+                } />
+
             </Routes>
         </BrowserRouter>
-    )
-}
+    );
+};
 
-export default App
+export default App;

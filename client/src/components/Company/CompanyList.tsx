@@ -52,8 +52,7 @@ const CompanyList: FC<CompanyListProps> = ({
         <>
             {status === 'loading' && (
                 <div className="text-center">
-                    {' '}
-                    <Spin size="large" />{' '}
+                    <Spin size="large" />
                 </div>
             )}
 

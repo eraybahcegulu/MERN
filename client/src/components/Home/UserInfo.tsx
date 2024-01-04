@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
-import { Card, Radio, Modal, Form, Button, Input } from 'antd';
+import { Card, Radio, Modal, Form, Button, Input, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { ArrowDownOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 
 import { changePassword } from '../../services/userService';
 import { errorChangePassword, successChangePassword, failedServer } from '../../constants/notifyConstant/notifyUser';
+import { useUserData } from '../../contexts/userContext';
 
-interface UserInfoProps {
-    user: any;
-}
 
-const UserInfo: React.FC<UserInfoProps> = ({
-
-    user,
-
-}) => {
-
+const UserInfo: React.FC = () => {
+    const { user, loading } = useUserData();
     const [changePasswordForm] = Form.useForm();
 
     const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState<boolean>(false);
@@ -59,18 +53,33 @@ const UserInfo: React.FC<UserInfoProps> = ({
                 title=
                 {
                     <div className='flex flex-col items-center p-2 gap-2'>
-                        <div className='flex flex-col items-center'>
-                            <span> WELCOME {user.userName} </span>
-                            <span> {user.email} </span>
-                        </div>
+                        {
+                            !loading
+                                ?
+                                <>
+                                    <div className='flex flex-col items-center'>
 
-                        <div>
-                            <SettingOutlined onClick={() => setIsChangePasswordModalOpen(true)} className='ml-2 hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
-                            <LogoutOutlined
-                                onClick={logout}
-                                className='ml-2 text-2xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-300 transition-all'
-                            />
-                        </div>
+                                        <span> WELCOME {user.userName} </span>
+                                        <span> {user.email} </span>
+
+
+                                    </div>
+
+                                    <div>
+                                        <SettingOutlined onClick={() => setIsChangePasswordModalOpen(true)} className='ml-2 hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
+                                        <LogoutOutlined
+                                            onClick={logout}
+                                            className='ml-2 text-2xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-300 transition-all'
+                                        />
+                                    </div>
+
+
+
+                                </>
+                                :
+                                <Spin size="large" />
+                        }
+
 
                     </div>
                 }

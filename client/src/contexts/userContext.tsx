@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
 import { userInfo } from '../services/userService';
 import { fetchCompanyData } from '../redux-toolkit/companySlice';
 import { fetchProductData } from '../redux-toolkit/productSlice';
 
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
+import { failedServer } from '../constants/notifyConstant/notifyUser';
 
 
 interface UserProviderProps {
@@ -24,7 +24,8 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | any>(null);
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-    const [user, setUser] = useState<User[]>([]);
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch<AppDispatch>();
 
     const fetchUserData = async (token: string ) => {
@@ -35,11 +36,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             setUser(response.data);
             dispatch(fetchCompanyData(token));
             dispatch(fetchProductData(token));
+            setLoading(false);
         } catch (error: any) {
-            console.error("Error User Data:", error);
-            if (axios.isAxiosError(error) && error.response) {
-                console.error("Error", error.response.data);
-            }
+            failedServer(error.message)
         }
     };
 
@@ -60,6 +59,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         <UserContext.Provider
             value={{
                 user,
+                loading,
+                setLoading,
                 getUser: (token: any) => fetchUserData(token),
             }}
         >

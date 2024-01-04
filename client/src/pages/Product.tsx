@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Modal, Result, Select } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input, Modal, Select } from 'antd';
 
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
@@ -10,9 +10,7 @@ import { AppDispatch, RootState } from '../store';
 
 import { fetchProductData } from '../redux-toolkit/productSlice';
 
-
 import { createProduct, removeProduct, updateProduct } from '../services/productService';
-
 
 import { failedServer } from '../constants/notifyConstant/notifyUser';
 import {
@@ -48,18 +46,12 @@ const Product: React.FC = () => {
     const company = useSelector((state: RootState) => state.company.data);
     const product = useSelector((state: RootState) => state.product.data);
 
-    const selectedCompany = company.map(company => ({
+    const selectedCompany = company.map((company: { _id: any; companyName: any; }) => ({
         value: company._id,
         label: company.companyName,
     }));
 
     const { user } = useUserData();
-
-
-
-    useEffect(() => {
-
-    }, []);
 
     const onFinishAddProduct = async (values: any) => {
         values.creatorId = user.userId;
@@ -157,12 +149,6 @@ const Product: React.FC = () => {
         navigate('/');
     };
 
-    const handle404 = (): void => {
-        localStorage.clear();
-        sessionStorage.clear();
-        navigate('/');
-    };
-
     const handleOpenAddProductModal = (): void => {
         setIsAddProductModalOpen(true);
         
@@ -174,16 +160,6 @@ const Product: React.FC = () => {
 
     return (
         <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
-            {!(sessionStorage.getItem('token') || localStorage.getItem('token')) ? (
-                <>
-                    <Result
-                        status="403"
-                        title="403"
-                        subTitle="Sorry, you are not authorized to access this page."
-                        extra={<Button onClick={handle404} type="primary">Go Login</Button>}
-                    />
-                </>
-            ) : (
                 <div className='flex flex-col items-center gap-4'>
                     <span><strong className='text-2xl'>PRODUCTS</strong></span>
 
@@ -211,8 +187,6 @@ const Product: React.FC = () => {
                     <div>
                         <ProductList search={search} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setselectedRowKeys} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
                     </div>
-
-
 
                     <Modal
                         open={isAddProductModalOpen}
@@ -378,8 +352,6 @@ const Product: React.FC = () => {
                         </Form>
                     </Modal>
                 </div>
-
-            )}
         </div>
     );
 };

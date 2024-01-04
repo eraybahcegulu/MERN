@@ -7,8 +7,6 @@ function NotFound() {
 
     return (
         <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
-
-
             <Result
                 status="404"
                 title="404"
