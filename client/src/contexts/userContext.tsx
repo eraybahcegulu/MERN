@@ -46,8 +46,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         const rememberMeToken = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (rememberMeToken) {
             fetchUserData(rememberMeToken);
-            dispatch(fetchCompanyData(rememberMeToken));
-            dispatch(fetchProductData(rememberMeToken));
         }
     };
 
