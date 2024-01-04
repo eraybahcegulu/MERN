@@ -15,8 +15,12 @@ export const fetchProductData = createAsyncThunk('fetchProductData', async (toke
         const response = await getProducts(token);
         return response.data;
     } catch (error: any) {
-        failedServer(error.message)
-        throw error;
+        if (error.response) {
+            failedServer(error.response.data.message)
+        }
+        else {
+            failedServer(error.message)
+        }
     }
 });
 

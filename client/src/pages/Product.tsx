@@ -65,7 +65,7 @@ const Product: React.FC = () => {
             }, 100);
 
         } catch (error: any) {
-            if (error.response && error.response.status === 400) {
+            if (error.response) {
                 errorAddProduct(error.response.data.message)
             }
             else {
@@ -134,7 +134,7 @@ const Product: React.FC = () => {
             setSelectedRows([]);
             setIsEditProductModalOpen(false);
         } catch (error: any) {
-            if (error.response && error.response.status === 400) {
+            if (error.response) {
                 errorEditProduct(error.response.data.message)
             }
             else {

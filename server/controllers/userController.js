@@ -83,7 +83,7 @@ const userInfo = async (req, res) => {
 
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        res.status(500).json({ status: 500, message: 'Server Error. Try login again', error: error.message });
     }
 };
 

@@ -28,7 +28,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch<AppDispatch>();
 
-    const fetchUserData = async (token: string ) => {
+    const fetchUserData = async (token: string) => {
         try {
             const response = await userInfo(token);
             token = response.data.token;
@@ -38,7 +38,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             dispatch(fetchProductData(token));
             setLoading(false);
         } catch (error: any) {
-            failedServer(error.message)
+            failedServer(error.response.data.message);
         }
     };
 

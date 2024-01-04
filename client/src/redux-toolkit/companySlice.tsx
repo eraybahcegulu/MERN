@@ -14,14 +14,15 @@ export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async (toke
     try {
         const response = await getCompanies(token);
         return response.data;
-    } catch (error: any) {
-        failedServer(error.message)
-        throw error;
+    }  catch (error: any) {
+        if (error.response) {
+            failedServer(error.response.data.message)
+        }
+        else {
+            failedServer(error.message)
+        }
     }
 });
-
-
-
 
 const initialState: CompanyState = {
     data: [],

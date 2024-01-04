@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const userRole = require("../models/enums/userRoles");
 
 const auth = async (req, res, next) => {
     try {
@@ -7,25 +8,43 @@ const auth = async (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
 
         if (token) {
-            jwt.verify(token, process.env.JWT_SECRET, (error) => {
+            jwt.verify(token, process.env.JWT_SECRET, (error, decodedToken) => {
                 if (error) {
-                    res.status(401).json({
+                    return res.status(401).json({
                         message: 'User auth token not valid',
                     });
                 } else {
+                    req.user = decodedToken;
                     next();
                 }
             });
         } else {
-            res.status(401).json({
+            return res.status(401).json({
                 message: 'User auth token not available',
             });
         }
     } catch (error) {
-        res.status(401).json({
-            message: 'Unauthorized',
+        return res.status(500).json({
+            message: `Unauthorized`,
         });
     }
 };
 
-module.exports = auth;
+const requireAdmin = (req, res, next) => {
+    //console.log(req.user);
+    try {
+        console.log(req.user.userRole);
+        if (req.user.userRole !== userRole.ADMIN) {
+            return res.status(401).json({ message: "Required Admin Authority" });
+        }
+        next();
+    } catch (error) {
+        return res.status(500).json({
+            message: `Unauthorized`,
+        });
+    }
+};
+
+
+
+module.exports = { auth, requireAdmin };

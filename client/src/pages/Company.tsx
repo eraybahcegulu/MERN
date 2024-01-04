@@ -57,13 +57,12 @@ const Company: React.FC = () => {
             }, 100);
 
         } catch (error: any) {
-            if (error.response && error.response.status === 400) {
+            if (error.response) {
                 errorAddCompany(error.response.data.message)
             }
             else {
                 failedServer(error.message)
             }
-
         }
     };
 
@@ -120,7 +119,7 @@ const Company: React.FC = () => {
             setSelectedRows([]);
             setIsEditCompanyModalOpen(false);
         } catch (error: any) {
-            if (error.response && error.response.status === 400) {
+            if (error.response) {
                 errorEditCompany(error.response.data.message)
             }
             else {
