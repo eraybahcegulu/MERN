@@ -12,7 +12,7 @@ const getAllCompanies = async (req, res) => {
     }
 };
 
-const addCompany = async (req, res) => {
+const addCompany = async (req, res, next) => {
     try {
         const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName.trim(), status: Status.ACTIVE });
         if (existingCompanyNameControl) {
@@ -31,14 +31,17 @@ const addCompany = async (req, res) => {
 
         const newCompany = new Company(req.body);
         await newCompany.save();
+
         res.status(200).json({ message: "Company added successfully." });
+        next();
+
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ status: 500, message: 'Error', error: error.message });
     }
 };
 
-const deleteCompany = async (req, res) => {
+const deleteCompany = async (req, res, next) => {
     const id = req.params.id;
     const userId = req.body.userId;
 
@@ -69,14 +72,14 @@ const deleteCompany = async (req, res) => {
 
             res.status(200).json({ message: `${company.companyName} company had no product. Company was deleted successfully` });
         }
-
+        next();
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ status: 500, message: 'Error', error: error.message });
     }
 };
 
-const updateCompany = async (req, res) => {
+const updateCompany = async (req, res, next) => {
     const id = req.params.id;
     try {
         const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName.trim(), status: Status.ACTIVE, _id: { $ne: id } });
@@ -93,9 +96,13 @@ const updateCompany = async (req, res) => {
         if (existingCompanyWEBSiteControl) {
             return res.status(400).json({ message: "Failed. This WEB Site is already registered" });
         }
+        const existingCompany = await Company.findById(id);
 
+        const firstData = existingCompany;
+        req.firstData = firstData;
         await Company.findByIdAndUpdate(id, req.body);
         res.status(200).json({ message: "Company updated successfully." });
+        next();
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ status: 500, message: 'Error', error: error.message });

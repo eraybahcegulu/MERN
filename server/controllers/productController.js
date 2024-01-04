@@ -16,7 +16,7 @@ const getAllProducts = async (req, res) => {
 };
 
 
-const addProduct = async (req, res) => {
+const addProduct = async (req, res, next) => {
     try {
         const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: Status.ACTIVE, company: req.body.company.trim() });
         if (existingProductNameControl) {
@@ -29,13 +29,14 @@ const addProduct = async (req, res) => {
         const newProduct = new Product(req.body);
         await newProduct.save();
         res.status(200).json({ message: "Product added successfully." });
+        next();
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ status: 500, message: 'Error', error: error.message });
     }
 };
 
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
     const id = req.params.id;
     const userId = req.body.userId;
 
@@ -47,13 +48,14 @@ const deleteProduct = async (req, res) => {
         await product.save();
 
         res.status(200).json({ message: "Product deleted successfully." });
+        next();
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ status: 500, message: 'Error', error: error.message });
     }
 };
 
-const updateProduct = async (req, res) => {
+const updateProduct = async (req, res, next) => {
     const id = req.params.id;
     try {
         const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: Status.ACTIVE, company: req.body.company.trim(), _id: { $ne: id } });
@@ -61,8 +63,14 @@ const updateProduct = async (req, res) => {
             return res.status(400).json({ message: "Failed. This Product Name is already registered for this Company" });
         }
 
+        const existingProduct = await Product.findById(id);
+
+        const firstData = existingProduct;
+        req.firstData = firstData;
+
         await Product.findByIdAndUpdate(id, req.body);
         res.status(200).json({ message: "Product updated successfully." });
+        next();
     } catch (error) {
         console.error('Error', error);
         res.status(500).json({ status: 500, message: 'Error', error: error.message });
