@@ -10,7 +10,7 @@ const login = async (data: any) => {
 }
 
 const userInfo = async (token: any) => {
-    return await axios.post
+    return await axios.get
         (
             GET_USER_INFO_API_URL,
 

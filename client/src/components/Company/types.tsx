@@ -13,3 +13,22 @@ export interface CompanyListProps {
     selectedRows: CompanyDataType[];
     setSelectedRows: (rows: CompanyDataType[]) => void;
 }
+
+export interface EditCompanyModalProps {
+    editCompanyForm: any;
+    onFinishEditCompany: (values: any) => void;
+    isEditCompanyModalOpen: boolean;
+    setIsEditCompanyModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface AddCompanyModalProps {
+    addCompanyForm: any;
+    onFinishAddCompany: (values: any) => void;
+    isAddCompanyModalOpen: boolean;
+    setIsAddCompanyModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface ViewDeletedCompaniesModalProps {
+    isViewDeletedCompanies: boolean;
+    setIsViewDeletedCompanies: React.Dispatch<React.SetStateAction<boolean>>;
+}

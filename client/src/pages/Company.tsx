@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Modal } from 'antd';
+import { Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import CompanyList from '../components/Company/CompanyList';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,6 +26,9 @@ import {
 
 import { useUserData } from "../contexts/userContext";
 import { fetchProductData } from '../redux-toolkit/productSlice';
+import AddCompanyModal from '../components/Company/AddCompanyModal';
+import EditCompanyModal from '../components/Company/EditCompanyModal';
+import ViewDeletedComapinesModal from '../components/Company/ViewDeletedCompaniesModal';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -37,6 +40,7 @@ const Company: React.FC = () => {
 
     const [isAddCompanyModalOpen, setIsAddCompanyModalOpen] = useState<boolean>(false);
     const [isEditCompanyModalOpen, setIsEditCompanyModalOpen] = useState<boolean>(false);
+    const [isViewDeletedCompanies, setIsViewDeletedCompanies] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -158,10 +162,11 @@ const Company: React.FC = () => {
                                     <PlusOutlined onClick={() => setIsAddCompanyModalOpen(true)} className="hover:cursor-pointer text-green-700 hover:text-green-600 hover:scale-125 transition-all text-2xl" />
                             }
 
-
                             <EditOutlined onClick={isEditCompany} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 hover:scale-125 transition-all text-2xl" />
 
                             <DeleteOutlined onClick={deleteCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
+
+                            <SyncOutlined onClick={() => setIsViewDeletedCompanies(true)} className="hover:cursor-pointer text-violet-600 hover:text-violet-500 hover:scale-125 transition-all text-2xl" />
 
                         </>
 
@@ -173,143 +178,10 @@ const Company: React.FC = () => {
                     <CompanyList search={search} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setselectedRowKeys} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
                 </div>
 
-                <Modal
-                    open={isAddCompanyModalOpen}
-                    onCancel={() => setIsAddCompanyModalOpen(false)}
-                    footer={false}
-                >
-                    <h2>
-                        <strong>ADD COMPANY</strong>
-                    </h2>
-                    <Form
-                        className="mt-4 flex flex-col gap-4"
-                        layout="vertical"
-                        onFinish={onFinishAddCompany}
-                        form={addCompanyForm}
-                    >
-                        <Form.Item
-                            name="companyName"
-                            label="Company Name"
-                            rules={[
-                                { required: true, message: "Company Name required" },
-                                { max: 40, message: "Max. 40 characters." }
-                            ]}
-                        >
-                            <Input style={{ borderRadius: "0" }} size="large" />
-                        </Form.Item>
+                <AddCompanyModal addCompanyForm={addCompanyForm} onFinishAddCompany={onFinishAddCompany} isAddCompanyModalOpen={isAddCompanyModalOpen} setIsAddCompanyModalOpen={setIsAddCompanyModalOpen} />
+                <EditCompanyModal editCompanyForm={editCompanyForm} onFinishEditCompany={onFinishEditCompany} isEditCompanyModalOpen={isEditCompanyModalOpen} setIsEditCompanyModalOpen={setIsEditCompanyModalOpen} />
+                <ViewDeletedComapinesModal isViewDeletedCompanies={isViewDeletedCompanies} setIsViewDeletedCompanies={setIsViewDeletedCompanies} />
 
-                        <Form.Item
-                            name="crn"
-                            label="Company Registration Number"
-                            rules={[{ required: true, message: "CRN required" },
-                            { max: 40, message: "Max. 40 characters." }
-                            ]}
-                        >
-                            <Input style={{ borderRadius: "0" }} size="large" />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="country"
-                            label="Country"
-                            rules={[{ required: true, message: "Country required" },
-                            { max: 40, message: "Max. 40 characters." }
-                            ]}
-                        >
-                            <Input style={{ borderRadius: "0" }} size="large" />
-                        </Form.Item>
-
-
-                        <Form.Item
-                            name="webSite"
-                            label="WEB Site"
-                            rules={[{ required: true, message: "WEB Site required" },
-                            { max: 40, message: "Max. 40 characters." }
-                            ]}
-                        >
-                            <Input style={{ borderRadius: "0" }} size="large" />
-                        </Form.Item>
-
-                        <Form.Item className="flex justify-end mb-0">
-                            <Button
-                                style={{ borderRadius: "0" }}
-                                type="primary"
-                                htmlType="submit"
-                                size="large"
-                            >
-                                <strong> ADD </strong>
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Modal>
-
-                <Modal
-                    open={isEditCompanyModalOpen}
-                    onCancel={() => setIsEditCompanyModalOpen(false)}
-                    footer={false}
-                >
-                    <h2>
-                        <strong>EDIT COMPANY</strong>
-                    </h2>
-                    <Form
-                        className="mt-4 flex flex-col gap-4"
-                        layout="vertical"
-                        onFinish={onFinishEditCompany}
-                        form={editCompanyForm}
-                    >
-                        <Form.Item
-                            name="companyName"
-                            label="Company Name"
-                            rules={[
-                                { required: true, message: "Company Name required" },
-                                { max: 40, message: "Max. 40 characters." }
-                            ]}
-                        >
-                            <Input style={{ borderRadius: "0" }} size="large" />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="crn"
-                            label="Company Registration Number"
-                            rules={[{ required: true, message: "CRN required" },
-                            { max: 40, message: "Max. 40 characters." }
-                            ]}
-                        >
-                            <Input style={{ borderRadius: "0" }} size="large" />
-                        </Form.Item>
-
-                        <Form.Item
-                            name="country"
-                            label="Country"
-                            rules={[{ required: true, message: "Country required" },
-                            { max: 40, message: "Max. 40 characters." }
-                            ]}
-                        >
-                            <Input style={{ borderRadius: "0" }} size="large" />
-                        </Form.Item>
-
-
-                        <Form.Item
-                            name="webSite"
-                            label="WEB Site"
-                            rules={[{ required: true, message: "WEB Site required" },
-                            { max: 40, message: "Max. 40 characters." }
-                            ]}
-                        >
-                            <Input style={{ borderRadius: "0" }} size="large" />
-                        </Form.Item>
-
-                        <Form.Item className="flex justify-end mb-0">
-                            <Button
-                                style={{ borderRadius: "0" }}
-                                type="primary"
-                                htmlType="submit"
-                                size="large"
-                            >
-                                <strong> UPDATE </strong>
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Modal>
             </div>
         </div>
     );
