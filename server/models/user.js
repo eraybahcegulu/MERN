@@ -24,17 +24,23 @@ const UserSchema = mongoose.Schema(
             default: '-'
         },
 
-        createdAt: {
-            type: Date,
-            default: Date.now
-        },
-
         userRole: {
             required: true,
             type: String,
             enum: [UserRoles.ADMIN, UserRoles.VISITOR, UserRoles.STANDART, UserRoles.PREMIUM],
             default: UserRoles.ADMIN
-        }
+        },
+
+        lastLoginAt: {
+            type: Date,
+        },
+
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+
+
     },
 );
 

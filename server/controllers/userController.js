@@ -43,6 +43,7 @@ const login = async (req, res) => {
             if (isPasswordValid) {
                 const newSessionSecurityStamp = generate.securityStamp();
                 user.securityStamp = newSessionSecurityStamp;
+                user.lastLoginAt= new Date();
                 await user.save();
 
                 const token = generate.token(user);
