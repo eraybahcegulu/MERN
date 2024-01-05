@@ -151,207 +151,213 @@ const Product: React.FC = () => {
 
     const handleOpenAddProductModal = (): void => {
         setIsAddProductModalOpen(true);
-        
+
         if (company.length === 0) {
             notFoundCompany();
         }
-        
+
     };
 
     return (
         <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
-                <div className='flex flex-col items-center gap-4'>
-                    <span><strong className='text-2xl'>PRODUCTS</strong></span>
+            <div className='flex flex-col items-center gap-4'>
+                <span><strong className='text-2xl'>PRODUCTS</strong></span>
 
-                    <div className="flex flex-row item-center justify-center mt-10 gap-4">
-                        <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl mr-4" />
+                <div className="flex flex-row item-center justify-center mt-10 gap-4">
+                    <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl mr-4" />
 
-                        <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
-
-                        {
-                            product.length === 0
-                                ?
-                                <FontAwesomeIcon onClick={handleOpenAddProductModal} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
-                                :
-                                <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
-                        }
+                    <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
 
 
-                        <EditOutlined onClick={isEditProduct} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 transition-all text-2xl" />
+                    {
+                        (user.userRole === 'admin')
+                        &&
+                        <>
+                            {
+                                product.length === 0
+                                    ?
+                                    <FontAwesomeIcon onClick={handleOpenAddProductModal} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
+                                    :
+                                    <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 transition-all text-2xl" />
+                            }
 
-                        <DeleteOutlined onClick={deleteProduct} className="hover:cursor-pointer text-red-600 hover:text-red-500 transition-all text-2xl" />
+                            <EditOutlined onClick={isEditProduct} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 transition-all text-2xl" />
 
-                        <LogoutOutlined onClick={logout} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl" />
-                    </div>
+                            <DeleteOutlined onClick={deleteProduct} className="hover:cursor-pointer text-red-600 hover:text-red-500 transition-all text-2xl" />
+                        </>
+                    }
 
-                    <div>
-                        <ProductList search={search} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setselectedRowKeys} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
-                    </div>
-
-                    <Modal
-                        open={isAddProductModalOpen}
-                        onCancel={() => setIsAddProductModalOpen(false)}
-                        footer={false}
-                    >
-                        <h2>
-                            <strong>ADD PRODUCT</strong>
-                        </h2>
-                        <Form
-                            className="mt-4 flex flex-col gap-4"
-                            layout="vertical"
-                            onFinish={onFinishAddProduct}
-                            form={addProductForm}
-                        >
-                            <Form.Item
-                                name="productName"
-                                label="Product Name"
-                                rules={[
-                                    { required: true, message: "Product Name required" },
-                                    { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Input style={{ borderRadius: "0" }} size="large" />
-                            </Form.Item>
-
-                            <Form.Item
-                                name="productCategory"
-                                label="Category"
-                                rules={[{ required: true, message: "Category required" },
-                                { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Input style={{ borderRadius: "0" }} size="large" />
-                            </Form.Item>
-
-                            <Form.Item
-                                name="productAmount"
-                                label="Product Amount"
-                                rules={[{ required: true, message: "Product Amount required" },
-                                { max: 40, message: "Max. 40 characters." },
-                                {
-                                    pattern: /^[0-9]+$/,
-                                    message: "Only number for Product Amount",
-                                },
-                                ]}
-                            >
-                                <Input style={{ borderRadius: "0" }} size="large" />
-                            </Form.Item>
-
-
-                            <Form.Item
-                                name="amountUnit"
-                                label="Amount Unit"
-                                rules={[{ required: true, message: "Amount Unit required" },
-                                { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Input style={{ borderRadius: "0" }} size="large" />
-                            </Form.Item>
-
-                            <Form.Item
-                                name="company"
-                                label="Company"
-                                rules={[
-                                    { required: true, message: "Company required" },
-                                    { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Select style={{ borderRadius: "0" }} size="large" options={selectedCompany} />
-                            </Form.Item>
-
-                            <Form.Item className="flex justify-end mb-0">
-                                <Button
-                                    style={{ borderRadius: "0" }}
-                                    type="primary"
-                                    htmlType="submit"
-                                    size="large"
-                                >
-                                    <strong> ADD </strong>
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </Modal>
-
-                    <Modal
-                        open={isEditProductModalOpen}
-                        onCancel={() => setIsEditProductModalOpen(false)}
-                        footer={false}
-                    >
-                        <h2>
-                            <strong>EDIT PRODUCT</strong>
-                        </h2>
-                        <Form
-                            className="mt-4 flex flex-col gap-4"
-                            layout="vertical"
-                            onFinish={onFinishEditProduct}
-                            form={editProductForm}
-                        >
-                            <Form.Item
-                                name="productName"
-                                label="Product Name"
-                                rules={[
-                                    { required: true, message: "Product Name required" },
-                                    { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Input style={{ borderRadius: "0" }} size="large" />
-                            </Form.Item>
-
-                            <Form.Item
-                                name="productCategory"
-                                label="Category"
-                                rules={[{ required: true, message: "Category required" },
-                                { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Input style={{ borderRadius: "0" }} size="large" />
-                            </Form.Item>
-
-                            <Form.Item
-                                name="productAmount"
-                                label="Product Amount"
-                                rules={[{ required: true, message: "Product Amount required" },
-                                { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Input style={{ borderRadius: "0" }} size="large" />
-                            </Form.Item>
-
-
-                            <Form.Item
-                                name="amountUnit"
-                                label="Amount Unit"
-                                rules={[{ required: true, message: "Amount Unit required" },
-                                { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Input style={{ borderRadius: "0" }} size="large" />
-                            </Form.Item>
-
-                            <Form.Item
-                                name="company"
-                                label="Company"
-                                rules={[
-                                    { required: true, message: "Company required" },
-                                    { max: 40, message: "Max. 40 characters." }
-                                ]}
-                            >
-                                <Select style={{ borderRadius: "0" }} size="large" options={selectedCompany} />
-                            </Form.Item>
-
-                            <Form.Item className="flex justify-end mb-0">
-                                <Button
-                                    style={{ borderRadius: "0" }}
-                                    type="primary"
-                                    htmlType="submit"
-                                    size="large"
-                                >
-                                    <strong> UPDATE </strong>
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </Modal>
+                    <LogoutOutlined onClick={logout} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl" />
                 </div>
+
+                <div>
+                    <ProductList search={search} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setselectedRowKeys} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
+                </div>
+
+                <Modal
+                    open={isAddProductModalOpen}
+                    onCancel={() => setIsAddProductModalOpen(false)}
+                    footer={false}
+                >
+                    <h2>
+                        <strong>ADD PRODUCT</strong>
+                    </h2>
+                    <Form
+                        className="mt-4 flex flex-col gap-4"
+                        layout="vertical"
+                        onFinish={onFinishAddProduct}
+                        form={addProductForm}
+                    >
+                        <Form.Item
+                            name="productName"
+                            label="Product Name"
+                            rules={[
+                                { required: true, message: "Product Name required" },
+                                { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Input style={{ borderRadius: "0" }} size="large" />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="productCategory"
+                            label="Category"
+                            rules={[{ required: true, message: "Category required" },
+                            { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Input style={{ borderRadius: "0" }} size="large" />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="productAmount"
+                            label="Product Amount"
+                            rules={[{ required: true, message: "Product Amount required" },
+                            { max: 40, message: "Max. 40 characters." },
+                            {
+                                pattern: /^[0-9]+$/,
+                                message: "Only number for Product Amount",
+                            },
+                            ]}
+                        >
+                            <Input style={{ borderRadius: "0" }} size="large" />
+                        </Form.Item>
+
+
+                        <Form.Item
+                            name="amountUnit"
+                            label="Amount Unit"
+                            rules={[{ required: true, message: "Amount Unit required" },
+                            { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Input style={{ borderRadius: "0" }} size="large" />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="company"
+                            label="Company"
+                            rules={[
+                                { required: true, message: "Company required" },
+                                { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Select style={{ borderRadius: "0" }} size="large" options={selectedCompany} />
+                        </Form.Item>
+
+                        <Form.Item className="flex justify-end mb-0">
+                            <Button
+                                style={{ borderRadius: "0" }}
+                                type="primary"
+                                htmlType="submit"
+                                size="large"
+                            >
+                                <strong> ADD </strong>
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+
+                <Modal
+                    open={isEditProductModalOpen}
+                    onCancel={() => setIsEditProductModalOpen(false)}
+                    footer={false}
+                >
+                    <h2>
+                        <strong>EDIT PRODUCT</strong>
+                    </h2>
+                    <Form
+                        className="mt-4 flex flex-col gap-4"
+                        layout="vertical"
+                        onFinish={onFinishEditProduct}
+                        form={editProductForm}
+                    >
+                        <Form.Item
+                            name="productName"
+                            label="Product Name"
+                            rules={[
+                                { required: true, message: "Product Name required" },
+                                { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Input style={{ borderRadius: "0" }} size="large" />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="productCategory"
+                            label="Category"
+                            rules={[{ required: true, message: "Category required" },
+                            { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Input style={{ borderRadius: "0" }} size="large" />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="productAmount"
+                            label="Product Amount"
+                            rules={[{ required: true, message: "Product Amount required" },
+                            { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Input style={{ borderRadius: "0" }} size="large" />
+                        </Form.Item>
+
+
+                        <Form.Item
+                            name="amountUnit"
+                            label="Amount Unit"
+                            rules={[{ required: true, message: "Amount Unit required" },
+                            { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Input style={{ borderRadius: "0" }} size="large" />
+                        </Form.Item>
+
+                        <Form.Item
+                            name="company"
+                            label="Company"
+                            rules={[
+                                { required: true, message: "Company required" },
+                                { max: 40, message: "Max. 40 characters." }
+                            ]}
+                        >
+                            <Select style={{ borderRadius: "0" }} size="large" options={selectedCompany} />
+                        </Form.Item>
+
+                        <Form.Item className="flex justify-end mb-0">
+                            <Button
+                                style={{ borderRadius: "0" }}
+                                type="primary"
+                                htmlType="submit"
+                                size="large"
+                            >
+                                <strong> UPDATE </strong>
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            </div>
         </div>
     );
 };
