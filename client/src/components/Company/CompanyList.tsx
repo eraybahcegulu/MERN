@@ -8,9 +8,7 @@ import { RootState } from '../../store';
 import type { TableRowSelection } from 'antd/es/table/interface';
 
 import { CompanyDataType, CompanyListProps } from './types';
-import { columns  } from './columns';
-
-
+import { columns } from './columns';
 
 const CompanyList: FC<CompanyListProps> = ({
     search,
@@ -18,7 +16,6 @@ const CompanyList: FC<CompanyListProps> = ({
     setSelectedRowKeys,
     setSelectedRows,
 }) => {
-
 
     const rowSelection: TableRowSelection<CompanyDataType> = {
         selectedRowKeys,
@@ -32,21 +29,17 @@ const CompanyList: FC<CompanyListProps> = ({
     };
 
     const company = useSelector((state: RootState) => state.company.data);
-
-
     const status = useSelector((state: RootState) => state.company.status);
 
-
-
-    const filteredCompanies = company.filter(
+    const filteredCompanies = company?.filter(
         (item: any) =>
             item.companyName.toLowerCase().includes(search.trim()) ||
             item.crn.toLowerCase().includes(search.trim()) ||
             item.country.toLowerCase().includes(search.trim()) ||
             item.webSite.toLowerCase().includes(search.trim())
-    );
+    ) || [];
 
-    const columnsCompany = columns(filteredCompanies); 
+    const columnsCompany = columns(filteredCompanies);
 
     return (
         <>

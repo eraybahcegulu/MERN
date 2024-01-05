@@ -1,7 +1,7 @@
 const UserRoles = {
     ADMIN: 'admin',
     VISITOR: 'visitor',
-    STANDART: 'standart',
+    STANDARD: 'standard',
     PREMIUM : 'premium',
 };
 

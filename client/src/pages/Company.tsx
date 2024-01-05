@@ -151,7 +151,7 @@ const Company: React.FC = () => {
 
                         <>
                             {
-                                company.length === 0
+                                company?.length === 0
                                     ?
                                     <FontAwesomeIcon onClick={() => setIsAddCompanyModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600 ' icon={faPlus} bounce />
                                     :

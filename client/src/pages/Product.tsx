@@ -46,7 +46,7 @@ const Product: React.FC = () => {
     const company = useSelector((state: RootState) => state.company.data);
     const product = useSelector((state: RootState) => state.product.data);
 
-    const selectedCompany = company.map((company: { _id: any; companyName: any; }) => ({
+    const selectedCompany = company?.map((company: { _id: any; companyName: any; }) => ({
         value: company._id,
         label: company.companyName,
     }));
@@ -152,7 +152,7 @@ const Product: React.FC = () => {
     const handleOpenAddProductModal = (): void => {
         setIsAddProductModalOpen(true);
 
-        if (company.length === 0) {
+        if (company?.length === 0) {
             notFoundCompany();
         }
 
@@ -167,14 +167,14 @@ const Product: React.FC = () => {
                     <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer  hover:opacity-50 transition-all text-2xl mr-4" />
 
                     <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
-
+                    
 
                     {
                         (user.userRole === 'admin')
                         &&
                         <>
                             {
-                                product.length === 0
+                                (product?.length === 0)
                                     ?
                                     <FontAwesomeIcon onClick={handleOpenAddProductModal} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600:' icon={faPlus} bounce />
                                     :

@@ -30,25 +30,21 @@ const ProductList: FC<ProductListProps> = ({
     const product = useSelector((state: RootState) => state.product.data);
     const status = useSelector((state: RootState) => state.product.status);
 
-    
-
-    const filteredProducts = product.filter(
+    const filteredProducts = product?.filter(
         (item: any) =>
             item.productName.toLowerCase().includes(search.trim()) ||
             item.productCategory.toLowerCase().includes(search.trim()) ||
             item.amountUnit.toLowerCase().includes(search.trim()) ||
             item.company.companyName.toLowerCase().includes(search.trim()) 
-    );
+    ) || [];
 
     const productColumns = columns(filteredProducts); 
-
 
     return (
         <>
             {status === 'loading' && (
                 <div className="text-center">
-                    {' '}
-                    <Spin size="large" />{' '}
+                    <Spin size="large" />
                 </div>
             )}
 

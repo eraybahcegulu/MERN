@@ -8,7 +8,7 @@ const Panels = () => {
 
     const product = useSelector((state: RootState) => state.product.data);
     
-    const lastAddedThreeProduct = product.slice(-3);
+    const lastAddedThreeProduct = product ? product.slice(-3) : [];
     const productStepsData = lastAddedThreeProduct.map((product) => ({
         title:
             <span className='text-md'>{product.productName}
@@ -30,7 +30,7 @@ const Panels = () => {
     }));
 
     const company = useSelector((state: RootState) => state.company.data);
-    const lastAddedThreeCompanies = company.slice(-3);
+    const lastAddedThreeCompanies = company ? company.slice(-3) : [];
     const companyStepsData = lastAddedThreeCompanies.map((company) => ({
         title:
             <span className='text-md'>{company.companyName}
@@ -76,7 +76,7 @@ const Panels = () => {
                                     {companyStatus === 'loading' && <div> <Spin size="large" /> </div>}
                                     {companyStatus === 'succeeded' &&
                                         (
-                                            <span>{company.length}</span>
+                                            <span>{company?.length}</span>
 
                                         )}
                                     {companyStatus === 'failed' &&
@@ -97,7 +97,7 @@ const Panels = () => {
                                     {productStatus === 'loading' && <div> <Spin size="large" /> </div>}
                                     {productStatus === 'succeeded' &&
                                         (
-                                            <span>{product.length}</span>
+                                            <span>{product?.length}</span>
                                         )}
                                     {productStatus === 'failed' &&
                                         <Alert message="Error" type="error" />}
