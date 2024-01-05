@@ -59,7 +59,7 @@ const login = async (req, res) => {
 
 const userInfo = async (req, res) => {
     try {
-        const token = req.body.headers.authorization.split(' ')[1];
+        const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
         const user = await User.findById(decodedToken.userId);

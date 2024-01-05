@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Status = require('./enums/status');
 
-const BaseModel = {
-
+const BaseModel ={
+    
     creatorId: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
@@ -30,7 +30,6 @@ const BaseModel = {
         enum: [Status.ACTIVE, Status.DELETED],
         default: Status.ACTIVE,
     }
-
 };
 
 module.exports = BaseModel;

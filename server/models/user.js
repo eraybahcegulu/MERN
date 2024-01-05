@@ -27,7 +27,7 @@ const UserSchema = mongoose.Schema(
         userRole: {
             required: true,
             type: String,
-            enum: [UserRoles.ADMIN, UserRoles.VISITOR, UserRoles.STANDART, UserRoles.PREMIUM],
+            enum: [UserRoles.ADMIN, UserRoles.VISITOR, UserRoles.STANDARD, UserRoles.PREMIUM],
             default: UserRoles.ADMIN
         },
 
@@ -39,8 +39,6 @@ const UserSchema = mongoose.Schema(
             type: Date,
             default: Date.now
         },
-
-
     },
 );
 

@@ -17,6 +17,7 @@ const ProductSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        
         amountUnit: {
             type: String,
             required: true,
@@ -26,6 +27,7 @@ const ProductSchema = mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Company'
         },
+
         ...BaseModel
     },
 );

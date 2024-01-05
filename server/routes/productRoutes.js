@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/productController");
-const {auth, requireAdmin}  = require('../middlewares/authMiddleware');
-const {validLength} = require("../middlewares/validatorMiddleware");
+const { auth, requireAdmin } = require('../middlewares/authMiddleware');
+const { validLength } = require("../middlewares/validatorMiddleware");
 const logger = require("../middlewares/loggerMiddleware");
 
 router.get("/api/product/get-all", auth, productController.getAllProducts);

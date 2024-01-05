@@ -3,7 +3,6 @@ const BaseModel = require("./baseModel");
 
 const CompanySchema = mongoose.Schema(
     {
-
         companyName: {
             type: String,
             required: true,
