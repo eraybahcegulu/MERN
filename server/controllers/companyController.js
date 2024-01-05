@@ -96,10 +96,11 @@ const updateCompany = async (req, res, next) => {
         if (existingCompanyWEBSiteControl) {
             return res.status(400).json({ message: "Failed. This WEB Site is already registered" });
         }
+        
         const existingCompany = await Company.findById(id);
 
-        const firstData = existingCompany;
-        req.firstData = firstData;
+        req.firstData = existingCompany;
+
         await Company.findByIdAndUpdate(id, req.body);
         res.status(200).json({ message: "Company updated successfully." });
         next();

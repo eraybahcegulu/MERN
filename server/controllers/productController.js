@@ -65,8 +65,7 @@ const updateProduct = async (req, res, next) => {
 
         const existingProduct = await Product.findById(id);
 
-        const firstData = existingProduct;
-        req.firstData = firstData;
+        req.firstData = existingProduct;
 
         await Product.findByIdAndUpdate(id, req.body);
         res.status(200).json({ message: "Product updated successfully." });

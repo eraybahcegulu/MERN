@@ -12,14 +12,15 @@ interface UserProviderProps {
     children: ReactNode;
 }
 
-interface User {
-
-}
+interface User {}
 
 interface UserContextType {
     user: User[];
+    loading: boolean;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     getUser: (token: any) => Promise<void>;
 }
+
 
 const UserContext = createContext<UserContextType | any>(null);
 
