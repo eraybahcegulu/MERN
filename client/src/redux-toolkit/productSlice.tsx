@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { failedServer } from '../constants/notifyConstant/notifyProduct';
-
 import { getProducts } from '../services/productService';
+import { handleFetchProductError } from '../constants/errorConstant/errorProduct';
 
 interface ProductState {
     data: any[];
@@ -15,12 +14,7 @@ export const fetchProductData = createAsyncThunk('fetchProductData', async (toke
         const response = await getProducts(token);
         return response.data;
     } catch (error: any) {
-        if (error.response) {
-            failedServer(error.response.data.message)
-        }
-        else {
-            failedServer(error.message)
-        }
+        handleFetchProductError(error);
     }
 });
 

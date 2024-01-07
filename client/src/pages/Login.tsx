@@ -7,9 +7,10 @@ import RegisterForm from '../components/Login/RegisterForm';
 import LoginForm from '../components/Login/LoginForm';
 
 import { register, login } from '../services/userService';
-import { successRegister, errorRegister, invalidLogin } from '../constants/notifyConstant/notifyUser'
+import { successRegister } from '../constants/notifyConstant/notifyUser'
 
 import { useUserData } from "../contexts/userContext";
+import { handleInvalidLoginError, handleRegisterError } from '../constants/errorConstant/errorUser';
 
 interface LoginProps { }
 
@@ -32,11 +33,7 @@ const Login: React.FC<LoginProps> = () => {
         registerForm.resetFields();
       }, 200);
     } catch (error: any) {
-      if (error.response && error.response.status === 400) {
-        errorRegister(error.response.data.message);
-      } else {
-        console.error(error);
-      }
+      handleRegisterError(error);
     }
   };
 
@@ -57,11 +54,7 @@ const Login: React.FC<LoginProps> = () => {
       navigate(`/home`,)
 
     } catch (error: any) {
-      if (error.response && error.response.status === 400) {
-        invalidLogin(error.response.data.message)
-      } else {
-        console.error(error);
-      }
+      handleInvalidLoginError(error);
     }
   };
 

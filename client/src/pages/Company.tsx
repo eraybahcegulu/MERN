@@ -13,21 +13,19 @@ import { fetchCompanyData } from '../redux-toolkit/companySlice';
 
 import { createCompany, removeCompany, updateCompany } from '../services/companyService';
 
-import { failedServer } from '../constants/notifyConstant/notifyUser';
 import {
     successAddCompany,
-    errorAddCompany,
     infoDeleteCompany,
     infoEditCompany,
     successDeleteCompany,
     successEditCompany,
-    errorEditCompany
 } from '../constants/notifyConstant/notifyCompany';
 
 import { useUserData } from "../contexts/userContext";
 import { fetchProductData } from '../redux-toolkit/productSlice';
 import AddCompanyModal from '../components/Company/AddCompanyModal';
 import EditCompanyModal from '../components/Company/EditCompanyModal';
+import { handleAddCompanyError, handleEditCompanyError, handleDeleteCompanyError } from '../constants/errorConstant/errorCompany';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -44,6 +42,7 @@ const Company: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const company = useSelector((state: RootState) => state.company.data);
+    const status = useSelector((state: RootState) => state.company.status);
 
     const { user } = useUserData();
 
@@ -59,12 +58,7 @@ const Company: React.FC = () => {
             }, 100);
 
         } catch (error: any) {
-            if (error.response) {
-                errorAddCompany(error.response.data.message)
-            }
-            else {
-                failedServer(error.message)
-            }
+            handleAddCompanyError(error);
         }
     };
 
@@ -89,7 +83,7 @@ const Company: React.FC = () => {
             dispatch(fetchCompanyData(user.token));
 
         } catch (error: any) {
-            failedServer(error.message)
+            handleDeleteCompanyError(error)
         }
     };
 
@@ -121,12 +115,7 @@ const Company: React.FC = () => {
             setSelectedRows([]);
             setIsEditCompanyModalOpen(false);
         } catch (error: any) {
-            if (error.response) {
-                errorEditCompany(error.response.data.message)
-            }
-            else {
-                failedServer(error.message)
-            }
+            handleEditCompanyError(error);
         }
     };
 
@@ -153,7 +142,7 @@ const Company: React.FC = () => {
 
                         <>
                             {
-                                company?.length === 0
+                                company?.length === 0 && status ==='succeeded'
                                     ?
                                     <FontAwesomeIcon onClick={() => setIsAddCompanyModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600 ' icon={faPlus} bounce />
                                     :

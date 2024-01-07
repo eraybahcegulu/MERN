@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowDownOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 
 import { changeEmail, changePassword } from '../../services/userService';
-import { errorChangePassword, successChangePassword, failedServer, errorChangeEmail, successChangeEmail } from '../../constants/notifyConstant/notifyUser';
+import { errorChangePassword, successChangePassword, successChangeEmail } from '../../constants/notifyConstant/notifyUser';
 import { useUserData } from '../../contexts/userContext';
+import { handleChangeEmailError, handleChangePasswordError } from '../../constants/errorConstant/errorUser';
 
 const contentStyle: React.CSSProperties = {
     height: '375px',
@@ -15,11 +16,9 @@ const contentStyle: React.CSSProperties = {
 };
 
 const UserInfo: React.FC = () => {
-    const { user, loading , getUser } = useUserData();
+    const { user, loading, getUser } = useUserData();
     const [changePasswordForm] = Form.useForm();
     const [changeEmailForm] = Form.useForm();
-
-    
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -40,12 +39,7 @@ const UserInfo: React.FC = () => {
 
 
         } catch (error: any) {
-            if (error.response && error.response.status === 400) {
-                errorChangePassword(error.response.data.message)
-            }
-            else {
-                failedServer(error.message)
-            }
+            handleChangePasswordError(error);
         }
     };
 
@@ -61,12 +55,7 @@ const UserInfo: React.FC = () => {
 
 
         } catch (error: any) {
-            if (error.response && error.response.status === 400) {
-                errorChangeEmail(error.response.data.message)
-            }
-            else {
-                failedServer(error.message)
-            }
+            handleChangeEmailError(error);
         }
     };
 
@@ -183,7 +172,7 @@ const UserInfo: React.FC = () => {
                                 </Form.Item>
                                 <Form.Item className="flex justify-center mb-0">
                                     <Button
-
+                                        className='hover:scale-105 transition duration-700'
                                         style={{ borderRadius: "0" }}
                                         type="primary"
                                         htmlType="submit"
@@ -236,6 +225,7 @@ const UserInfo: React.FC = () => {
                                 </Form.Item>
                                 <Form.Item className="flex justify-center mb-0">
                                     <Button
+                                        className='hover:scale-105 transition duration-700'
                                         style={{ borderRadius: "0" }}
                                         type="primary"
                                         htmlType="submit"

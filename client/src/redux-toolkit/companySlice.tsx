@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { failedServer } from '../constants/notifyConstant/notifyCompany';
-
 import { getCompanies} from '../services/companyService'
+import { handleFetchCompanyError } from '../constants/errorConstant/errorCompany';
 
 interface CompanyState {
     data: any[];
@@ -15,12 +14,7 @@ export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async (toke
         const response = await getCompanies(token);
         return response.data;
     }  catch (error: any) {
-        if (error.response) {
-            failedServer(error.response.data.message)
-        }
-        else {
-            failedServer(error.message)
-        }
+        handleFetchCompanyError(error);
     }
 });
 

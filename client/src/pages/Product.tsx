@@ -12,15 +12,12 @@ import { fetchProductData } from '../redux-toolkit/productSlice';
 
 import { createProduct, removeProduct, updateProduct } from '../services/productService';
 
-import { failedServer } from '../constants/notifyConstant/notifyUser';
 import {
     successAddProduct,
-    errorAddProduct,
     infoDeleteProduct,
     successDeleteProduct,
     infoEditProduct,
     successEditProduct,
-    errorEditProduct,
     notFoundCompany
 } from '../constants/notifyConstant/notifyProduct';
 
@@ -30,6 +27,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useUserData } from "../contexts/userContext";
 import AddProductModal from '../components/Product/AddProductModal';
 import EditProductModal from '../components/Product/EditProductModal';
+import { handleAddProductError, handleEditProductError, handleDeleteProductError } from '../constants/errorConstant/errorProduct';
 
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -47,6 +45,7 @@ const Product: React.FC = () => {
 
     const company = useSelector((state: RootState) => state.company.data);
     const product = useSelector((state: RootState) => state.product.data);
+    const status = useSelector((state: RootState) => state.product.status);
 
     const selectedCompany = company?.map((company: { _id: any; companyName: any; }) => ({
         value: company._id,
@@ -67,12 +66,7 @@ const Product: React.FC = () => {
             }, 100);
 
         } catch (error: any) {
-            if (error.response) {
-                errorAddProduct(error.response.data.message)
-            }
-            else {
-                failedServer(error.message)
-            }
+            handleAddProductError(error);
         }
     };
 
@@ -104,7 +98,7 @@ const Product: React.FC = () => {
             dispatch(fetchProductData(user.token));
 
         } catch (error: any) {
-            failedServer(error.message)
+            handleDeleteProductError(error)
         }
     };
 
@@ -136,12 +130,7 @@ const Product: React.FC = () => {
             setSelectedRows([]);
             setIsEditProductModalOpen(false);
         } catch (error: any) {
-            if (error.response) {
-                errorEditProduct(error.response.data.message)
-            }
-            else {
-                failedServer(error.message)
-            }
+            handleEditProductError(error);
         }
     };
 
@@ -176,7 +165,7 @@ const Product: React.FC = () => {
                         &&
                         <>
                             {
-                                (product?.length === 0)
+                                product?.length === 0 && status === 'succeeded'
                                     ?
                                     <FontAwesomeIcon onClick={handleOpenAddProductModal} className='hover:cursor-pointer text-4xl text-green-700 hover:scale-125 hover:text-green-600:' icon={faPlus} bounce />
                                     :

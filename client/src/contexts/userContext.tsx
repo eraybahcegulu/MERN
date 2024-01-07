@@ -5,7 +5,8 @@ import { fetchProductData } from '../redux-toolkit/productSlice';
 
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
-import { failedServer } from '../constants/notifyConstant/notifyUser';
+
+import { handleFailedServerUserError } from '../constants/errorConstant/errorUser';
 
 
 interface UserProviderProps {
@@ -20,7 +21,6 @@ interface UserContextType {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     getUser: (token: any) => Promise<void>;
 }
-
 
 const UserContext = createContext<UserContextType | any>(null);
 
@@ -39,7 +39,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             dispatch(fetchProductData(token));
             setLoading(false);
         } catch (error: any) {
-            failedServer(error.response.data.message);
+            handleFailedServerUserError(error);
         }
     };
 

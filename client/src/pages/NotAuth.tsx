@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 function NotAuth() {
     const navigate = useNavigate();
 
+    const goLogin = () => {
+        sessionStorage.clear();
+        localStorage.clear();
+        navigate("/")
+    };
+
     return (
         <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
             <Result
@@ -12,7 +18,7 @@ function NotAuth() {
                 title="403"
                 subTitle="Sorry, the page you visited does not exist."
                 extra={
-                    <Button type="primary" onClick={() => navigate("/")}>
+                    <Button type="primary" onClick={goLogin}>
                         Go Login
                     </Button>
                 }
