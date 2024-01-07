@@ -20,7 +20,8 @@
 .ant-radio-button-wrapper,
 .ant-popover,
 .ant-steps-item-title,
-.ant-steps-item-description {
+.ant-steps-item-description,
+.ant-carousel{
   font-family: 'Electrolize', sans-serif;
 }
 

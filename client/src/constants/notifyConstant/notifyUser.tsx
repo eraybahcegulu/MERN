@@ -51,6 +51,20 @@ const successChangePassword = (data: any) =>
         duration: 3,
     });
 
+    const errorChangeEmail = (data: any) =>
+    message.open({
+        type: 'error',
+        content: data,
+        duration: 3,
+    });
+
+const successChangeEmail = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -58,5 +72,7 @@ export {
     errorRegister,
     invalidLogin,
     errorChangePassword,
-    successChangePassword
+    successChangePassword,
+    errorChangeEmail,
+    successChangeEmail
 };

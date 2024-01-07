@@ -117,9 +117,38 @@ const changePassword = async (req, res) => {
     }
 };
 
+const changeEmail = async (req, res) => {
+    const id = req.params.id;
+    try {
+        
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
+        }
+
+        const existingEmail = await User.findOne({email: req.body.newEmail})
+        if(existingEmail){
+            return res.status(400).json({ status: 400, message: `${req.body.newEmail} is already registered, try again`})
+        }
+
+        user.email = req.body.newEmail;
+        await user.save();
+        //console.log(user);
+
+        const newTokenAfterEmailChange = generate.token(user);
+
+        return res.status(200).json({ message: 'Your email has been changed successfully', token: newTokenAfterEmailChange});
+
+    } catch (error) {
+        console.error('Error', error);
+        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+    }
+};
+
 module.exports = {
     register,
     login,
     userInfo,
-    changePassword
+    changePassword,
+    changeEmail
 };

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL } from '../constants/apiConstant/apiUser';
+import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL, CHANGE_EMAIL_API_URL } from '../constants/apiConstant/apiUser';
 
 const register = async (data: any) => {
     return await axios.post(`${REGISTER_API_URL}`, data)
@@ -39,4 +39,20 @@ const changePassword = async (id: any, data: any, token: any) => {
         )
 }
 
-export { register, login, userInfo, changePassword };
+const changeEmail = async (id: any, data: any, token: any) => {
+    return await axios.put
+        (
+            `${CHANGE_EMAIL_API_URL}/${id}`,
+
+            data,
+
+            {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                    api_source: `${CHANGE_EMAIL_API_URL}`
+                }
+            }
+        )
+}
+
+export { register, login, userInfo, changePassword, changeEmail};
