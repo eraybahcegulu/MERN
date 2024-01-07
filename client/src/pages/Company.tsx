@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import CompanyList from '../components/Company/CompanyList';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,7 +28,6 @@ import { useUserData } from "../contexts/userContext";
 import { fetchProductData } from '../redux-toolkit/productSlice';
 import AddCompanyModal from '../components/Company/AddCompanyModal';
 import EditCompanyModal from '../components/Company/EditCompanyModal';
-import ViewDeletedComapinesModal from '../components/Company/ViewDeletedCompaniesModal';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -40,7 +39,6 @@ const Company: React.FC = () => {
 
     const [isAddCompanyModalOpen, setIsAddCompanyModalOpen] = useState<boolean>(false);
     const [isEditCompanyModalOpen, setIsEditCompanyModalOpen] = useState<boolean>(false);
-    const [isViewDeletedCompanies, setIsViewDeletedCompanies] = useState<boolean>(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -166,8 +164,6 @@ const Company: React.FC = () => {
 
                             <DeleteOutlined onClick={deleteCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
 
-                            <SyncOutlined onClick={() => setIsViewDeletedCompanies(true)} className="hover:cursor-pointer text-violet-600 hover:text-violet-500 hover:scale-125 transition-all text-2xl" />
-
                         </>
 
                     }
@@ -180,7 +176,6 @@ const Company: React.FC = () => {
 
                 <AddCompanyModal addCompanyForm={addCompanyForm} onFinishAddCompany={onFinishAddCompany} isAddCompanyModalOpen={isAddCompanyModalOpen} setIsAddCompanyModalOpen={setIsAddCompanyModalOpen} />
                 <EditCompanyModal editCompanyForm={editCompanyForm} onFinishEditCompany={onFinishEditCompany} isEditCompanyModalOpen={isEditCompanyModalOpen} setIsEditCompanyModalOpen={setIsEditCompanyModalOpen} />
-                <ViewDeletedComapinesModal isViewDeletedCompanies={isViewDeletedCompanies} setIsViewDeletedCompanies={setIsViewDeletedCompanies} />
 
             </div>
         </div>
