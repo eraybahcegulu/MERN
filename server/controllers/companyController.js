@@ -4,13 +4,43 @@ const Status = require("../models/enums/status");
 
 const getAllCompanies = async (req, res) => {
     try {
-        const companies = await Company.find({ status: Status.ACTIVE });
+        const companies = await Company.aggregate([
+            {
+                $match: { status: Status.ACTIVE }
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    let: { companyId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$company', '$$companyId'] },
+                                        { $eq: ['$status', Status.ACTIVE] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'products'
+                }
+            },
+            {
+                $addFields: {
+                    products: '$products'
+                }
+            }
+        ]);
+
         res.status(200).json(companies);
     } catch (error) {
         console.error('Error', error);
         return res.status(500).json({ status: 500, message: 'Error', error: error.message });
     }
 };
+
 
 const addCompany = async (req, res, next) => {
     try {
@@ -54,7 +84,7 @@ const deleteCompany = async (req, res, next) => {
             company.status = Status.DELETED;
             company.lastDeleterId = userId;
             await company.save();
-            
+
             products.forEach(async product => {
                 product.status = Status.DELETED;
                 product.lastDeleterId = userId;
@@ -62,8 +92,8 @@ const deleteCompany = async (req, res, next) => {
             });
 
             const isPlural = products.length > 1 ? 's' : '';
-            res.status(200).json({ message: `${company.companyName} company had ${products.length} product${isPlural}. Company and product${isPlural} was deleted successfully`});
-            
+            res.status(200).json({ message: `${company.companyName} company had ${products.length} product${isPlural}. Company and product${isPlural} was deleted successfully` });
+
         } else {
 
             company.status = Status.DELETED;
@@ -96,7 +126,7 @@ const updateCompany = async (req, res, next) => {
         if (existingCompanyWEBSiteControl) {
             return res.status(400).json({ message: "Failed. This WEB Site is already registered" });
         }
-        
+
         const existingCompany = await Company.findById(id);
 
         req.firstData = existingCompany;

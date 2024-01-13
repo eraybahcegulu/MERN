@@ -1,5 +1,8 @@
 import type { ColumnsType } from 'antd/es/table';
 import { CompanyDataType } from './types';
+import { Popover } from 'antd';
+import React from 'react';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 export const columns = (companyData: CompanyDataType[]) => {
 
@@ -51,6 +54,39 @@ export const columns = (companyData: CompanyDataType[]) => {
             filterSearch: true,
             onFilter: (value: any, record) => record.webSite.startsWith(value),
             width: '25%',
+        },
+        {
+            title: 'Total Product',
+            width: '25%',
+            render: (_, record) => (
+                <div className='flex flex-row'>
+
+                    {
+                        record.products.length
+                    }
+
+                    {
+                        record.products.length > 0
+                        &&
+                        <Popover
+                            placement="right"
+                            content={
+                                <div className='flex flex-col gap-2 text-xs'>
+
+                                    {record.products.map(product => (
+                                        <span key={product._id} className='text-xs'>
+                                            <strong>{product.productName}</strong>
+                                        </span>
+                                    ))}
+                                </div>
+                            }
+                        >
+                            <InfoCircleOutlined className='text-xl ml-2 hover:scale-125 transition-all text-blue-600' />
+                        </Popover>
+                    }
+
+                </div>
+            ),
         },
     ];
     return companyColumns;

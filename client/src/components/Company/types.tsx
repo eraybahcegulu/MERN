@@ -4,6 +4,7 @@ export interface CompanyDataType {
     crn: string;
     country: string;
     webSite: string;
+    products: Array<any>;
 }
 
 export interface CompanyListProps {
