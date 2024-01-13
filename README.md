@@ -16,11 +16,11 @@
 
 ![1](https://github.com/eraybahcegulu/MERN/assets/84785201/5a830bc1-39f9-49fc-8f23-8802020ee39a)
 
-![2](https://github.com/eraybahcegulu/MERN/assets/84785201/31fd5da2-4f2b-4a13-83ab-65324cf0052a)
+![2](https://github.com/eraybahcegulu/MERN/assets/84785201/f18da083-e316-46ef-baa1-3183a985f7f2)
 
-![x](https://github.com/eraybahcegulu/MERN/assets/84785201/8f4b391d-d6f3-43e3-8547-cd864ec2f850)
+![x](https://github.com/eraybahcegulu/MERN/assets/84785201/4d176854-4ebf-49b6-9b0b-6f6e8522a548)
 
-![3](https://github.com/eraybahcegulu/MERN/assets/84785201/9fa8b9b4-fb8c-44e5-a585-779e03655cae)
+![3](https://github.com/eraybahcegulu/MERN/assets/84785201/8188bfef-895f-4ac0-a92b-9fe208e5281a)
 
 ![4](https://github.com/eraybahcegulu/MERN/assets/84785201/6acc1840-4d58-4f7f-bccc-2471d8d7e21b)
 
