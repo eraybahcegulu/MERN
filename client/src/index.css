@@ -21,7 +21,8 @@
 .ant-popover,
 .ant-steps-item-title,
 .ant-steps-item-description,
-.ant-carousel{
+.ant-carousel,
+.ant-form-item-explain-error{
   font-family: 'Electrolize', sans-serif;
 }
 

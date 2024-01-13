@@ -28,6 +28,7 @@ import { useUserData } from "../contexts/userContext";
 import AddProductModal from '../components/Product/AddProductModal';
 import EditProductModal from '../components/Product/EditProductModal';
 import { handleAddProductError, handleEditProductError, handleDeleteProductError } from '../constants/errorConstant/errorProduct';
+import { fetchCompanyData } from '../redux-toolkit/companySlice';
 
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -60,6 +61,7 @@ const Product: React.FC = () => {
             const res = await createProduct(values, user.token);
             successAddProduct(res.data.message)
             dispatch(fetchProductData(user.token));
+            dispatch(fetchCompanyData(user.token));
             setIsAddProductModalOpen(false);
             setTimeout(() => {
                 addProductForm.resetFields();
@@ -96,6 +98,7 @@ const Product: React.FC = () => {
 
             setselectedRowKeys([]);
             dispatch(fetchProductData(user.token));
+            dispatch(fetchCompanyData(user.token));
 
         } catch (error: any) {
             handleDeleteProductError(error)
@@ -125,6 +128,7 @@ const Product: React.FC = () => {
             const res = await updateProduct(selectedRowKeys, values, user.token);
             successEditProduct(res.data.message);
             dispatch(fetchProductData(user.token));
+            dispatch(fetchCompanyData(user.token));
             editProductForm.resetFields();
             setselectedRowKeys([]);
             setSelectedRows([]);
@@ -157,8 +161,11 @@ const Product: React.FC = () => {
                 <div className="flex flex-row item-center justify-center mt-10 gap-4">
                     <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer hover:scale-125 hover:opacity-50 transition-all text-2xl mr-4" />
 
-                    <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
-
+                    {
+                        (user.userRole === 'admin' || user.userRole === 'premium')
+                        &&
+                        <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
+                    }
 
                     {
                         (user.userRole === 'admin')
@@ -167,7 +174,7 @@ const Product: React.FC = () => {
                             {
                                 product?.length === 0 && status === 'succeeded'
                                     ?
-                                    <FontAwesomeIcon onClick={handleOpenAddProductModal} className='hover:cursor-pointer text-4xl text-green-700 hover:scale-125 hover:text-green-600:' icon={faPlus} bounce />
+                                    <FontAwesomeIcon onClick={handleOpenAddProductModal} className='hover:cursor-pointer text-4xl text-green-700 hover:scale-125 hover:text-green-600' icon={faPlus} bounce />
                                     :
                                     <PlusOutlined onClick={handleOpenAddProductModal} className="hover:cursor-pointer text-green-700 hover:text-green-600 hover:scale-125 transition-all text-2xl" />
                             }

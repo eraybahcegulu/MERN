@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { Card, Radio, Modal, Form, Button, Input, Spin, Carousel } from 'antd';
+import { Card, Radio, Modal, Form, Button, Input, Spin, Carousel, Popover } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ArrowDownOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, InfoCircleOutlined, LogoutOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
 
 import { changeEmail, changePassword } from '../../services/userService';
 import { errorChangePassword, successChangePassword, successChangeEmail } from '../../constants/notifyConstant/notifyUser';
 import { useUserData } from '../../contexts/userContext';
 import { handleChangeEmailError, handleChangePasswordError } from '../../constants/errorConstant/errorUser';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGem } from '@fortawesome/free-solid-svg-icons';
 
 const contentStyle: React.CSSProperties = {
     height: '375px',
@@ -81,6 +84,7 @@ const UserInfo: React.FC = () => {
                                         <span> {user.email} </span>
                                     </div>
 
+
                                     <div>
                                         <SettingOutlined onClick={() => setIsAccountSettingsModalOpen(true)} className='ml-2 hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
                                         <LogoutOutlined
@@ -88,6 +92,7 @@ const UserInfo: React.FC = () => {
                                             className='ml-2 text-2xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-300 transition-all'
                                         />
                                     </div>
+
                                 </>
                                 :
                                 <Spin size="large" />
@@ -235,6 +240,35 @@ const UserInfo: React.FC = () => {
                                     </Button>
                                 </Form.Item>
                             </Form>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
+                            {
+                                !(user.userRole === 'admin' || user.userRole === 'premium')
+                                ?
+                                <>
+                                    <span> YOU HAVE STANDARD MEMBERSHIP </span>
+                                    <span className='text-2xl'> GET PREMIUM NOW </span>
+                                    <FontAwesomeIcon className='hover:cursor-pointer text-4xl text-violet-500 hover:text-violet-400 ' icon={faGem} shake />
+                                    <Popover placement="bottom"
+                                            content={
+                                                <div className='flex flex-col gap-2 text-xs'>
+                                                    <span className='text-xs'> <PlusOutlined /> <strong>Premium Search</strong> </span>
+                                                </div>
+                                            }
+                                        >
+
+                                            <InfoCircleOutlined className='text-md mt-4 hover:scale-125 transition-all' />
+                                        </Popover>
+
+                                </>
+                                :
+                                <>
+                                    <span className='text-2xl'> PREMIUM ACTIVATED </span>
+                                </>
+                            }
                         </div>
                     </div>
 
