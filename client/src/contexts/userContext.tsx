@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { userInfo } from '../services/userService';
 import { fetchCompanyData } from '../redux-toolkit/companySlice';
 import { fetchProductData } from '../redux-toolkit/productSlice';
@@ -24,7 +24,7 @@ interface UserContextType {
 
 const UserContext = createContext<UserContextType | any>(null);
 
-export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const dispatch = useDispatch<AppDispatch>();
@@ -33,7 +33,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         try {
             const response = await userInfo(token);
             token = response.data.token;
-            console.log(response.data)
             setUser(response.data);
             dispatch(fetchCompanyData(token));
             dispatch(fetchProductData(token));
@@ -68,6 +67,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     );
 };
 
-export const useUserData = () => {
-    return useContext(UserContext);
-};
+export {
+    UserProvider
+}
+
+export default UserContext;

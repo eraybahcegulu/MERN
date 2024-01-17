@@ -5,7 +5,7 @@ import { ArrowDownOutlined, InfoCircleOutlined, LogoutOutlined, PlusOutlined, Se
 
 import { changeEmail, changePassword } from '../../services/userService';
 import { errorChangePassword, successChangePassword, successChangeEmail } from '../../constants/notifyConstant/notifyUser';
-import { useUserData } from '../../contexts/userContext';
+import useUser from '../../hooks/useUser';
 import { handleChangeEmailError, handleChangePasswordError } from '../../constants/errorConstant/errorUser';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,7 +19,7 @@ const contentStyle: React.CSSProperties = {
 };
 
 const UserInfo: React.FC = () => {
-    const { user, loading, getUser } = useUserData();
+    const { user, loading, getUser } = useUser();
     const [changePasswordForm] = Form.useForm();
     const [changeEmailForm] = Form.useForm();
 

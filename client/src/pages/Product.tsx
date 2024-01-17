@@ -24,7 +24,7 @@ import {
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { useUserData } from "../contexts/userContext";
+import useUser from "../hooks/useUser";
 import AddProductModal from '../components/Product/AddProductModal';
 import EditProductModal from '../components/Product/EditProductModal';
 import { handleAddProductError, handleEditProductError, handleDeleteProductError } from '../constants/errorConstant/errorProduct';
@@ -53,7 +53,7 @@ const Product: React.FC = () => {
         label: company.companyName,
     }));
 
-    const { user } = useUserData();
+    const { user } = useUser();
 
     const onFinishAddProduct = async (values: any) => {
         values.creatorId = user.userId;

@@ -21,7 +21,7 @@ import {
     successEditCompany,
 } from '../constants/notifyConstant/notifyCompany';
 
-import { useUserData } from "../contexts/userContext";
+import useUser from "../hooks/useUser";
 import { fetchProductData } from '../redux-toolkit/productSlice';
 import AddCompanyModal from '../components/Company/AddCompanyModal';
 import EditCompanyModal from '../components/Company/EditCompanyModal';
@@ -44,7 +44,7 @@ const Company: React.FC = () => {
     const company = useSelector((state: RootState) => state.company.data);
     const status = useSelector((state: RootState) => state.company.status);
 
-    const { user } = useUserData();
+    const { user } = useUser();
 
     const onFinishAddCompany = async (values: any) => {
         values.creatorId = user.userId;
