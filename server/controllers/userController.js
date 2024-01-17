@@ -43,7 +43,7 @@ const login = async (req, res) => {
             if (isPasswordValid) {
                 const newSessionSecurityStamp = generate.securityStamp();
                 user.securityStamp = newSessionSecurityStamp;
-                user.lastLoginAt= new Date();
+                user.lastLoginAt = new Date();
                 await user.save();
 
                 const token = generate.token(user);
@@ -91,7 +91,7 @@ const userInfo = async (req, res) => {
 const changePassword = async (req, res) => {
     const id = req.params.id;
     try {
-        
+
         const user = await User.findById(id);
         if (!user) {
             return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
@@ -99,8 +99,7 @@ const changePassword = async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(req.body.currentPassword, user.password);
 
-        if(!isPasswordValid)
-        {
+        if (!isPasswordValid) {
             return res.status(400).json({ message: 'Invalid Current Password' });
         }
 
@@ -109,7 +108,7 @@ const changePassword = async (req, res) => {
         user.password = hashedPassword;
         await user.save();
 
-        return res.status(200).json({ message: 'Your password has been changed successfully'});
+        return res.status(200).json({ message: 'Your password has been changed successfully' });
 
     } catch (error) {
         console.error('Error', error);
@@ -120,15 +119,15 @@ const changePassword = async (req, res) => {
 const changeEmail = async (req, res) => {
     const id = req.params.id;
     try {
-        
+
         const user = await User.findById(id);
         if (!user) {
             return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
         }
 
-        const existingEmail = await User.findOne({email: req.body.newEmail})
-        if(existingEmail){
-            return res.status(400).json({ status: 400, message: `${req.body.newEmail} is already registered, try again`})
+        const existingEmail = await User.findOne({ email: req.body.newEmail })
+        if (existingEmail) {
+            return res.status(400).json({ status: 400, message: `${req.body.newEmail} is already registered, try again` })
         }
 
         user.email = req.body.newEmail;
@@ -137,7 +136,7 @@ const changeEmail = async (req, res) => {
 
         const newTokenAfterEmailChange = generate.token(user);
 
-        return res.status(200).json({ message: 'Your email has been changed successfully', token: newTokenAfterEmailChange});
+        return res.status(200).json({ message: 'Your email has been changed successfully', token: newTokenAfterEmailChange });
 
     } catch (error) {
         console.error('Error', error);

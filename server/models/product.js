@@ -6,21 +6,25 @@ const ProductSchema = mongoose.Schema(
         productName: {
             type: String,
             required: true,
+            trim: true,
         },
 
         productCategory: {
             type: String,
             required: true,
+            trim: true,
         },
 
         productAmount: {
             type: String,
             required: true,
+            trim: true,
         },
         
         amountUnit: {
             type: String,
             required: true,
+            trim: true,
         },
 
         company: {
