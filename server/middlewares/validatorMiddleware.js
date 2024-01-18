@@ -4,6 +4,8 @@ const { JSDOM } = jsdom;
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
+const responseHandler = require('../handlers/responseHandler')
+
 const validLength = (req, res, next) => {
     try {
         const body = req.body;
@@ -12,18 +14,14 @@ const validLength = (req, res, next) => {
             if (body.hasOwnProperty(key)) {
                 const data = body[key];
                 if (data.length > 40) {
-                    return res.status(400).json({
-                        message: `Entered values invalid, try again `,
-                    });
+                    return responseHandler.badRequest(res, `Entered values invalid, try again`);
                 }
             }
         }
         next();
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: 'Server Error',
-        });
+        return responseHandler.serverError(res, 'Server Error');
     }
 };
 
@@ -34,26 +32,22 @@ const sanitize = (req, res, next) => {
         for (const key in body) {
             if (body.hasOwnProperty(key)) {
                 const data = body[key];
-        
+
                 if (typeof data === 'string') {
                     const cleanedData = DOMPurify.sanitize(data, { ALLOWED_TAGS: [] });
 
                     if (cleanedData !== data) {
-                        return res.status(400).json({
-                            message: `Invalid character detected in ${key}, try again`,
-                        });
+                        return responseHandler.badRequest(res, `Invalid character detected in ${key}, try again`);
                     }
                 }
             }
         }
-        
+
         next();
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: 'Server Error',
-        });
+        return responseHandler.serverError(res, 'Server Error');
     }
 };
 
-module.exports = {validLength, sanitize};
+module.exports = { validLength, sanitize };
