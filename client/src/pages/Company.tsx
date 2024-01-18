@@ -7,9 +7,8 @@ import CompanyList from '../components/Company/CompanyList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store';
-import { fetchCompanyData } from '../redux-toolkit/companySlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 import { createCompany, removeCompany, updateCompany } from '../services/companyService';
 
@@ -21,11 +20,14 @@ import {
     successEditCompany,
 } from '../constants/notifyConstant/notifyCompany';
 
-import useUser from "../hooks/useUser";
-import { fetchProductData } from '../redux-toolkit/productSlice';
 import AddCompanyModal from '../components/Company/AddCompanyModal';
 import EditCompanyModal from '../components/Company/EditCompanyModal';
+
 import { handleAddCompanyError, handleEditCompanyError, handleDeleteCompanyError } from '../constants/errorConstant/errorCompany';
+
+import useUserContext from "../hooks/useUserContext";
+import useCompanySlice from '../hooks/useCompanySlice';
+import useProductSlice from '../hooks/useProductSlice';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -39,19 +41,20 @@ const Company: React.FC = () => {
     const [isEditCompanyModalOpen, setIsEditCompanyModalOpen] = useState<boolean>(false);
 
     const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
 
     const company = useSelector((state: RootState) => state.company.data);
     const status = useSelector((state: RootState) => state.company.status);
 
-    const { user } = useUser();
+    const { user } = useUserContext();
+    const { fetchCompany } = useCompanySlice();
+    const { fetchProduct } = useProductSlice();
 
     const onFinishAddCompany = async (values: any) => {
         values.creatorId = user.userId;
         try {
             const res = await createCompany(values, user.token);
             successAddCompany(res.data.message)
-            dispatch(fetchCompanyData(user.token));
+            fetchCompany(user.token)
             setIsAddCompanyModalOpen(false);
             setTimeout(() => {
                 addCompanyForm.resetFields();
@@ -79,8 +82,8 @@ const Company: React.FC = () => {
             });
 
             setselectedRowKeys([]);
-            dispatch(fetchProductData(user.token));
-            dispatch(fetchCompanyData(user.token));
+            fetchProduct(user.token)
+            fetchCompany(user.token)
 
         } catch (error: any) {
             handleDeleteCompanyError(error)
@@ -109,7 +112,7 @@ const Company: React.FC = () => {
             const res = await updateCompany(selectedRowKeys, values, user.token);
             successEditCompany(res.data.message);
 
-            dispatch(fetchCompanyData(user.token));
+            fetchCompany(user.token)
             editCompanyForm.resetFields();
             setselectedRowKeys([]);
             setSelectedRows([]);
@@ -136,7 +139,7 @@ const Company: React.FC = () => {
                     <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer hover:opacity-50 hover:scale-125 transition-all text-2xl mr-4" />
 
                     {
-                        (user.userRole === 'admin' || user.userRole ==='premium')
+                        (user.userRole === 'admin' || user.userRole === 'premium')
                         &&
                         <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
                     }
@@ -147,7 +150,7 @@ const Company: React.FC = () => {
 
                         <>
                             {
-                                company?.length === 0 && status ==='succeeded'
+                                company?.length === 0 && status === 'succeeded'
                                     ?
                                     <FontAwesomeIcon onClick={() => setIsAddCompanyModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600 ' icon={faPlus} bounce />
                                     :

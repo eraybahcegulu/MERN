@@ -5,10 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import ProductList from '../components/Product/ProductList';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store';
-
-import { fetchProductData } from '../redux-toolkit/productSlice';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 import { createProduct, removeProduct, updateProduct } from '../services/productService';
 
@@ -24,11 +22,16 @@ import {
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import useUser from "../hooks/useUser";
+
+
 import AddProductModal from '../components/Product/AddProductModal';
 import EditProductModal from '../components/Product/EditProductModal';
+
 import { handleAddProductError, handleEditProductError, handleDeleteProductError } from '../constants/errorConstant/errorProduct';
-import { fetchCompanyData } from '../redux-toolkit/companySlice';
+
+import useUserContext from "../hooks/useUserContext";
+import useCompanySlice from '../hooks/useCompanySlice';
+import useProductSlice from '../hooks/useProductSlice';
 
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -42,7 +45,6 @@ const Product: React.FC = () => {
     const [isEditProductModalOpen, setIsEditProductModalOpen] = useState<boolean>(false);
 
     const navigate = useNavigate();
-    const dispatch = useDispatch<AppDispatch>();
 
     const company = useSelector((state: RootState) => state.company.data);
     const product = useSelector((state: RootState) => state.product.data);
@@ -53,15 +55,17 @@ const Product: React.FC = () => {
         label: company.companyName,
     }));
 
-    const { user } = useUser();
+    const { user } = useUserContext();
+    const { fetchCompany } = useCompanySlice();
+    const { fetchProduct } = useProductSlice();
 
     const onFinishAddProduct = async (values: any) => {
         values.creatorId = user.userId;
         try {
             const res = await createProduct(values, user.token);
             successAddProduct(res.data.message)
-            dispatch(fetchProductData(user.token));
-            dispatch(fetchCompanyData(user.token));
+            fetchProduct(user.token)
+            fetchCompany(user.token)
             setIsAddProductModalOpen(false);
             setTimeout(() => {
                 addProductForm.resetFields();
@@ -97,8 +101,8 @@ const Product: React.FC = () => {
             }
 
             setselectedRowKeys([]);
-            dispatch(fetchProductData(user.token));
-            dispatch(fetchCompanyData(user.token));
+            fetchProduct(user.token)
+            fetchCompany(user.token)
 
         } catch (error: any) {
             handleDeleteProductError(error)
@@ -127,8 +131,8 @@ const Product: React.FC = () => {
         try {
             const res = await updateProduct(selectedRowKeys, values, user.token);
             successEditProduct(res.data.message);
-            dispatch(fetchProductData(user.token));
-            dispatch(fetchCompanyData(user.token));
+            fetchProduct(user.token)
+            fetchCompany(user.token)
             editProductForm.resetFields();
             setselectedRowKeys([]);
             setSelectedRows([]);

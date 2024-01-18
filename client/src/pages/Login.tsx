@@ -9,7 +9,8 @@ import LoginForm from '../components/Login/LoginForm';
 import { register, login } from '../services/userService';
 import { successRegister } from '../constants/notifyConstant/notifyUser'
 
-import useUser from "../hooks/useUser";
+import useUserContext from "../hooks/useUserContext";
+
 import { handleInvalidLoginError, handleRegisterError } from '../constants/errorConstant/errorUser';
 
 interface LoginProps { }
@@ -22,7 +23,7 @@ const Login: React.FC<LoginProps> = () => {
 
   const token = localStorage.getItem('token');
 
-  const { getUser } = useUser();
+  const { getUser } = useUserContext();
 
   const onFinishRegister = async (values: any) => {
     try {
@@ -51,7 +52,7 @@ const Login: React.FC<LoginProps> = () => {
         sessionStorage.setItem('securityStamp', securityStamp);
       }
       await getUser(token);
-      console.log(res)
+      //console.log(res)
       navigate(`/home`,)
 
     } catch (error: any) {
