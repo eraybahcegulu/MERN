@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowDownOutlined, InfoCircleOutlined, LogoutOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
 
 import { changeEmail, changePassword } from '../../services/userService';
-import { errorChangePassword, successChangePassword, successChangeEmail } from '../../constants/notifyConstant/notifyUser';
+import { errorChangePassword, successChangePassword, successChangeEmail, errorChangeEmail } from '../../constants/notifyConstant/notifyUser';
 import useUser from '../../hooks/useUserContext';
 import { handleChangeEmailError, handleChangePasswordError } from '../../constants/errorConstant/errorUser';
 
@@ -48,6 +48,11 @@ const UserInfo: React.FC = () => {
 
     const onFinishChangeEmail = async (values: any) => {
         try {
+            if (values.newEmail === user.email) {
+                return errorChangeEmail(
+                    <span>New email and current email cannot be the same</span>
+                );
+            }
             const res = await changeEmail(user.userId, values, user.token);
             successChangeEmail(res.data.message);
             getUser(res.data.token);
