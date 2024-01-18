@@ -5,16 +5,18 @@ const jwt = require('jsonwebtoken');
 
 const bcrypt = require('bcrypt');
 
+const responseHandler = require('../handlers/responseHandler')
+
 const register = async (req, res) => {
     try {
         const existingUserNameControl = await User.findOne({ userName: req.body.userName });
         if (existingUserNameControl) {
-            return res.status(400).json({ message: "This User Name is already registered" })
+            return responseHandler.badRequest(res, "This User Name is already registered");
         }
 
         const existingEmailControl = await User.findOne({ email: req.body.email });
         if (existingEmailControl) {
-            return res.status(400).json({ message: "This Email is already registered" })
+            return responseHandler.badRequest(res, "This Email is already registered");
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -26,10 +28,10 @@ const register = async (req, res) => {
         });
 
         await newUser.save();
-        return res.status(200).json({ message: "Successfully registered" });
+        return responseHandler.created(res, { message: "Successfully registered" });
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return responseHandler.serverError(res, 'Server error');
     }
 };
 
@@ -47,13 +49,13 @@ const login = async (req, res) => {
                 await user.save();
 
                 const token = generate.token(user);
-                return res.status(200).json({ message: 'Login successful', token: token, securityStamp: newSessionSecurityStamp });
+                return responseHandler.ok(res, { message: 'Login successful', token: token, securityStamp: newSessionSecurityStamp });
             }
         }
-        return res.status(400).json({ message: 'Invalid User Name or Password' });
+        return responseHandler.badRequest(res, "Invalid User Name or Password")
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return responseHandler.serverError(res, 'Server error');
     }
 };
 
@@ -64,7 +66,7 @@ const userInfo = async (req, res) => {
 
         const user = await User.findById(decodedToken.userId);
         if (!user) {
-            return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
+            return responseHandler.notFound(res, 'User not found. Try Again Login');
         }
 
         const userId = decodedToken.userId;
@@ -73,7 +75,7 @@ const userInfo = async (req, res) => {
         const userRole = decodedToken.userRole;
         const securityStamp = user.securityStamp;
 
-        return res.json({
+        return responseHandler.ok(res, {
             userId,
             userName,
             email,
@@ -84,7 +86,7 @@ const userInfo = async (req, res) => {
 
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Server Error. Try login again', error: error.message });
+        return responseHandler.serverError(res, 'Try login again!!!');
     }
 };
 
@@ -94,13 +96,13 @@ const changePassword = async (req, res) => {
 
         const user = await User.findById(id);
         if (!user) {
-            return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
+            return responseHandler.notFound(res, 'User not found. Try Again Login');
         }
 
         const isPasswordValid = await bcrypt.compare(req.body.currentPassword, user.password);
 
         if (!isPasswordValid) {
-            return res.status(400).json({ message: 'Invalid Current Password' });
+            return responseHandler.badRequest(res, 'Invalid Current Password');
         }
 
         const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
@@ -108,11 +110,11 @@ const changePassword = async (req, res) => {
         user.password = hashedPassword;
         await user.save();
 
-        return res.status(200).json({ message: 'Your password has been changed successfully' });
+        return responseHandler.ok(res, { message: 'Your password has been changed successfully' });
 
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return responseHandler.serverError(res, 'Server error');
     }
 };
 
@@ -122,12 +124,12 @@ const changeEmail = async (req, res) => {
 
         const user = await User.findById(id);
         if (!user) {
-            return res.status(404).json({ status: 404, message: 'User not found. Try Again Login' });
+            return responseHandler.notFound(res, 'User not found. Try Again Login');
         }
 
         const existingEmail = await User.findOne({ email: req.body.newEmail })
         if (existingEmail) {
-            return res.status(400).json({ status: 400, message: `${req.body.newEmail} is already registered, try again` })
+            return responseHandler.badRequest(res, `${req.body.newEmail} is already registered, try again`);
         }
 
         user.email = req.body.newEmail;
@@ -136,11 +138,11 @@ const changeEmail = async (req, res) => {
 
         const newTokenAfterEmailChange = generate.token(user);
 
-        return res.status(200).json({ message: 'Your email has been changed successfully', token: newTokenAfterEmailChange });
+        return responseHandler.ok(res, { message: 'Your email has been changed successfully', token: newTokenAfterEmailChange });
 
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return responseHandler.serverError(res, 'Server error');
     }
 };
 

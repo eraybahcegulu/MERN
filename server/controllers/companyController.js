@@ -2,6 +2,8 @@ const Company = require("../models/company");
 const Product = require("../models/product")
 const Status = require("../models/enums/status");
 
+const responseHandler = require('../handlers/responseHandler');
+
 const getAllCompanies = async (req, res) => {
     try {
         const companies = await Company.aggregate([
@@ -34,10 +36,10 @@ const getAllCompanies = async (req, res) => {
             }
         ]);
 
-        res.status(200).json(companies);
+        return responseHandler.ok(res, companies);
     } catch (error) {
         console.error('Error', error);
-        return res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return responseHandler.serverError(res, 'Server error');
     }
 };
 
@@ -46,28 +48,28 @@ const addCompany = async (req, res, next) => {
     try {
         const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName.trim(), status: Status.ACTIVE });
         if (existingCompanyNameControl) {
-            return res.status(400).json({ message: "Failed. This Company Name is already registered" });
+            return responseHandler.badRequest(res, 'Failed. This Company Name is already registered');
         }
 
         const existingCompanyCRNControl = await Company.findOne({ crn: req.body.crn.trim(), status: Status.ACTIVE });
         if (existingCompanyCRNControl) {
-            return res.status(400).json({ message: "Failed. This CRN is already registered" });
+            return responseHandler.badRequest(res, 'Failed. This CRN is already registered');
         }
 
         const existingCompanyWEBsiteControl = await Company.findOne({ webSite: req.body.webSite.trim(), status: Status.ACTIVE });
         if (existingCompanyWEBsiteControl) {
-            return res.status(400).json({ message: "Failed. This WEB Site is already registered" });
+            return responseHandler.badRequest(res, 'Failed. This WEB Site is already registered');
         }
 
         const newCompany = new Company(req.body);
         await newCompany.save();
 
-        res.status(200).json({ message: "Company added successfully." });
+        responseHandler.created(res, { message: 'Company added successfully.' });
         next();
 
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return responseHandler.serverError(res, 'Server error');
     }
 };
 
@@ -92,7 +94,9 @@ const deleteCompany = async (req, res, next) => {
             });
 
             const isPlural = products.length > 1 ? 's' : '';
-            res.status(200).json({ message: `${company.companyName} company had ${products.length} product${isPlural}. Company and product${isPlural} was deleted successfully` });
+            responseHandler.ok(res, {
+                message: `${company.companyName} company had ${products.length} product${isPlural}. Company and product${isPlural} was deleted successfully`
+            });
 
         } else {
 
@@ -100,12 +104,12 @@ const deleteCompany = async (req, res, next) => {
             company.lastDeleterId = userId;
             await company.save();
 
-            res.status(200).json({ message: `${company.companyName} company had no product. Company was deleted successfully` });
+            responseHandler.ok(res, { message: `${company.companyName} company had no product. Company was deleted successfully` });
         }
         next();
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return responseHandler.serverError(res, 'Server error');
     }
 };
 
@@ -114,29 +118,33 @@ const updateCompany = async (req, res, next) => {
     try {
         const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName.trim(), status: Status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyNameControl) {
-            return res.status(400).json({ message: "Failed. This Company Name is already registered" });
+            return responseHandler.badRequest(res, 'Failed. This Company Name is already registered');
         }
 
         const existingCompanyCRNControl = await Company.findOne({ crn: req.body.crn.trim(), status: Status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyCRNControl) {
-            return res.status(400).json({ message: "Failed. This CRN is already registered" });
+            return responseHandler.badRequest(res, 'Failed. This CRN is already registered');
         }
 
         const existingCompanyWEBSiteControl = await Company.findOne({ webSite: req.body.webSite.trim(), status: Status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyWEBSiteControl) {
-            return res.status(400).json({ message: "Failed. This WEB Site is already registered" });
+            return responseHandler.badRequest(res, 'Failed. This WEB Site is already registered');
         }
 
         const existingCompany = await Company.findById(id);
 
+        if (!existingCompany) {
+            return responseHandler.notFound(res, 'Company not found.');
+        }
+
         req.firstData = existingCompany;
 
         await Company.findByIdAndUpdate(id, req.body);
-        res.status(200).json({ message: "Company updated successfully." });
+        responseHandler.ok(res, { message: 'Company updated successfully.' });
         next();
     } catch (error) {
         console.error('Error', error);
-        res.status(500).json({ status: 500, message: 'Error', error: error.message });
+        return responseHandler.serverError(res, 'Server error');
     }
 };
 
