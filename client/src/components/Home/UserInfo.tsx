@@ -5,7 +5,7 @@ import { ArrowDownOutlined, InfoCircleOutlined, LogoutOutlined, PlusOutlined, Se
 
 import { changeEmail, changePassword } from '../../services/userService';
 import { errorChangePassword, successChangePassword, successChangeEmail } from '../../constants/notifyConstant/notifyUser';
-import useUser from '../../hooks/useUser';
+import useUser from '../../hooks/useUserContext';
 import { handleChangeEmailError, handleChangePasswordError } from '../../constants/errorConstant/errorUser';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
