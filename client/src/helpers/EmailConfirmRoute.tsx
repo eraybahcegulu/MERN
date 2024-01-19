@@ -25,6 +25,7 @@ export const EmailConfirmRoute = () => {
                 successEmailConfirm(res.data.message)
             } catch (error: any) {
                 handleFailedServerUserError(error);
+                setIsLoading(false);
             }
         }
         handleEmailConfirm();
