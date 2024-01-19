@@ -1,12 +1,29 @@
 import axios from "axios";
-import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL, CHANGE_EMAIL_API_URL } from '../constants/apiConstant/apiUser';
+import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL, CHANGE_EMAIL_API_URL, EMAIL_CONFIRM_API_URL } from '../constants/apiConstant/apiUser';
 
 const register = async (data: any) => {
-    return await axios.post(`${REGISTER_API_URL}`, data)
+    return await axios.post
+        (
+            REGISTER_API_URL,
+
+            data
+        )
 }
 
 const login = async (data: any) => {
-    return await axios.post(`${LOGIN_API_URL}`, data)
+    return await axios.post
+        (
+            LOGIN_API_URL,
+
+            data
+        )
+}
+
+const emailConfirm = async (emailConfirmToken: any) => {
+    return await axios.get
+        (
+            `${EMAIL_CONFIRM_API_URL}/${emailConfirmToken}`
+        )
 }
 
 const userInfo = async (token: any) => {
@@ -55,4 +72,4 @@ const changeEmail = async (id: any, data: any, token: any) => {
         )
 }
 
-export { register, login, userInfo, changePassword, changeEmail};
+export { register, emailConfirm, login, userInfo, changePassword, changeEmail };

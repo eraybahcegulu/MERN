@@ -7,6 +7,8 @@ const bcrypt = require('bcrypt');
 
 const responseHandler = require('../handlers/responseHandler')
 
+const { sendMailEmailConfirm } = require('../utils/sendMail')
+
 const register = async (req, res) => {
     try {
         const existingUserNameControl = await User.findOne({ userName: req.body.userName });
@@ -20,14 +22,19 @@ const register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const emailConfirmToken = generate.emailConfirmToken();
 
         const newUser = new User({
             userName: req.body.userName,
             email: req.body.email,
             password: hashedPassword,
+            emailConfirmToken: emailConfirmToken
         });
 
+        sendMailEmailConfirm({ userName: newUser.userName, email: newUser.email, emailConfirmToken: newUser.emailConfirmToken });
+
         await newUser.save();
+
         return responseHandler.created(res, { message: "Successfully registered" });
     } catch (error) {
         console.error('Error', error);
@@ -35,21 +42,46 @@ const register = async (req, res) => {
     }
 };
 
+const emailConfirm = async (req, res) => {
+    const { emailConfirmToken } = req.params
+    //console.log(emailConfirmToken)
+    try {
+        const user = await User.findOne({ emailConfirmToken })
+        if (!user) {
+            return responseHandler.notFound(res, 'User not found. Try register');
+        }
+
+        user.isEmailConfirmed = true;
+        user.emailConfirmToken = "";
+
+        await user.save()
+        //console.log(user)
+
+        return responseHandler.ok(res, { message: "Your email address has been confirmed successfully" });
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+
+}
+
 const login = async (req, res) => {
     const { userNameEmail, password } = req.body;
     try {
         const user = await User.findOne({ $or: [{ userName: userNameEmail }, { email: userNameEmail }] });
 
         if (user) {
+            if (!user.isEmailConfirmed) {
+                return responseHandler.badRequest(res, "Please confirm your email address to login. Check your email adress")
+                //sendMailEmailConfirm({ userName: user.userName, email: user.email, token: user.token });
+            }
             const isPasswordValid = await bcrypt.compare(password, user.password);
             if (isPasswordValid) {
-                const newSessionSecurityStamp = generate.securityStamp();
-                user.securityStamp = newSessionSecurityStamp;
                 user.lastLoginAt = new Date();
                 await user.save();
 
                 const token = generate.token(user);
-                return responseHandler.ok(res, { message: 'Login successful', token: token, securityStamp: newSessionSecurityStamp });
+                return responseHandler.ok(res, { message: 'Login successful', token: token });
             }
         }
         return responseHandler.badRequest(res, "Invalid User Name or Password")
@@ -73,14 +105,12 @@ const userInfo = async (req, res) => {
         const userName = decodedToken.userName;
         const email = decodedToken.email;
         const userRole = decodedToken.userRole;
-        const securityStamp = user.securityStamp;
 
         return responseHandler.ok(res, {
             userId,
             userName,
             email,
             userRole,
-            securityStamp,
             token
         });
 
@@ -148,6 +178,7 @@ const changeEmail = async (req, res) => {
 
 module.exports = {
     register,
+    emailConfirm,
     login,
     userInfo,
     changePassword,

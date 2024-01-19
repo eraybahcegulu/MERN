@@ -5,6 +5,7 @@ const { auth } = require('../middlewares/authMiddleware');
 const { validLength, sanitize } = require("../middlewares/validatorMiddleware");
 
 router.post("/api/user/register", sanitize, validLength, userController.register);
+router.get("/api/user/emailConfirm/:emailConfirmToken", userController.emailConfirm);
 router.post("/api/user/login", validLength, userController.login);
 router.get("/api/user/userInfo", userController.userInfo);
 router.put("/api/user/changePassword/:id", auth, sanitize, validLength, userController.changePassword);

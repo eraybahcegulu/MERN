@@ -21,10 +21,9 @@ const UserSchema = mongoose.Schema(
             trim: true,
         },
 
-        securityStamp: {
-            required: true,
-            type: String,
-            default: '-'
+        isEmailConfirmed: {
+            type: Boolean,
+            default: false
         },
 
         userRole: {
@@ -41,6 +40,10 @@ const UserSchema = mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now
+        },
+
+        emailConfirmToken: {
+            type: String,
         },
     },
 );

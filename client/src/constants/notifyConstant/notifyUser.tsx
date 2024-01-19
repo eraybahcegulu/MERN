@@ -65,6 +65,13 @@ const successChangeEmail = (data: any) =>
         duration: 3,
     });
 
+    const successEmailConfirm = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -74,5 +81,6 @@ export {
     errorChangePassword,
     successChangePassword,
     errorChangeEmail,
-    successChangeEmail
+    successChangeEmail,
+    successEmailConfirm
 };

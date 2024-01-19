@@ -7,6 +7,8 @@ import Company from './pages/Company';
 import Product from './pages/Product';
 import NotFound from './pages/NotFound';
 import { PrivateRoute } from './helpers/PrivateRoute';
+import { EmailConfirmRoute } from './helpers/EmailConfirmRoute';
+
 
 const App = () => {
 
@@ -16,6 +18,7 @@ const App = () => {
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="*" element={<NotFound />} />
+                <Route path="/api/user/emailConfirm/:emailConfirmToken" element={<EmailConfirmRoute />} />
 
                 <Route path="/home" element={
                     <PrivateRoute>
