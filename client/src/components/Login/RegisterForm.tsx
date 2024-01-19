@@ -21,10 +21,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
                 rules={[{ required: true, message: 'Please input your Username!' },
                 { max: 40, message: "Max. 40 characters." },
                 {
-                    validator: (_, value) =>
-                        !value.includes(" ") && !value.includes("<") && !value.includes(">")
-                            ? Promise.resolve()
-                            : Promise.reject(new Error("Invalid character detected."))
+                    validator: (_, value) => {
+                        return (/^[^<> ]*$/.test(value)) ? Promise.resolve() : Promise.reject(new Error("Invalid character detected."));
+                    }
                 }
                 ]}
             >
@@ -50,10 +49,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
                     },
                     { max: 40, message: "Max. 40 characters." },
                     {
-                        validator: (_, value) =>
-                            !value.includes(" ") && !value.includes("<") && !value.includes(">")
-                                ? Promise.resolve()
-                                : Promise.reject(new Error("Invalid character detected."))
+                        validator: (_, value) => {
+                            return (/^[^<> ]*$/.test(value)) ? Promise.resolve() : Promise.reject(new Error("Invalid character detected."));
+                        }
                     }
                 ]}
                 hasFeedback
@@ -75,10 +73,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerF
                     },
                     { max: 40, message: "Max. 40 characters." },
                     {
-                        validator: (_, value) =>
-                            !value.includes(" ") && !value.includes("<") && !value.includes(">")
-                                ? Promise.resolve()
-                                : Promise.reject(new Error("Invalid character detected."))
+                        validator: (_, value) => {
+                            return (/^[^<> ]*$/.test(value)) ? Promise.resolve() : Promise.reject(new Error("Invalid character detected."));
+                        }
                     },
                     ({ getFieldValue }) => ({
                         validator(_, value) {

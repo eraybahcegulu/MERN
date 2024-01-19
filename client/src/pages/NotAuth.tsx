@@ -16,7 +16,7 @@ function NotAuth() {
             <Result
                 status="403"
                 title="403"
-                subTitle="Sorry, the page you visited does not exist."
+                subTitle="Sorry, you are not authorized to access this page."
                 extra={
                     <Button type="primary" onClick={goLogin}>
                         Go Login

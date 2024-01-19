@@ -23,10 +23,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
                 rules={[{ required: true, message: 'Please input your Username or Email!' },
                 { max: 40, message: "Max. 40 characters." },
                 {
-                    validator: (_, value) =>
-                        !value.includes(" ") && !value.includes("<") && !value.includes(">")
-                            ? Promise.resolve()
-                            : Promise.reject(new Error("Invalid character detected."))
+                    validator: (_, value) => {
+                        return (/^[^<> ]*$/.test(value)) ? Promise.resolve() : Promise.reject(new Error("Invalid character detected."));
+                    }
                 }
                 ]}
             >
@@ -37,10 +36,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
                 rules={[{ required: true, message: 'Please input your Password!' },
                 { max: 40, message: "Max. 40 characters." },
                 {
-                    validator: (_, value) =>
-                        !value.includes(" ") && !value.includes("<") && !value.includes(">")
-                            ? Promise.resolve()
-                            : Promise.reject(new Error("Invalid character detected."))
+                    validator: (_, value) => {
+                        return (/^[^<> ]*$/.test(value)) ? Promise.resolve() : Promise.reject(new Error("Invalid character detected."));
+                    }
                 }
                 ]}
             >

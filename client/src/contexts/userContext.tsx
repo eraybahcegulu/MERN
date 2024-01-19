@@ -33,6 +33,15 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             const response = await userInfo(token);
             token = response.data.token;
             setUser(response.data);
+
+            if (localStorage.getItem('token')) {
+                localStorage.setItem('token', token);
+            }
+
+            if (sessionStorage.getItem('token')) {
+                sessionStorage.setItem('token', token);
+            }
+
             fetchProduct(token)
             fetchCompany(token)
             setLoading(false);

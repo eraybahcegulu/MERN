@@ -42,14 +42,11 @@ const Login: React.FC<LoginProps> = () => {
     try {
       const res = await login(values);
       const token = res.data.token;
-      const securityStamp = res.data.securityStamp;
 
       if (isChecked === true) {
         localStorage.setItem('token', token);
-        localStorage.setItem('securityStamp', securityStamp);
       } else {
         sessionStorage.setItem('token', token);
-        sessionStorage.setItem('securityStamp', securityStamp);
       }
       await getUser(token);
       //console.log(res)
