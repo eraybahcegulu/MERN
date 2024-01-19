@@ -5,11 +5,14 @@ import { ArrowDownOutlined, InfoCircleOutlined, LogoutOutlined, PlusOutlined, Se
 
 import { changeEmail, changePassword } from '../../services/userService';
 import { errorChangePassword, successChangePassword, successChangeEmail, errorChangeEmail } from '../../constants/notifyConstant/notifyUser';
-import useUser from '../../hooks/useUserContext';
+
 import { handleChangeEmailError, handleChangePasswordError } from '../../constants/errorConstant/errorUser';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGem } from '@fortawesome/free-solid-svg-icons';
+
+import useUserContext from '../../hooks/useUserContext';
+import useLogout from '../../hooks/useLogout';
 
 const contentStyle: React.CSSProperties = {
     height: '375px',
@@ -19,9 +22,11 @@ const contentStyle: React.CSSProperties = {
 };
 
 const UserInfo: React.FC = () => {
-    const { user, loading, getUser } = useUser();
+    const { user, loading, getUser } = useUserContext();
     const [changePasswordForm] = Form.useForm();
     const [changeEmailForm] = Form.useForm();
+
+    const { logout } = useLogout();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -67,10 +72,8 @@ const UserInfo: React.FC = () => {
         }
     };
 
-    const logout = (): void => {
-        localStorage.clear();
-        sessionStorage.clear();
-        navigate('/');
+    const handleLogout = (): void => {
+        logout();
     };
 
     return (
@@ -93,7 +96,7 @@ const UserInfo: React.FC = () => {
                                     <div>
                                         <SettingOutlined onClick={() => setIsAccountSettingsModalOpen(true)} className='ml-2 hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
                                         <LogoutOutlined
-                                            onClick={logout}
+                                            onClick={handleLogout}
                                             className='ml-2 text-2xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-300 transition-all'
                                         />
                                     </div>

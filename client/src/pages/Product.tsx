@@ -32,6 +32,7 @@ import { handleAddProductError, handleEditProductError, handleDeleteProductError
 import useUserContext from "../hooks/useUserContext";
 import useCompanySlice from '../hooks/useCompanySlice';
 import useProductSlice from '../hooks/useProductSlice';
+import useLogout from '../hooks/useLogout';
 
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -58,6 +59,7 @@ const Product: React.FC = () => {
     const { user } = useUserContext();
     const { fetchCompany } = useCompanySlice();
     const { fetchProduct } = useProductSlice();
+    const { logout } = useLogout();
 
     const onFinishAddProduct = async (values: any) => {
         values.creatorId = user.userId;
@@ -142,10 +144,8 @@ const Product: React.FC = () => {
         }
     };
 
-    const logout = (): void => {
-        localStorage.clear();
-        sessionStorage.clear();
-        navigate('/');
+    const handleLogout = (): void => {
+        logout();
     };
 
     const handleOpenAddProductModal = (): void => {
@@ -189,7 +189,7 @@ const Product: React.FC = () => {
                         </>
                     }
 
-                    <LogoutOutlined onClick={logout} className="hover:cursor-pointer hover:scale-125 hover:opacity-50 transition-all text-2xl" />
+                    <LogoutOutlined onClick={handleLogout} className="hover:cursor-pointer hover:scale-125 hover:opacity-50 transition-all text-2xl" />
                 </div>
 
                 <div>

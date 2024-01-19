@@ -28,6 +28,7 @@ import { handleAddCompanyError, handleEditCompanyError, handleDeleteCompanyError
 import useUserContext from "../hooks/useUserContext";
 import useCompanySlice from '../hooks/useCompanySlice';
 import useProductSlice from '../hooks/useProductSlice';
+import useLogout from '../hooks/useLogout';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -48,6 +49,7 @@ const Company: React.FC = () => {
     const { user } = useUserContext();
     const { fetchCompany } = useCompanySlice();
     const { fetchProduct } = useProductSlice();
+    const { logout } = useLogout();
 
     const onFinishAddCompany = async (values: any) => {
         values.creatorId = user.userId;
@@ -122,10 +124,8 @@ const Company: React.FC = () => {
         }
     };
 
-    const logout = (): void => {
-        localStorage.clear();
-        sessionStorage.clear();
-        navigate('/');
+    const handleLogout = (): void => {
+        logout();
     };
 
     return (
@@ -164,7 +164,7 @@ const Company: React.FC = () => {
                         </>
 
                     }
-                    <LogoutOutlined onClick={logout} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl" />
+                    <LogoutOutlined onClick={handleLogout} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl" />
                 </div>
 
                 <div>
