@@ -35,7 +35,7 @@ const register = async (req, res) => {
 
         await newUser.save();
 
-        return responseHandler.created(res, { message: "Successfully registered" });
+        return responseHandler.created(res, { message: `Successfully registered. Email confirmation required, link sent to ${newUser.email}` });
     } catch (error) {
         console.error('Error', error);
         return responseHandler.serverError(res, 'Server error');
@@ -72,7 +72,7 @@ const login = async (req, res) => {
 
         if (user) {
             if (!user.isEmailConfirmed) {
-                return responseHandler.badRequest(res, "Please confirm your email address to login. Check your email adress")
+                return responseHandler.badRequest(res, "Please confirm your email address to login. Check your email address")
                 //sendMailEmailConfirm({ userName: user.userName, email: user.email, token: user.token });
             }
             const isPasswordValid = await bcrypt.compare(password, user.password);
