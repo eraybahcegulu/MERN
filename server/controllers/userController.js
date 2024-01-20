@@ -79,13 +79,17 @@ const login = async (req, res) => {
         const user = await User.findOne({ $or: [{ userName: userNameEmail }, { email: userNameEmail }] });
 
         if (user) {
-            if (!user.isEmailVerified) {
-                return responseHandler.badRequest(res, "Please confirm your email address to login. Check your email address")
-                //sendMailEmailConfirm({ userName: user.userName, email: user.email, token: user.token });
+            if (!user.password) {
+                return responseHandler.badRequest(res, "Invalid User Name or Password")
             }
 
             const isPasswordMatch = await comparePassword(password, user.password);
             if (isPasswordMatch) {
+
+                if (!user.isEmailVerified) {
+                    return responseHandler.badRequest(res, "Please confirm your email address to login. Check your email address")
+                    //sendMailEmailConfirm({ userName: user.userName, email: user.email, token: user.token });
+                }
 
                 user.lastLoginAt = new Date();
 
@@ -104,6 +108,26 @@ const login = async (req, res) => {
             }
         }
         return responseHandler.badRequest(res, "Invalid User Name or Password")
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+};
+
+const loginGoogle = async (req, res) => {
+    try {
+        const user = req.user;
+        console.log(user)
+        console.log(user.googleUserToken)
+
+        if (user && user.googleUserToken) {
+
+            //res.redirect(`http://localhost:3000/home`);
+
+        } else {
+            console.error("User or token not available");
+            return responseHandler.serverError(res, 'Server error');
+        }
     } catch (error) {
         console.error('Error', error);
         return responseHandler.serverError(res, 'Server error');
@@ -199,6 +223,7 @@ module.exports = {
     register,
     emailConfirm,
     login,
+    loginGoogle,
     userInfo,
     changePassword,
     changeEmail

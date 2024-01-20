@@ -2,15 +2,28 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
-
-app.use(express.json());
+require('dotenv').config();
+const session = require("express-session");
+const passport = require("passport");
+require("./utils/passport");
 
 app.use(cors({
     origin: ["http://localhost:3000"],
     credentials: true
 }));
 
+app.use(express.json());
+
 app.use(cookieParser());
+
+app.use(session({
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: true
+}))
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const routes = [
     require('./routes/userRoutes'),
