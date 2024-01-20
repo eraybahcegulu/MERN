@@ -2,7 +2,7 @@ const User = require("../models/user");
 
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
 
-const { generateToken, verifyToken, generateEmailConfirmToken } = require('../utils/jwt');
+const { generateUserToken, verifyToken, generateEmailConfirmToken } = require('../utils/jwt');
 
 const responseHandler = require('../handlers/responseHandler')
 
@@ -21,6 +21,7 @@ const register = async (req, res) => {
         }
 
         const hashedPassword = await hashPassword(req.body.password);
+
         const emailConfirmToken = generateEmailConfirmToken(req.body.email);
 
         const newUser = new User({
@@ -98,14 +99,7 @@ const login = async (req, res) => {
 
                 await user.save();
 
-                const tokenPayload = {
-                    userId: user._id,
-                    userName: user.userName,
-                    email: user.email,
-                    userRole: user.userRole,
-                };
-
-                const token = generateToken(tokenPayload);
+                const token = generateUserToken(user);
                 return responseHandler.ok(res, { message: 'Login successful', token: token, ...(isFirstLogin ? { isFirstLogin: true } : {}) });
             }
         }
@@ -191,7 +185,7 @@ const changeEmail = async (req, res) => {
         await user.save();
         //console.log(user);
 
-        const newTokenAfterEmailChange = generateToken(user);
+        const newTokenAfterEmailChange = generateUserToken(user);
 
         return responseHandler.ok(res, { message: 'Your email has been changed successfully', token: newTokenAfterEmailChange });
 

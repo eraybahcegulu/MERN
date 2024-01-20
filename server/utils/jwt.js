@@ -1,25 +1,54 @@
 const jwt = require('jsonwebtoken');
 
-const generateToken = (user) => {
-    return jwt.sign(user, process.env.SECRET_KEY);
+const generateUserToken = (user) => {
+    return jwt.sign
+        (
+            {
+                userId: user._id,
+                userName: user.userName,
+                email: user.email,
+                userRole: user.userRole
+            },
+
+            process.env.SECRET_KEY
+        );
 }
 
 const verifyToken = (token) => {
-    return jwt.verify(token, process.env.SECRET_KEY);
+    return jwt.verify
+        (
+            token,
+
+            process.env.SECRET_KEY
+        );
 };
 
 const generateEmailConfirmToken = (email) => {
-    return jwt.sign({ email }, process.env.SECRET_KEY);
+    return jwt.sign
+        (
+            {
+                email
+            },
+
+            process.env.SECRET_KEY
+        );
 }
 
 /*
 const generateEmailConfirmToken = (email, expiresIn = '30s') => {
-    return jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn });
+    return jwt.sign
+    (
+        { email }, 
+
+        process.env.SECRET_KEY,
+
+        { expiresIn }
+    );
 }
 */
 
 module.exports = {
-    generateToken,
+    generateUserToken,
     verifyToken,
     generateEmailConfirmToken
 };
