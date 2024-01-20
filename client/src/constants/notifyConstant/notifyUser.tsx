@@ -1,4 +1,5 @@
-import { message } from 'antd';
+import { message, notification } from 'antd';
+import React from 'react';
 
 const failedServer = (data: any) => {
     message.open({
@@ -72,6 +73,18 @@ const successChangeEmail = (data: any) =>
         duration: 3,
     });
 
+    const firstLoginNotify= (data: any) => {
+        notification.open({
+            type: 'info',
+            message: (
+                <span>
+                    <strong> Hi {data}, welcome to app </strong>
+                </span>
+            ),
+            duration: 15,
+        });
+    };
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -82,5 +95,6 @@ export {
     successChangePassword,
     errorChangeEmail,
     successChangeEmail,
-    successEmailConfirm
+    successEmailConfirm,
+    firstLoginNotify
 };

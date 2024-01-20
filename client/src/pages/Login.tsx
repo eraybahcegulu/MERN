@@ -10,6 +10,7 @@ import { register, login } from '../services/userService';
 import { successRegister } from '../constants/notifyConstant/notifyUser'
 
 import useUserContext from "../hooks/useUserContext";
+import useLogout from '../hooks/useLogout';
 
 import { handleInvalidLoginError, handleRegisterError } from '../constants/errorConstant/errorUser';
 
@@ -23,7 +24,8 @@ const Login: React.FC<LoginProps> = () => {
 
   const token = localStorage.getItem('token');
 
-  const { getUser } = useUserContext();
+  const { getUser, setIsFirstLogin } = useUserContext();
+  const { logout } = useLogout();
 
   const onFinishRegister = async (values: any) => {
     try {
@@ -43,6 +45,12 @@ const Login: React.FC<LoginProps> = () => {
       const res = await login(values);
       const token = res.data.token;
       //console.log(res.data)
+      //console.log(res.data.isFirstLogin);
+
+      if(res.data.isFirstLogin)
+      {
+        setIsFirstLogin(true);
+      }
 
       if (isChecked === true) {
         localStorage.setItem('token', token);
@@ -51,6 +59,7 @@ const Login: React.FC<LoginProps> = () => {
       }
       await getUser(token);
       //console.log(res)
+
       navigate(`/home`,)
 
     } catch (error: any) {
@@ -62,11 +71,10 @@ const Login: React.FC<LoginProps> = () => {
     setChecked((prevState) => !prevState);
   };
 
-  const logout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    navigate('/');
-  };
+    const handleLogout = (): void => {
+        logout();
+    };
+
 
   return (
     <div className='bg-slate-400 h-screen w-screen flex items-center justify-center'>
@@ -80,7 +88,7 @@ const Login: React.FC<LoginProps> = () => {
                 className='text-5xl hover:scale-125 cursor-pointer text-blue-500 hover:text-blue-400 transition-all'
               />
               <LogoutOutlined
-                onClick={logout}
+                onClick={handleLogout}
                 className='text-5xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-400 transition-all'
               />
             </div>

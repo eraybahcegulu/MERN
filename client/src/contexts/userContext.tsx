@@ -24,6 +24,7 @@ const UserContext = createContext<UserContextType | any>(null);
 const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isFirstLogin, setIsFirstLogin] = useState<boolean>(false);
 
     const { fetchCompany } = useCompanySlice();
     const { fetchProduct } = useProductSlice();
@@ -31,7 +32,6 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const fetchUserData = async (token: string) => {
         try {
             const response = await userInfo(token);
-            //console.log(response.data)
             token = response.data.token;
             setUser(response.data);
 
@@ -67,6 +67,8 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
             value={{
                 user,
                 loading,
+                isFirstLogin,
+                setIsFirstLogin,
                 setLoading,
                 getUser: (token: any) => fetchUserData(token),
             }}
