@@ -31,6 +31,7 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const fetchUserData = async (token: string) => {
         try {
             const response = await userInfo(token);
+            //console.log(response.data)
             token = response.data.token;
             setUser(response.data);
 

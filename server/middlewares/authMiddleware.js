@@ -10,7 +10,7 @@ const auth = async (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
 
         if (token) {
-            jwt.verify(token, process.env.JWT_SECRET, (error, decodedToken) => {
+            jwt.verify(token, process.env.SECRET_KEY, (error, decodedToken) => {
                 if (error) {
                     return responseHandler.unauthorized(res, 'User auth token not valid');
                 } else {

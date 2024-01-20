@@ -42,6 +42,7 @@ const Login: React.FC<LoginProps> = () => {
     try {
       const res = await login(values);
       const token = res.data.token;
+      //console.log(res.data)
 
       if (isChecked === true) {
         localStorage.setItem('token', token);
