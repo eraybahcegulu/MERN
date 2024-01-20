@@ -21,7 +21,7 @@ const UserSchema = mongoose.Schema(
             trim: true,
         },
 
-        isEmailConfirmed: {
+        isEmailVerified: {
             type: Boolean,
             default: false
         },
@@ -42,8 +42,14 @@ const UserSchema = mongoose.Schema(
             default: Date.now
         },
 
-        emailConfirmToken: {
+        verificationToken: {
             type: String,
+            allowNull: true,
+        },
+
+        isFirstLogin: {
+            type: Boolean,
+            default: true,
         },
     },
 );

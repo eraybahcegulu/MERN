@@ -1,9 +1,8 @@
 const User = require("../models/user");
-const generate = require('../utils/generate');
 
-const jwt = require('jsonwebtoken');
+const { hashPassword, comparePassword } = require('../utils/bcrypt');
 
-const bcrypt = require('bcrypt');
+const { generateToken, verifyToken, generateEmailConfirmToken } = require('../utils/jwt');
 
 const responseHandler = require('../handlers/responseHandler')
 
@@ -21,17 +20,17 @@ const register = async (req, res) => {
             return responseHandler.badRequest(res, "This Email is already registered");
         }
 
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const emailConfirmToken = generate.emailConfirmToken();
+        const hashedPassword = await hashPassword(req.body.password);
+        const emailConfirmToken = generateEmailConfirmToken(req.body.email);
 
         const newUser = new User({
             userName: req.body.userName,
             email: req.body.email,
             password: hashedPassword,
-            emailConfirmToken: emailConfirmToken
+            verificationToken: emailConfirmToken
         });
 
-        sendMailEmailConfirm({ userName: newUser.userName, email: newUser.email, emailConfirmToken: newUser.emailConfirmToken });
+        sendMailEmailConfirm({ userName: newUser.userName, email: newUser.email, emailConfirmToken: newUser.verificationToken });
 
         await newUser.save();
 
@@ -46,18 +45,26 @@ const emailConfirm = async (req, res) => {
     const { emailConfirmToken } = req.params
     //console.log(emailConfirmToken)
     try {
-        const user = await User.findOne({ emailConfirmToken })
+        const user = await User.findOne({ verificationToken: emailConfirmToken })
         if (!user) {
             return responseHandler.notFound(res, 'User not found. Try register');
         }
 
-        user.isEmailConfirmed = true;
-        user.emailConfirmToken = "";
+        try {
+            const decodedToken = verifyToken(emailConfirmToken);
+            if (decodedToken.email === user.email) {
+                user.isEmailVerified = true;
+                user.verificationToken = null;
 
-        await user.save()
-        //console.log(user)
+                await user.save()
+                //console.log(user)
 
-        return responseHandler.ok(res, { message: "Your email address has been confirmed successfully" });
+                return responseHandler.ok(res, { message: "Your email address has been confirmed successfully" });
+            }
+        }
+        catch (error) {
+            return responseHandler.notFound(res, 'Verification failed. OTP is expired.');
+        }
     } catch (error) {
         console.error('Error', error);
         return responseHandler.serverError(res, 'Server error');
@@ -71,16 +78,33 @@ const login = async (req, res) => {
         const user = await User.findOne({ $or: [{ userName: userNameEmail }, { email: userNameEmail }] });
 
         if (user) {
-            if (!user.isEmailConfirmed) {
+            if (!user.isEmailVerified) {
                 return responseHandler.badRequest(res, "Please confirm your email address to login. Check your email address")
                 //sendMailEmailConfirm({ userName: user.userName, email: user.email, token: user.token });
             }
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            if (isPasswordValid) {
+
+            const isPasswordMatch = await comparePassword(password, user.password);
+            if (isPasswordMatch) {
+
                 user.lastLoginAt = new Date();
+
+                let isFirstLogin = false;
+                if (user.isFirstLogin) {
+                    isFirstLogin = true;
+                    user.isFirstLogin = false;
+                }
+
                 await user.save();
 
-                const token = generate.token(user);
+                const tokenPayload = {
+                    userId: user._id,
+                    userName: user.userName,
+                    email: user.email,
+                    userRole: user.userRole,
+                    ...(isFirstLogin ? { isFirstLogin: true } : {})
+                };
+
+                const token = generateToken(tokenPayload);
                 return responseHandler.ok(res, { message: 'Login successful', token: token });
             }
         }
@@ -94,7 +118,7 @@ const login = async (req, res) => {
 const userInfo = async (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const decodedToken = verifyToken(token);
 
         const user = await User.findById(decodedToken.userId);
         if (!user) {
@@ -129,13 +153,13 @@ const changePassword = async (req, res) => {
             return responseHandler.notFound(res, 'User not found. Try Again Login');
         }
 
-        const isPasswordValid = await bcrypt.compare(req.body.currentPassword, user.password);
+        const isPasswordMatch = await comparePassword(req.body.currentPassword, user.password);
 
-        if (!isPasswordValid) {
+        if (!isPasswordMatch) {
             return responseHandler.badRequest(res, 'Invalid Current Password');
         }
 
-        const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
+        const hashedPassword = await hashPassword(req.body.newPassword);
 
         user.password = hashedPassword;
         await user.save();
@@ -166,7 +190,7 @@ const changeEmail = async (req, res) => {
         await user.save();
         //console.log(user);
 
-        const newTokenAfterEmailChange = generate.token(user);
+        const newTokenAfterEmailChange = generateToken(user);
 
         return responseHandler.ok(res, { message: 'Your email has been changed successfully', token: newTokenAfterEmailChange });
 
