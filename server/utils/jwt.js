@@ -1,19 +1,19 @@
 const jwt = require('jsonwebtoken');
 
-function generateToken(user) {
+const generateToken = (user) => {
     return jwt.sign(user, process.env.SECRET_KEY);
 }
 
-function verifyToken(token){
+const verifyToken = (token) => {
     return jwt.verify(token, process.env.SECRET_KEY);
 };
 
-function generateEmailConfirmToken(email) {
+const generateEmailConfirmToken = (email) => {
     return jwt.sign({ email }, process.env.SECRET_KEY);
 }
 
 /*
-function generateEmailConfirmToken(email, expiresIn = '30s') {
+const generateEmailConfirmToken = (email, expiresIn = '30s') => {
     return jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn });
 }
 */

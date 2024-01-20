@@ -103,11 +103,10 @@ const login = async (req, res) => {
                     userName: user.userName,
                     email: user.email,
                     userRole: user.userRole,
-                    ...(isFirstLogin ? { isFirstLogin: true } : {})
                 };
 
                 const token = generateToken(tokenPayload);
-                return responseHandler.ok(res, { message: 'Login successful', token: token });
+                return responseHandler.ok(res, { message: 'Login successful', token: token, ...(isFirstLogin ? { isFirstLogin: true } : {}) });
             }
         }
         return responseHandler.badRequest(res, "Invalid User Name or Password")

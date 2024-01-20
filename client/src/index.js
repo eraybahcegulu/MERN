@@ -14,3 +14,16 @@ root.render(
     </UserProvider>
   </Provider>
 );
+
+/*
+<ConfigProvider
+  theme={{
+    //algorithm: theme.darkAlgorithm,
+    token: {
+      fontFamily: 'Electrolize, sans-serif',
+    },
+  }}
+>
+  <App />
+</ConfigProvider>
+*/
