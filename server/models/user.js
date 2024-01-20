@@ -49,7 +49,12 @@ const UserSchema = mongoose.Schema(
 
         isFirstLogin: {
             type: Boolean,
-            default: true,
+            default: true
+        },
+
+        activityLevel: {
+            type: String,
+            default: '0'
         },
     },
 );

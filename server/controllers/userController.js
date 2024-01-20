@@ -88,6 +88,8 @@ const login = async (req, res) => {
 
                 user.lastLoginAt = new Date();
 
+                user.activityLevel = Number(user.activityLevel) + 1;
+
                 let isFirstLogin = false;
                 if (user.isFirstLogin) {
                     isFirstLogin = true;
