@@ -39,8 +39,10 @@ const generateGoogleUserToken = (user) => {
         (
             {
                 userId: user._id,
+                userName: user.userName,
                 email: user.email,
-                userRole: user.userRole
+                userRole: user.userRole,
+                isGoogleAuth: true
             },
 
             process.env.SECRET_KEY

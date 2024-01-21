@@ -1,5 +1,5 @@
 import React from 'react';
-import { InfoCircleOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
+import { GoogleOutlined, InfoCircleOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Popover, Switch } from 'antd';
 
 interface LoginFormProps {
@@ -9,8 +9,8 @@ interface LoginFormProps {
     setisRegisterModalOpen: (isOpen: boolean) => void;
 }
 
-const loginwithgoogle = ()=>{
-    window.open("http://localhost:5000/auth/google/callback","_self")
+const loginWithGoogle = () => {
+    window.open("http://localhost:5000/auth/google/callback", "_self")
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChange, setisRegisterModalOpen }) => {
@@ -59,6 +59,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
                     <Popover placement="left"
                         content={
                             <div className='flex flex-col gap-2 text-xs'>
+                                <strong> Registration required for Remember Me feature </strong>
                                 <span><strong>Enabled:</strong> Stay open until your session is terminated</span>
                                 <span><strong>Disabled:</strong> Stay open until your close the browser window </span>
                             </div>
@@ -94,10 +95,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
 
             </Form>
 
-            <button className='login-with-google-btn' onClick={loginwithgoogle}>
-                    Sign In With Google
-                </button>
-
+            <div className='flex flex-row border border-black rounded-md 
+            gap-1 p-2 items-center justify-center cursor-pointer hover:scale-105 transition duration-700'
+            onClick={loginWithGoogle} >
+                <GoogleOutlined className='text-3xl' />
+                <span> Login with google</span>
+            </div>
         </>
     );
 };

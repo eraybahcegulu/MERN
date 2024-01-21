@@ -78,7 +78,7 @@ const Login: React.FC<LoginProps> = () => {
 
   return (
     <div className='bg-slate-400 h-screen w-screen flex items-center justify-center'>
-      <div className='p-20 w-[400px] h-[375px] drop-shadow-2xl bg-indigo-100' style={{ borderRadius: '20px' }}>
+      <div className='pb-20 pt-14 pr-20 pl-20 w-[400px] h-[375px] drop-shadow-2xl bg-indigo-100' style={{ borderRadius: '20px' }}>
         {token ? (
           <div className='flex flex-col items-center gap-5'>
             <p className='text-2xl'>Open session found</p>

@@ -117,16 +117,23 @@ const login = async (req, res) => {
 const loginGoogle = async (req, res) => {
     try {
         const user = req.user;
-        console.log(user)
-        console.log(user.googleUserToken)
+        //console.log(user)
 
-        if (user && user.googleUserToken) {
+        if (user) {
 
-            //res.redirect(`http://localhost:3000/home`);
+            user.lastLoginAt = new Date();
+
+            user.activityLevel = Number(user.activityLevel) + 1;
+
+            res.redirect(`http://localhost:3000/api/auth/google/${user.googleUserToken}`);
+
+            user.googleUserToken = null;
+
+            await user.save();
 
         } else {
-            console.error("User or token not available");
-            return responseHandler.serverError(res, 'Server error');
+            console.error("User not found");
+            return responseHandler.badRequest(res, "User not found");
         }
     } catch (error) {
         console.error('Error', error);
@@ -148,13 +155,15 @@ const userInfo = async (req, res) => {
         const userName = decodedToken.userName;
         const email = decodedToken.email;
         const userRole = decodedToken.userRole;
+        const isGoogleAuth = decodedToken.isGoogleAuth;
 
         return responseHandler.ok(res, {
             userId,
             userName,
             email,
             userRole,
-            token
+            token,
+            isGoogleAuth
         });
 
     } catch (error) {

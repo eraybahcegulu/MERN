@@ -28,10 +28,11 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
     const { fetchCompany } = useCompanySlice();
     const { fetchProduct } = useProductSlice();
-
+    //console.log(user)
     const fetchUserData = async (token: string) => {
         try {
             const response = await userInfo(token);
+
             token = response.data.token;
             setUser(response.data);
 

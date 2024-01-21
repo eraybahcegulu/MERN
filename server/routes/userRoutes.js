@@ -13,7 +13,6 @@ router.put("/api/user/changePassword/:id", auth, sanitize, validLength, userCont
 router.put("/api/user/changeEmail/:id", auth, sanitize, validLength, userController.changeEmail);
 
 router.get("/auth/google",passport.authenticate("google",{scope:["profile","email"]}));
-
 router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: process.env.CLIENT_URL }), userController.loginGoogle);
 
 module.exports = router;
