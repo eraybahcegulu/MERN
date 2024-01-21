@@ -125,7 +125,7 @@ const loginGoogle = async (req, res) => {
 
             user.activityLevel = Number(user.activityLevel) + 1;
 
-            res.redirect(`http://localhost:3000/api/auth/google/${user.googleUserToken}`);
+            res.redirect(`${process.env.CLIENT_URL}/api/auth/google/${user.googleUserToken}`);
 
             user.googleUserToken = null;
 

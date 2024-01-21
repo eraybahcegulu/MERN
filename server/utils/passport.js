@@ -1,6 +1,7 @@
 const passport = require("passport");
 var GoogleStrategy = require('passport-google-oauth20').Strategy
 const User = require("../models/user")
+const UserRole = require("../models/enums/userRoles")
 
 const { generateGoogleUserToken } = require('../utils/jwt');
 
@@ -19,6 +20,7 @@ passport.use(
                     user = new User({
                         isEmailVerified: true,
                         email: profile.emails[0].value,
+                        userRole: UserRole.VISITOR
                     });
 
                     await user.save();
@@ -26,6 +28,8 @@ passport.use(
 
                 const googleUserToken = generateGoogleUserToken(user);
 
+                user.isEmailVerified = true;
+                user.verificationToken = null;
                 user.googleUserToken = googleUserToken;
                 await user.save();
 

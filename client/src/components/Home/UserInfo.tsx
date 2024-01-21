@@ -76,6 +76,7 @@ const UserInfo: React.FC = () => {
         logout();
     };
 
+    console.log(user)
     return (
         <>
             <Card
@@ -88,7 +89,7 @@ const UserInfo: React.FC = () => {
                                 ?
                                 <>
                                     <div className='flex flex-col items-center'>
-                                        <span> WELCOME {user.userName} </span>
+                                        <span> WELCOME {user.userName} {user.userRole === 'visitor' && <span> VISITOR </span>}</span>
                                         <span> {user.email} </span>
                                     </div>
 
@@ -133,148 +134,166 @@ const UserInfo: React.FC = () => {
                 </h2>
 
                 <Carousel>
-                    <div>
-                        <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
-                            <Form
-                                className="mt-4 flex flex-col gap-4 mb-6"
-                                layout="vertical"
-                                onFinish={onFinishChangePassword}
-                                form={changePasswordForm}
-                            >
-                                <Form.Item
-                                    className='mb-0'
-                                    name="currentPassword"
-                                    rules={[
-                                        { required: true, message: "Current Password required" },
-                                        { max: 40, message: "Max. 40 characters." }
-                                    ]}
+                    {
+                        !(user.userRole === 'visitor')
+                        &&
+                        <div>
+                            <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
+                                <Form
+                                    className="mt-4 flex flex-col gap-4 mb-6"
+                                    layout="vertical"
+                                    onFinish={onFinishChangePassword}
+                                    form={changePasswordForm}
                                 >
-                                    <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='Current Password' />
-                                </Form.Item>
-
-                                <ArrowDownOutlined className='text-white text-2xl mt-0 justify-center' />
-
-                                <Form.Item
-                                    name="newPassword"
-                                    rules={[
-                                        { required: true, message: "New Password required" },
-                                        { max: 40, message: "Max. 40 characters." }
-                                    ]}
-
-                                >
-                                    <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='New Password' />
-                                </Form.Item>
-
-                                <Form.Item
-                                    name="newPasswordConfirm"
-                                    dependencies={['newPassword']}
-                                    rules={[
-                                        { required: true, message: "Confirm New Password required" },
-                                        { max: 40, message: "Max. 40 characters." },
-                                        ({ getFieldValue }) => ({
-                                            validator(_, value) {
-                                                if (!value || getFieldValue('newPassword') === value) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject(new Error('The new password that you entered do not match!'));
-                                            },
-                                        }),
-                                    ]}
-                                >
-                                    <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='Confirm New Password' />
-                                </Form.Item>
-                                <Form.Item className="flex justify-center mb-0">
-                                    <Button
-                                        className='hover:scale-105 transition duration-700'
-                                        style={{ borderRadius: "0" }}
-                                        type="primary"
-                                        htmlType="submit"
-                                        size="large"
+                                    <Form.Item
+                                        className='mb-0'
+                                        name="currentPassword"
+                                        rules={[
+                                            { required: true, message: "Current Password required" },
+                                            { max: 40, message: "Max. 40 characters." }
+                                        ]}
                                     >
-                                        <strong>CHANGE PASSWORD</strong>
-                                    </Button>
-                                </Form.Item>
-                            </Form>
-                        </div>
-                    </div>
+                                        <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='Current Password' />
+                                    </Form.Item>
 
-                    <div>
-                        <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
-                            <strong className='text-xl'>{user.email}</strong>
-                            <ArrowDownOutlined className='text-2xl mt-0' />
+                                    <ArrowDownOutlined className='text-white text-2xl mt-0 justify-center' />
 
-                            <Form
-                                className="mt-4 flex flex-col gap-4 mb-6"
-                                layout="vertical"
-                                onFinish={onFinishChangeEmail}
-                                form={changeEmailForm}
-                            >
-                                <Form.Item
-                                    name="newEmail"
-                                    rules={[{ type: 'email', required: true, message: 'New Email required' },
-                                    { max: 40, message: "Max. 40 characters." }
-                                    ]}
-                                >
-                                    <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='New Email' />
-                                </Form.Item>
+                                    <Form.Item
+                                        name="newPassword"
+                                        rules={[
+                                            { required: true, message: "New Password required" },
+                                            { max: 40, message: "Max. 40 characters." }
+                                        ]}
 
-                                <Form.Item
-                                    name="newEmailConfirm"
-                                    dependencies={['newEmail']}
-                                    rules={[
-                                        { type: 'email', required: true, message: 'Confirm New Email required' },
-                                        { max: 40, message: "Max. 40 characters." },
-                                        ({ getFieldValue }) => ({
-                                            validator(_, value) {
-                                                if (!value || getFieldValue('newEmail') === value) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject(new Error('The new email that you entered do not match!'));
-                                            },
-                                        }),
-                                    ]}
-                                >
-                                    <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='Confirm New Email' />
-                                </Form.Item>
-                                <Form.Item className="flex justify-center mb-0">
-                                    <Button
-                                        className='hover:scale-105 transition duration-700'
-                                        style={{ borderRadius: "0" }}
-                                        type="primary"
-                                        htmlType="submit"
-                                        size="large"
                                     >
-                                        <strong> CHANGE EMAIL </strong>
-                                    </Button>
-                                </Form.Item>
-                            </Form>
+                                        <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='New Password' />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name="newPasswordConfirm"
+                                        dependencies={['newPassword']}
+                                        rules={[
+                                            { required: true, message: "Confirm New Password required" },
+                                            { max: 40, message: "Max. 40 characters." },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    if (!value || getFieldValue('newPassword') === value) {
+                                                        return Promise.resolve();
+                                                    }
+                                                    return Promise.reject(new Error('The new password that you entered do not match!'));
+                                                },
+                                            }),
+                                        ]}
+                                    >
+                                        <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='Confirm New Password' />
+                                    </Form.Item>
+                                    <Form.Item className="flex justify-center mb-0">
+                                        <Button
+                                            className='hover:scale-105 transition duration-700'
+                                            style={{ borderRadius: "0" }}
+                                            type="primary"
+                                            htmlType="submit"
+                                            size="large"
+                                        >
+                                            <strong>CHANGE PASSWORD</strong>
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                            </div>
                         </div>
-                    </div>
+                    }
+
+                    {
+                        !(user.userRole === 'visitor')
+                        &&
+
+                        <div>
+                            <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
+                                <strong className='text-xl'>{user.email}</strong>
+                                <ArrowDownOutlined className='text-2xl mt-0' />
+
+                                <Form
+                                    className="mt-4 flex flex-col gap-4 mb-6"
+                                    layout="vertical"
+                                    onFinish={onFinishChangeEmail}
+                                    form={changeEmailForm}
+                                >
+                                    <Form.Item
+                                        name="newEmail"
+                                        rules={[{ type: 'email', required: true, message: 'New Email required' },
+                                        { max: 40, message: "Max. 40 characters." }
+                                        ]}
+                                    >
+                                        <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='New Email' />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name="newEmailConfirm"
+                                        dependencies={['newEmail']}
+                                        rules={[
+                                            { type: 'email', required: true, message: 'Confirm New Email required' },
+                                            { max: 40, message: "Max. 40 characters." },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    if (!value || getFieldValue('newEmail') === value) {
+                                                        return Promise.resolve();
+                                                    }
+                                                    return Promise.reject(new Error('The new email that you entered do not match!'));
+                                                },
+                                            }),
+                                        ]}
+                                    >
+                                        <Input className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='Confirm New Email' />
+                                    </Form.Item>
+                                    <Form.Item className="flex justify-center mb-0">
+                                        <Button
+                                            className='hover:scale-105 transition duration-700'
+                                            style={{ borderRadius: "0" }}
+                                            type="primary"
+                                            htmlType="submit"
+                                            size="large"
+                                        >
+                                            <strong> CHANGE EMAIL </strong>
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                            </div>
+                        </div>
+                    }
 
                     <div>
                         <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
                             {
-                                !(user.userRole === 'admin' || user.userRole === 'premium')
-                                ?
+                                (user.userRole === 'admin' || user.userRole === 'premium')
+                                &&
+                                <span className='text-2xl'> PREMIUM ACTIVATED </span>
+                            }
+
+                            {
+                                (user.userRole === 'standard')
+                                &&
                                 <>
                                     <span> YOU HAVE STANDARD MEMBERSHIP </span>
                                     <span className='text-2xl'> GET PREMIUM NOW </span>
                                     <FontAwesomeIcon className='hover:cursor-pointer text-4xl text-violet-500 hover:text-violet-400 ' icon={faGem} shake />
                                     <Popover placement="bottom"
-                                            content={
-                                                <div className='flex flex-col gap-2 text-xs'>
-                                                    <span className='text-xs'> <PlusOutlined /> <strong>Premium Search</strong> </span>
-                                                </div>
-                                            }
-                                        >
-
-                                            <InfoCircleOutlined className='text-md mt-4 hover:scale-125 transition-all' />
-                                        </Popover>
-
+                                        content={
+                                            <div className='flex flex-col gap-2 text-xs'>
+                                                <span className='text-xs'> <PlusOutlined /> <strong>Premium Search</strong> </span>
+                                            </div>
+                                        }
+                                    >
+                                        <InfoCircleOutlined className='text-md mt-4 hover:scale-125 transition-all' />
+                                    </Popover>
                                 </>
-                                :
+                            }
+
+                            {
+                                (user.userRole === 'visitor')
+                                &&
                                 <>
-                                    <span className='text-2xl'> PREMIUM ACTIVATED </span>
+                                    <span> WELCOME VISITOR </span>
+                                    <span> Register Now </span>
                                 </>
                             }
                         </div>

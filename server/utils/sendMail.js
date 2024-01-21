@@ -22,7 +22,7 @@ const sendMailEmailConfirm = async (userData) => {
         html:
             `
             <p> Hello, ${userName} </p>
-            <a href="${process.env.CLIENT_URL}/api/user/emailConfirm/${emailConfirmToken}"> Confirm Mail </a>
+            <a href="${process.env.CLIENT_URL}/api/user/emailConfirm/${emailConfirmToken}"> Confirm Email </a>
             `
     };
 
