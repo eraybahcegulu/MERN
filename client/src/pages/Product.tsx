@@ -20,7 +20,7 @@ import AddProductModal from '../components/Product/AddProductModal';
 import EditProductModal from '../components/Product/EditProductModal';
 
 import useUserContext from "../hooks/useUserContext";
-import useLogout from '../hooks/useUser';
+import useUser from '../hooks/useUser';
 import useProduct from '../hooks/useProduct';
 
 const Product: React.FC = () => {
@@ -47,7 +47,7 @@ const Product: React.FC = () => {
 
     const { user } = useUserContext();
     const { addProduct, deleteProduct, editProduct } = useProduct();
-    const { logout } = useLogout();
+    const { logout } = useUser();
 
     const onFinishAddProduct = async (values: any) => {
         addProduct(values)

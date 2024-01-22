@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import { PrivateRoute } from './helpers/PrivateRoute';
 import { EmailConfirmRoute } from './helpers/EmailConfirmRoute';
 import { GoogleAuthRoute } from './helpers/GoogleAuthRoute';
+import { ChangeEmailConfirmRoute } from './helpers/ChangeEmailConfirmRoute';
 
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="*" element={<NotFound />} />
                 <Route path="/api/user/emailConfirm/:emailConfirmToken" element={<EmailConfirmRoute />} />
+                <Route path="/api/user/changeEmailConfirm/:changeEmailConfirmToken" element={<ChangeEmailConfirmRoute />} />
                 <Route path="/api/auth/google/:googleUserToken" element={<GoogleAuthRoute />} />
 
                 <Route path="/home" element={

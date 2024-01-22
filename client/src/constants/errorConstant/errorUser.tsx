@@ -48,6 +48,13 @@ const handleChangeEmailError = (error: any) => {
     }
 };
 
+const handleChangeEmailConfirmError = (error: any) => {
+    if (error.response) {
+        errorChangeEmail(error.response.data.message);
+    } else {
+        failedServer(error.message);
+    }
+};
 export {
     handleRegisterError,
     handleRegisterVisitorError,
@@ -55,4 +62,5 @@ export {
     handleFailedServerUserError,
     handleChangePasswordError,
     handleChangeEmailError,
+    handleChangeEmailConfirmError,
 };

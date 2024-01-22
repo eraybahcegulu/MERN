@@ -5,3 +5,5 @@ export const EMAIL_CONFIRM_API_URL = `${process.env.REACT_APP_API_URL}/api/user/
 export const GET_USER_INFO_API_URL = `${process.env.REACT_APP_API_URL}/api/user/userInfo`;
 export const CHANGE_PASSWORD_API_URL = `${process.env.REACT_APP_API_URL}/api/user/changePassword`;
 export const CHANGE_EMAIL_API_URL = `${process.env.REACT_APP_API_URL}/api/user/changeEmail`;
+export const CHANGE_EMAIL_CONFIRM_API_URL = `${process.env.REACT_APP_API_URL}/api/user/changeEmailConfirm`;
+

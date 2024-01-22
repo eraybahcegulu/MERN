@@ -1,33 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { emailConfirm } from "../services/userService";
 import { SmileOutlined } from '@ant-design/icons';
 import { Button, Result, Spin } from 'antd';
 import { handleFailedServerUserError } from '../constants/errorConstant/errorUser';
-import { successEmailConfirm } from '../constants/notifyConstant/notifyUser';
+import { successChangeEmailConfirm } from '../constants/notifyConstant/notifyUser';
+import { changeEmailConfirm } from '../services/userService';
 
-export const EmailConfirmRoute = () => {
+export const ChangeEmailConfirmRoute = () => {
     const navigate = useNavigate();
 
-    const { emailConfirmToken } = useParams();
+    const { changeEmailConfirmToken } = useParams();
 
-    const [isConfirmedMail, setIsConfirmedMail] = useState<boolean>(false);
+    const [isChangedMail, setIsChangedMail] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
     useEffect(() => {
-        const handleEmailConfirm = async () => {
+        const handleChangeEmailConfirm = async () => {
             try {
-                const res = await emailConfirm(emailConfirmToken);
-                setIsConfirmedMail(true);
+                const res = await changeEmailConfirm(changeEmailConfirmToken);
+                setIsChangedMail(true);
                 setIsLoading(false);
-                successEmailConfirm(res.data.message)
+
+                successChangeEmailConfirm(res.data.message)
             } catch (error: any) {
                 handleFailedServerUserError(error);
                 setIsLoading(false);
             }
         }
-        handleEmailConfirm();
+        handleChangeEmailConfirm();
     }, [])
 
     const goLogin = () => {
@@ -40,10 +41,10 @@ export const EmailConfirmRoute = () => {
         <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
             {
                 !isLoading ? (
-                    isConfirmedMail ? (
+                    isChangedMail ? (
                         <Result
                             icon={<SmileOutlined />}
-                            title="Your email address successfully confirmed. Login Now."
+                            title="Your email address successfully changed. Login Now."
                             extra={
                                 <Button type="primary" onClick={goLogin}>
                                     Go Login

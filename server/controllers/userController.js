@@ -2,11 +2,11 @@ const User = require("../models/user");
 
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
 
-const { generateUserToken, verifyToken, generateEmailConfirmToken } = require('../utils/jwt');
+const { generateUserToken, verifyToken, generateEmailConfirmToken , generateChangeEmailConfirmToken  } = require('../utils/jwt');
 
 const responseHandler = require('../handlers/responseHandler')
 
-const { sendMailEmailConfirm } = require('../utils/sendMail');
+const { sendMailEmailConfirm , sendMailChangeEmail} = require('../utils/sendMail');
 const UserRoles = require("../models/enums/userRoles");
 
 const register = async (req, res) => {
@@ -99,7 +99,6 @@ const emailConfirm = async (req, res) => {
         console.error('Error', error);
         return responseHandler.serverError(res, 'Server error');
     }
-
 }
 
 const login = async (req, res) => {
@@ -243,19 +242,53 @@ const changeEmail = async (req, res) => {
             return responseHandler.badRequest(res, `${req.body.newEmail} is already registered, try again`);
         }
 
-        user.email = req.body.newEmail;
+        const changeEmailToken = generateChangeEmailConfirmToken(user._id, req.body.newEmail);
+
+        user.verificationToken = changeEmailToken;
         await user.save();
+
+        sendMailChangeEmail({ userName:user.userName, email: req.body.newEmail, changeEmailToken: user.verificationToken });
         //console.log(user);
 
-        const newTokenAfterEmailChange = generateUserToken(user);
-
-        return responseHandler.ok(res, { message: 'Your email has been changed successfully', token: newTokenAfterEmailChange });
+        return responseHandler.ok(res, { message: `Check ${req.body.newEmail} for confirm the email change` });
 
     } catch (error) {
         console.error('Error', error);
         return responseHandler.serverError(res, 'Server error');
     }
 };
+
+const changeEmailConfirm = async (req, res) => {
+    const { changeEmailConfirmToken } = req.params
+
+    try {
+        const user = await User.findOne({ verificationToken: changeEmailConfirmToken })
+        if (!user) {
+            return responseHandler.notFound(res, 'User not found. Try register');
+        }
+
+        try {
+            const decodedToken = verifyToken(changeEmailConfirmToken);
+
+            if (decodedToken.userId === user._id.toString()) {
+
+                user.verificationToken = null;
+                user.email = decodedToken.email;
+
+                await user.save()
+                //console.log(user)
+
+                return responseHandler.ok(res, { message: "Your email address has been changed successfully" });
+            }
+        }
+        catch (error) {
+            return responseHandler.notFound(res, 'Verification failed. OTP is expired.');
+        }
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+}
 
 module.exports = {
     register,
@@ -265,5 +298,6 @@ module.exports = {
     loginGoogle,
     userInfo,
     changePassword,
-    changeEmail
+    changeEmail,
+    changeEmailConfirm
 };

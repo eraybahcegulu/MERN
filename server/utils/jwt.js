@@ -34,6 +34,18 @@ const generateEmailConfirmToken = (email) => {
         );
 }
 
+const generateChangeEmailConfirmToken = (userId, email) => {
+    return jwt.sign
+        (
+            {
+                userId,
+                email
+            },
+
+            process.env.SECRET_KEY
+        );
+}
+
 const generateGoogleUserToken = (user) => {
     return jwt.sign
         (
@@ -48,6 +60,7 @@ const generateGoogleUserToken = (user) => {
             process.env.SECRET_KEY
         );
 }
+
 
 /*
 const generateEmailConfirmToken = (email, expiresIn = '30s') => {
@@ -66,5 +79,6 @@ module.exports = {
     generateUserToken,
     verifyToken,
     generateEmailConfirmToken,
+    generateChangeEmailConfirmToken,
     generateGoogleUserToken
 };

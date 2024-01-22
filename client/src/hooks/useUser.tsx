@@ -64,7 +64,7 @@ const useUser = () => {
             }
             const res = await changeEmail(user.userId, values, user.token);
             successChangeEmail(res.data.message);
-            getUser(res.data.token);
+
         } catch (error: any) {
             handleChangeEmailError(error);
         }

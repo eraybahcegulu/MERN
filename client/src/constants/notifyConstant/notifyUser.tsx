@@ -77,14 +77,14 @@ const successChangeEmail = (data: any) =>
     message.open({
         type: 'success',
         content: data,
-        duration: 3,
+        duration: 8,
     });
 
     const successEmailConfirm = (data: any) =>
     message.open({
         type: 'success',
         content: data,
-        duration: 3,
+        duration: 8,
     });
 
     const firstLoginNotify= (data: any) => {
@@ -99,6 +99,13 @@ const successChangeEmail = (data: any) =>
         });
     };
 
+    const successChangeEmailConfirm = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 8,
+    });
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -112,5 +119,6 @@ export {
     errorChangeEmail,
     successChangeEmail,
     successEmailConfirm,
-    firstLoginNotify
+    firstLoginNotify,
+    successChangeEmailConfirm
 };

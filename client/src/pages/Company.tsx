@@ -19,7 +19,7 @@ import EditCompanyModal from '../components/Company/EditCompanyModal';
 
 import useUserContext from "../hooks/useUserContext";
 import useCompany from "../hooks/useCompany";
-import useLogout from '../hooks/useUser';
+import useUser from '../hooks/useUser';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -39,7 +39,7 @@ const Company: React.FC = () => {
 
     const { user } = useUserContext();
     const { addCompany, deleteCompany, editCompany } = useCompany();
-    const { logout } = useLogout();
+    const { logout } = useUser();
 
     const onFinishAddCompany = async (values: any) => {
         addCompany(values);
