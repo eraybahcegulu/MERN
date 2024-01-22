@@ -3,13 +3,9 @@ const UserRoles = require('./enums/userRoles');
 
 const UserSchema = mongoose.Schema(
     {
-        googleId: {
-            type: String,
-            trim: true,
-        },
-
         userName: {
             type: String,
+            allowNull: true,
             trim: true,
         },
 
@@ -20,6 +16,7 @@ const UserSchema = mongoose.Schema(
 
         password: {
             type: String,
+            allowNull: true,
             trim: true,
         },
 

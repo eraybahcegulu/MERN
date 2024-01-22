@@ -9,8 +9,7 @@ import { successEmailConfirm } from '../constants/notifyConstant/notifyUser';
 export const EmailConfirmRoute = () => {
     const navigate = useNavigate();
 
-    const params = useParams();
-    const { emailConfirmToken } = params;
+    const { emailConfirmToken } = useParams();
 
     const [isConfirmedMail, setIsConfirmedMail] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);

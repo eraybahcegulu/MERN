@@ -7,7 +7,6 @@ interface RegisterFormProps {
     registerForm: any;
 }
 
-
 const RegisterForm: React.FC<RegisterFormProps> = ({ onFinishRegister, registerForm }) => {
     return (
         <Form
