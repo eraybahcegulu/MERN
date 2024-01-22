@@ -10,25 +10,16 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
-import { createCompany, removeCompany, updateCompany } from '../services/companyService';
-
 import {
-    successAddCompany,
-    infoDeleteCompany,
     infoEditCompany,
-    successDeleteCompany,
-    successEditCompany,
 } from '../constants/notifyConstant/notifyCompany';
 
 import AddCompanyModal from '../components/Company/AddCompanyModal';
 import EditCompanyModal from '../components/Company/EditCompanyModal';
 
-import { handleAddCompanyError, handleEditCompanyError, handleDeleteCompanyError } from '../constants/errorConstant/errorCompany';
-
 import useUserContext from "../hooks/useUserContext";
-import useCompanySlice from '../hooks/useCompanySlice';
-import useProductSlice from '../hooks/useProductSlice';
-import useLogout from '../hooks/useLogout';
+import useCompany from "../hooks/useCompany";
+import useLogout from '../hooks/useUser';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -47,49 +38,22 @@ const Company: React.FC = () => {
     const status = useSelector((state: RootState) => state.company.status);
 
     const { user } = useUserContext();
-    const { fetchCompany } = useCompanySlice();
-    const { fetchProduct } = useProductSlice();
+    const { addCompany, deleteCompany, editCompany } = useCompany();
     const { logout } = useLogout();
 
     const onFinishAddCompany = async (values: any) => {
-        values.creatorId = user.userId;
-        try {
-            const res = await createCompany(values, user.token);
-            successAddCompany(res.data.message)
-            fetchCompany(user.token)
-            setIsAddCompanyModalOpen(false);
-            setTimeout(() => {
-                addCompanyForm.resetFields();
-            }, 100);
-
-        } catch (error: any) {
-            handleAddCompanyError(error);
-        }
+        addCompany(values);
+        setIsAddCompanyModalOpen(false);
+        setTimeout(() => {
+            addCompanyForm.resetFields();
+        }, 100);
     };
 
-    const deleteCompany = async () => {
-        try {
-            if (selectedRowKeys.length === 0) {
-                infoDeleteCompany();
-                return;
-            }
+    const removeCompany = async () => {
 
-            const res = await Promise.all(selectedRowKeys.map(id => removeCompany(id, user.userId, user.token)));
-            const messages = res.map(res => res.data.message);
+        deleteCompany(selectedRowKeys)
+        setselectedRowKeys([]);
 
-            messages.forEach(message => {
-
-                successDeleteCompany(message);
-
-            });
-
-            setselectedRowKeys([]);
-            fetchProduct(user.token)
-            fetchCompany(user.token)
-
-        } catch (error: any) {
-            handleDeleteCompanyError(error)
-        }
     };
 
     const isEditCompany = async () => {
@@ -109,19 +73,11 @@ const Company: React.FC = () => {
     };
 
     const onFinishEditCompany = async (values: any) => {
-        values.lastUpdaterId = user.userId;
-        try {
-            const res = await updateCompany(selectedRowKeys, values, user.token);
-            successEditCompany(res.data.message);
-
-            fetchCompany(user.token)
-            editCompanyForm.resetFields();
-            setselectedRowKeys([]);
-            setSelectedRows([]);
-            setIsEditCompanyModalOpen(false);
-        } catch (error: any) {
-            handleEditCompanyError(error);
-        }
+        editCompany(selectedRowKeys, values)
+        editCompanyForm.resetFields();
+        setselectedRowKeys([]);
+        setSelectedRows([]);
+        setIsEditCompanyModalOpen(false);
     };
 
     const handleLogout = (): void => {
@@ -159,7 +115,7 @@ const Company: React.FC = () => {
 
                             <EditOutlined onClick={isEditCompany} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 hover:scale-125 transition-all text-2xl" />
 
-                            <DeleteOutlined onClick={deleteCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
+                            <DeleteOutlined onClick={removeCompany} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
 
                         </>
 

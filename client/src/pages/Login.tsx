@@ -6,13 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import RegisterForm from '../components/Login/RegisterForm';
 import LoginForm from '../components/Login/LoginForm';
 
-import { register, login } from '../services/userService';
-import { successRegister } from '../constants/notifyConstant/notifyUser'
-
-import useUserContext from "../hooks/useUserContext";
-import useLogout from '../hooks/useLogout';
-
-import { handleInvalidLoginError, handleRegisterError } from '../constants/errorConstant/errorUser';
+import useUser from "../hooks/useUser";
 
 interface LoginProps { }
 
@@ -24,57 +18,27 @@ const Login: React.FC<LoginProps> = () => {
 
   const token = localStorage.getItem('token');
 
-  const { getUser, setIsFirstLogin } = useUserContext();
-  const { logout } = useLogout();
+  const { signin, signup, logout } = useUser();
 
   const onFinishRegister = async (values: any) => {
-    try {
-      const res = await register(values);
-      successRegister(res.data.message);
-      setisRegisterModalOpen(false);
-      setTimeout(() => {
-        registerForm.resetFields();
-      }, 200);
-    } catch (error: any) {
-      handleRegisterError(error);
-    }
+    signup(values)
+    setisRegisterModalOpen(false);
+    setTimeout(() => {
+      registerForm.resetFields();
+    }, 200);
   };
 
   const onFinishLogin = async (values: any) => {
-    try {
-      const res = await login(values);
-      const token = res.data.token;
-      //console.log(res.data)
-      //console.log(res.data.isFirstLogin);
-
-      if(res.data.isFirstLogin)
-      {
-        setIsFirstLogin(true);
-      }
-
-      if (isChecked === true) {
-        localStorage.setItem('token', token);
-      } else {
-        sessionStorage.setItem('token', token);
-      }
-      await getUser(token);
-      //console.log(res)
-
-      navigate(`/home`,)
-
-    } catch (error: any) {
-      handleInvalidLoginError(error);
-    }
+    signin(isChecked, values)
   };
 
   const onChange = () => {
     setChecked((prevState) => !prevState);
   };
 
-    const handleLogout = (): void => {
-        logout();
-    };
-
+  const handleLogout = (): void => {
+    logout();
+  };
 
   return (
     <div className='bg-slate-400 h-screen w-screen flex items-center justify-center'>

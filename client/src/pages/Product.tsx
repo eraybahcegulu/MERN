@@ -8,35 +8,24 @@ import ProductList from '../components/Product/ProductList';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
-import { createProduct, removeProduct, updateProduct } from '../services/productService';
-
 import {
-    successAddProduct,
-    infoDeleteProduct,
-    successDeleteProduct,
     infoEditProduct,
-    successEditProduct,
     notFoundCompany
 } from '../constants/notifyConstant/notifyProduct';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-
-
 import AddProductModal from '../components/Product/AddProductModal';
 import EditProductModal from '../components/Product/EditProductModal';
 
-import { handleAddProductError, handleEditProductError, handleDeleteProductError } from '../constants/errorConstant/errorProduct';
-
 import useUserContext from "../hooks/useUserContext";
-import useCompanySlice from '../hooks/useCompanySlice';
-import useProductSlice from '../hooks/useProductSlice';
-import useLogout from '../hooks/useLogout';
+import useLogout from '../hooks/useUser';
+import useProduct from '../hooks/useProduct';
 
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
-    const [selectedRowKeys, setselectedRowKeys] = useState<string[]>([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
     const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
     const [addProductForm] = Form.useForm();
@@ -57,58 +46,20 @@ const Product: React.FC = () => {
     }));
 
     const { user } = useUserContext();
-    const { fetchCompany } = useCompanySlice();
-    const { fetchProduct } = useProductSlice();
+    const { addProduct, deleteProduct, editProduct } = useProduct();
     const { logout } = useLogout();
 
     const onFinishAddProduct = async (values: any) => {
-        values.creatorId = user.userId;
-        try {
-            const res = await createProduct(values, user.token);
-            successAddProduct(res.data.message)
-            fetchProduct(user.token)
-            fetchCompany(user.token)
-            setIsAddProductModalOpen(false);
-            setTimeout(() => {
-                addProductForm.resetFields();
-            }, 100);
-
-        } catch (error: any) {
-            handleAddProductError(error);
-        }
+        addProduct(values)
+        setIsAddProductModalOpen(false);
+        setTimeout(() => {
+            addProductForm.resetFields();
+        }, 100);
     };
 
-    const deleteProduct = async () => {
-        try {
-            if (selectedRowKeys.length === 0) {
-                infoDeleteProduct();
-                return;
-            }
-
-            const res = await Promise.all(selectedRowKeys.map(id => removeProduct(id, user.userId, user.token)));
-
-            if (res.length > 1) {
-                successDeleteProduct(
-                    <span>
-                        {res.length} products deleted successfully
-                    </span>
-                );
-            }
-            if (res.length === 1) {
-                successDeleteProduct(
-                    <span>
-                        Product deleted successfully
-                    </span>
-                );
-            }
-
-            setselectedRowKeys([]);
-            fetchProduct(user.token)
-            fetchCompany(user.token)
-
-        } catch (error: any) {
-            handleDeleteProductError(error)
-        }
+    const removeProduct = async () => {
+        deleteProduct(selectedRowKeys)
+        setSelectedRowKeys([]);
     };
 
     const isEditProduct = async () => {
@@ -129,19 +80,11 @@ const Product: React.FC = () => {
     };
 
     const onFinishEditProduct = async (values: any) => {
-        values.lastUpdaterId = user.userId;
-        try {
-            const res = await updateProduct(selectedRowKeys, values, user.token);
-            successEditProduct(res.data.message);
-            fetchProduct(user.token)
-            fetchCompany(user.token)
-            editProductForm.resetFields();
-            setselectedRowKeys([]);
-            setSelectedRows([]);
-            setIsEditProductModalOpen(false);
-        } catch (error: any) {
-            handleEditProductError(error);
-        }
+        editProduct(selectedRowKeys, values);
+        editProductForm.resetFields();
+        setSelectedRowKeys([]);
+        setSelectedRows([]);
+        setIsEditProductModalOpen(false);
     };
 
     const handleLogout = (): void => {
@@ -185,7 +128,7 @@ const Product: React.FC = () => {
 
                             <EditOutlined onClick={isEditProduct} className="hover:cursor-pointer text-blue-600 hover:text-blue-500 hover:scale-125 transition-all text-2xl" />
 
-                            <DeleteOutlined onClick={deleteProduct} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
+                            <DeleteOutlined onClick={removeProduct} className="hover:cursor-pointer text-red-600 hover:text-red-500 hover:scale-125 transition-all text-2xl" />
                         </>
                     }
 
@@ -193,7 +136,7 @@ const Product: React.FC = () => {
                 </div>
 
                 <div>
-                    <ProductList search={search} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setselectedRowKeys} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
+                    <ProductList search={search} selectedRowKeys={selectedRowKeys} setSelectedRowKeys={setSelectedRowKeys} selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
                 </div>
 
 

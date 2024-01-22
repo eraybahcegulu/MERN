@@ -8,7 +8,7 @@ const useCompanySlice = () => {
     const fetchCompany = (token: any) => {
         dispatch(fetchCompanyData(token));
     };
-
+    
     return { fetchCompany };
 };
 
