@@ -1,8 +1,16 @@
-import { errorChangeEmail, errorChangePassword, errorRegister, failedServer, invalidLogin } from "../notifyConstant/notifyUser";
+import { errorChangeEmail, errorChangePassword, errorRegister, errorRegisterVisitor, failedServer, invalidLogin } from "../notifyConstant/notifyUser";
 
 const handleRegisterError = (error: any) => {
     if (error.response) {
         errorRegister(error.response.data.message);
+    } else {
+        failedServer(error.message);
+    }
+};
+
+const handleRegisterVisitorError = (error: any) => {
+    if (error.response) {
+        errorRegisterVisitor(error.response.data.message);
     } else {
         failedServer(error.message);
     }
@@ -42,6 +50,7 @@ const handleChangeEmailError = (error: any) => {
 
 export {
     handleRegisterError,
+    handleRegisterVisitorError,
     handleInvalidLoginError,
     handleFailedServerUserError,
     handleChangePasswordError,

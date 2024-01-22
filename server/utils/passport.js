@@ -19,6 +19,8 @@ passport.use(
                 if (!user) {
                     user = new User({
                         isEmailVerified: true,
+                        userName: null,
+                        password: null,
                         email: profile.emails[0].value,
                         userRole: UserRole.VISITOR
                     });

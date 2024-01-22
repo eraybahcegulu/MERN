@@ -6,6 +6,7 @@ const { validLength, sanitize } = require("../middlewares/validatorMiddleware");
 const passport = require("passport");
 
 router.post("/api/user/register", sanitize, validLength, userController.register);
+router.put("/api/user/registerVisitor/:id", sanitize, validLength, userController.registerVisitor);
 router.get("/api/user/emailConfirm/:emailConfirmToken", userController.emailConfirm);
 router.post("/api/user/login", validLength, userController.login);
 router.get("/api/user/userInfo", userController.userInfo);

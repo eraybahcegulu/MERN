@@ -31,6 +31,20 @@ const errorRegister = (data: any) =>
         duration: 3,
     });
 
+    const successRegisterVisitor = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
+const errorRegisterVisitor = (data: any) =>
+    message.open({
+        type: 'error',
+        content: data,
+        duration: 3,
+    });
+
 const invalidLogin = (data: any) =>
     message.open({
         type: 'error',
@@ -90,6 +104,8 @@ export {
     failedGetUserInfo,
     successRegister,
     errorRegister,
+    successRegisterVisitor,
+    errorRegisterVisitor,
     invalidLogin,
     errorChangePassword,
     successChangePassword,

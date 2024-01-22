@@ -6,7 +6,8 @@ const { generateUserToken, verifyToken, generateEmailConfirmToken } = require('.
 
 const responseHandler = require('../handlers/responseHandler')
 
-const { sendMailEmailConfirm } = require('../utils/sendMail')
+const { sendMailEmailConfirm } = require('../utils/sendMail');
+const UserRoles = require("../models/enums/userRoles");
 
 const register = async (req, res) => {
     try {
@@ -36,6 +37,34 @@ const register = async (req, res) => {
         await newUser.save();
 
         return responseHandler.created(res, { message: `Successfully registered. Email confirmation required, link sent to ${newUser.email}` });
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+};
+
+const registerVisitor = async (req, res) => {
+    try {
+        const existingUserNameControl = await User.findOne({ userName: req.body.userName });
+        if (existingUserNameControl) {
+            return responseHandler.badRequest(res, "This User Name is already registered");
+        }
+        
+        const existingVisitor = await User.findOne({ _id: req.params.id });
+        if (!existingVisitor) {
+            return responseHandler.notFound(res, 'User not found.');
+        }
+
+        const hashedPassword = await hashPassword(req.body.password);
+
+        existingVisitor.userName = req.body.userName;
+        existingVisitor.password = hashedPassword;
+        existingVisitor.userRole = UserRoles.STANDARD;
+        await existingVisitor.save();
+
+        const newTokenAfterRegisterVisitor = generateUserToken(existingVisitor);
+
+        return responseHandler.ok(res, { message: 'Successfully registered. Standard membership activated', token: newTokenAfterRegisterVisitor });
     } catch (error) {
         console.error('Error', error);
         return responseHandler.serverError(res, 'Server error');
@@ -230,6 +259,7 @@ const changeEmail = async (req, res) => {
 
 module.exports = {
     register,
+    registerVisitor,
     emailConfirm,
     login,
     loginGoogle,

@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import { Card, Radio, Modal, Form, Button, Input, Spin, Carousel, Popover } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ArrowDownOutlined, InfoCircleOutlined, LogoutOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
-
-import { changeEmail, changePassword } from '../../services/userService';
-import { errorChangePassword, successChangePassword, successChangeEmail, errorChangeEmail } from '../../constants/notifyConstant/notifyUser';
-
-import { handleChangeEmailError, handleChangePasswordError } from '../../constants/errorConstant/errorUser';
-
+import { ArrowDownOutlined, InfoCircleOutlined, LockOutlined, LogoutOutlined, PlusOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGem } from '@fortawesome/free-solid-svg-icons';
 
 import useUserContext from '../../hooks/useUserContext';
-import useLogout from '../../hooks/useLogout';
+import useUser from '../../hooks/useUser';
 
 const contentStyle: React.CSSProperties = {
     height: '375px',
@@ -22,61 +16,44 @@ const contentStyle: React.CSSProperties = {
 };
 
 const UserInfo: React.FC = () => {
-    const { user, loading, getUser } = useUserContext();
+    const { user, loading } = useUserContext();
     const [changePasswordForm] = Form.useForm();
     const [changeEmailForm] = Form.useForm();
+    const [registerVisitorForm] = Form.useForm();
 
-    const { logout } = useLogout();
+    const { logout, changePass, modifyEmail, signupVisitor } = useUser();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const onFinishChangePassword = async (values: any) => {
-        try {
-            if (values.currentPassword === values.newPassword) {
-                return errorChangePassword(
-                    <span>Current password and new password cannot be the same</span>
-                );
-            }
-            const res = await changePassword(user.userId, values, user.token);
-            successChangePassword(res.data.message);
-            setIsAccountSettingsModalOpen(false);
-            setTimeout(() => {
-                changePasswordForm.resetFields();
-            }, 100);
-
-
-        } catch (error: any) {
-            handleChangePasswordError(error);
-        }
+        changePass(values);
+        setIsAccountSettingsModalOpen(false);
+        setTimeout(() => {
+            changePasswordForm.resetFields();
+        }, 100);
     };
 
     const onFinishChangeEmail = async (values: any) => {
-        try {
-            if (values.newEmail === user.email) {
-                return errorChangeEmail(
-                    <span>New email and current email cannot be the same</span>
-                );
-            }
-            const res = await changeEmail(user.userId, values, user.token);
-            successChangeEmail(res.data.message);
-            getUser(res.data.token);
-            setIsAccountSettingsModalOpen(false);
-            setTimeout(() => {
-                changeEmailForm.resetFields();
-            }, 100);
+        modifyEmail(values)
+        setIsAccountSettingsModalOpen(false);
+        setTimeout(() => {
+            changeEmailForm.resetFields();
+        }, 100);
+    };
 
-
-        } catch (error: any) {
-            handleChangeEmailError(error);
-        }
+    const onFinishRegisterVisitor = async (values: any) => {
+        signupVisitor(values)
+        setIsAccountSettingsModalOpen(false);
+        setTimeout(() => {
+            registerVisitorForm.resetFields();
+        }, 100);
     };
 
     const handleLogout = (): void => {
         logout();
     };
 
-    console.log(user)
     return (
         <>
             <Card
@@ -293,7 +270,100 @@ const UserInfo: React.FC = () => {
                                 &&
                                 <>
                                     <span> WELCOME VISITOR </span>
-                                    <span> Register Now </span>
+                                    <span> Register to App Now </span>
+                                    <strong className=''>{user.email}</strong>
+                                    <ArrowDownOutlined className='text-2xl mt-0' />
+
+                                    <Form
+                                        className="flex flex-col"
+                                        layout="vertical"
+                                        onFinish={onFinishRegisterVisitor}
+                                        form={registerVisitorForm}
+                                    >
+                                        <Form.Item
+                                            name="userName"
+                                            rules={[{ required: true, message: 'Please input your Username!' },
+                                            { max: 40, message: "Max. 40 characters." },
+                                            {
+                                                validator: (_, value) => {
+                                                    return (/^[^<> ]*$/.test(value)) ? Promise.resolve() : Promise.reject(new Error("Invalid character detected."));
+                                                }
+                                            }
+                                            ]}
+                                        >
+                                            <Input prefix={<UserOutlined className="site-form-item-icon" />}
+                                                className='w-[250px]'
+                                                style={{ borderRadius: "0" }} size="large"
+                                                placeholder="Username" />
+                                        </Form.Item>
+
+                                        <Form.Item
+                                            name="password"
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Please input your password!',
+
+                                                },
+                                                { max: 40, message: "Max. 40 characters." },
+                                                {
+                                                    validator: (_, value) => {
+                                                        return (/^[^<> ]*$/.test(value)) ? Promise.resolve() : Promise.reject(new Error("Invalid character detected."));
+                                                    }
+                                                }
+                                            ]}
+                                            hasFeedback
+                                        >
+                                            <Input
+                                                className='w-[250px]' style={{ borderRadius: "0" }} size="large"
+                                                placeholder="Password"
+                                                prefix={<LockOutlined className="site-form-item-icon" />}
+                                            />
+                                        </Form.Item>
+
+                                        <Form.Item
+                                            name="confirm"
+                                            dependencies={['password']}
+                                            hasFeedback
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                    message: 'Please confirm your password!',
+                                                },
+                                                { max: 40, message: "Max. 40 characters." },
+                                                {
+                                                    validator: (_, value) => {
+                                                        return (/^[^<> ]*$/.test(value)) ? Promise.resolve() : Promise.reject(new Error("Invalid character detected."));
+                                                    }
+                                                },
+                                                ({ getFieldValue }) => ({
+                                                    validator(_, value) {
+                                                        if (!value || getFieldValue('password') === value) {
+                                                            return Promise.resolve();
+                                                        }
+                                                        return Promise.reject(new Error('The new password that you entered do not match!'));
+                                                    },
+                                                }),
+                                            ]}
+                                        >
+                                            <Input
+                                                className='w-[250px]' style={{ borderRadius: "0" }} size="large"
+                                                placeholder="Confirm Password"
+                                                prefix={<LockOutlined className="site-form-item-icon" />}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item className="flex justify-center mb-0">
+                                            <Button
+                                                className='hover:scale-105 transition duration-700'
+                                                style={{ borderRadius: "0" }}
+                                                type="primary"
+                                                htmlType="submit"
+                                                size="large"
+                                            >
+                                                <strong> REGISTER </strong>
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
                                 </>
                             }
                         </div>
