@@ -5,9 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import ProductList from '../components/Product/ProductList';
 
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
-
 import {
     infoEditProduct,
     notFoundCompany
@@ -22,6 +19,7 @@ import EditProductModal from '../components/Product/EditProductModal';
 import useUserContext from "../hooks/useUserContext";
 import useUser from '../hooks/useUser';
 import useProduct from '../hooks/useProduct';
+import useCompany from '../hooks/useCompany';
 
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -36,18 +34,15 @@ const Product: React.FC = () => {
 
     const navigate = useNavigate();
 
-    const company = useSelector((state: RootState) => state.company.data);
-    const product = useSelector((state: RootState) => state.product.data);
-    const status = useSelector((state: RootState) => state.product.status);
+    const { user } = useUserContext();
+    const { products, productsStatus , addProduct, deleteProduct, updateProduct } = useProduct();
+    const {  companies } = useCompany();
+    const { logout } = useUser();
 
-    const selectedCompany = company?.map((company: { _id: any; companyName: any; }) => ({
+    const selectedCompany = companies?.map((company: { _id: any; companyName: any; }) => ({
         value: company._id,
         label: company.companyName,
     }));
-
-    const { user } = useUserContext();
-    const { addProduct, deleteProduct, editProduct } = useProduct();
-    const { logout } = useUser();
 
     const onFinishAddProduct = async (values: any) => {
         addProduct(values)
@@ -80,7 +75,7 @@ const Product: React.FC = () => {
     };
 
     const onFinishEditProduct = async (values: any) => {
-        editProduct(selectedRowKeys, values);
+        updateProduct(selectedRowKeys, values);
         editProductForm.resetFields();
         setSelectedRowKeys([]);
         setSelectedRows([]);
@@ -94,7 +89,7 @@ const Product: React.FC = () => {
     const handleOpenAddProductModal = (): void => {
         setIsAddProductModalOpen(true);
 
-        if (company?.length === 0) {
+        if (companies?.length === 0) {
             notFoundCompany();
         }
 
@@ -119,7 +114,7 @@ const Product: React.FC = () => {
                         &&
                         <>
                             {
-                                product?.length === 0 && status === 'succeeded'
+                                products?.length === 0 && productsStatus === 'succeeded'
                                     ?
                                     <FontAwesomeIcon onClick={handleOpenAddProductModal} className='hover:cursor-pointer text-4xl text-green-700 hover:scale-125 hover:text-green-600' icon={faPlus} bounce />
                                     :

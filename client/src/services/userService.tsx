@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL, CHANGE_EMAIL_API_URL, EMAIL_CONFIRM_API_URL, REGISTER_VISITOR_API_URL, CHANGE_EMAIL_CONFIRM_API_URL } from '../constants/apiConstant/apiUser';
 
-const register = async (data: any) => {
+const registerService = async (data: any) => {
     return await axios.post
         (
             REGISTER_API_URL,
@@ -10,7 +10,7 @@ const register = async (data: any) => {
         )
 }
 
-const login = async (data: any) => {
+const loginService = async (data: any) => {
     return await axios.post
         (
             LOGIN_API_URL,
@@ -19,14 +19,14 @@ const login = async (data: any) => {
         )
 }
 
-const emailConfirm = async (emailConfirmToken: any) => {
+const emailConfirmService = async (emailConfirmToken: any) => {
     return await axios.get
         (
             `${EMAIL_CONFIRM_API_URL}/${emailConfirmToken}`
         )
 }
 
-const userInfo = async (token: any) => {
+const userInfoService = async (token: any) => {
     return await axios.get
         (
             GET_USER_INFO_API_URL,
@@ -40,7 +40,7 @@ const userInfo = async (token: any) => {
         )
 }
 
-const changePassword = async (id: any, data: any, token: any) => {
+const changePasswordService = async (id: any, data: any, token: any) => {
     return await axios.put
         (
             `${CHANGE_PASSWORD_API_URL}/${id}`,
@@ -56,8 +56,8 @@ const changePassword = async (id: any, data: any, token: any) => {
         )
 }
 
-const changeEmail = async (id: any, data: any, token: any) => {
-    return await axios.put
+const changeEmailService = async (id: any, data: any, token: any) => {
+    return await axios.post
         (
             `${CHANGE_EMAIL_API_URL}/${id}`,
 
@@ -72,14 +72,14 @@ const changeEmail = async (id: any, data: any, token: any) => {
         )
 }
 
-const changeEmailConfirm = async (changeEmailConfirmToken: any) => {
+const changeEmailConfirmService = async (changeEmailConfirmToken: any) => {
     return await axios.get
         (
             `${CHANGE_EMAIL_CONFIRM_API_URL}/${changeEmailConfirmToken}`
         )
 }
 
-const registerVisitor = async (id: any, data: any, token: any) => {
+const registerVisitorService = async (id: any, data: any, token: any) => {
     return await axios.put
         (
             `${REGISTER_VISITOR_API_URL}/${id}`,
@@ -95,4 +95,13 @@ const registerVisitor = async (id: any, data: any, token: any) => {
         )
 }
 
-export { register, emailConfirm, login, userInfo, changePassword, changeEmail, changeEmailConfirm, registerVisitor };
+export {
+    registerService,
+    emailConfirmService,
+    loginService,
+    userInfoService,
+    changePasswordService,
+    changeEmailService,
+    changeEmailConfirmService,
+    registerVisitorService
+};

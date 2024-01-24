@@ -1,14 +1,13 @@
 import React, { FC } from 'react';
 
-import { useSelector } from 'react-redux';
-
 import { Spin, Table, Alert } from 'antd';
-import { RootState } from '../../store';
 
 import type { TableRowSelection } from 'antd/es/table/interface';
 
 import { CompanyDataType, CompanyListProps } from './types';
 import { columns } from './columns';
+
+import useCompany from '../../hooks/useCompany'
 
 const CompanyList: FC<CompanyListProps> = ({
     search,
@@ -16,6 +15,8 @@ const CompanyList: FC<CompanyListProps> = ({
     setSelectedRowKeys,
     setSelectedRows,
 }) => {
+
+    const { companies, companiesStatus } = useCompany();
 
     const rowSelection: TableRowSelection<CompanyDataType> = {
         selectedRowKeys,
@@ -28,10 +29,7 @@ const CompanyList: FC<CompanyListProps> = ({
         },
     };
 
-    const company = useSelector((state: RootState) => state.company.data);
-    const status = useSelector((state: RootState) => state.company.status);
-
-    const filteredCompanies = company?.filter(
+    const filteredCompanies = companies?.filter(
         (item: any) =>
             item.companyName.toLowerCase().includes(search.trim()) ||
             item.crn.toLowerCase().includes(search.trim()) ||
@@ -43,13 +41,13 @@ const CompanyList: FC<CompanyListProps> = ({
 
     return (
         <>
-            {status === 'loading' && (
+            {companiesStatus === 'loading' && (
                 <div className="text-center">
                     <Spin size="large" />
                 </div>
             )}
 
-            {status === 'succeeded' && filteredCompanies.length > 0 && (
+            {companiesStatus === 'succeeded' && filteredCompanies.length > 0 && (
                 <Table
                     scroll={{ y: 400 }}
                     className="max-w-[475px] md:max-w-[750px] xl:max-w-[1200px]"
@@ -63,11 +61,11 @@ const CompanyList: FC<CompanyListProps> = ({
                 />
             )}
 
-            {status === 'succeeded' && filteredCompanies.length === 0 && (
+            {companiesStatus === 'succeeded' && filteredCompanies.length === 0 && (
                 <Alert message="Company not found" type="warning" />
             )}
 
-            {status === 'failed' && (
+            {companiesStatus === 'failed' && (
                 <Alert message="Server Error" type="error" />
             )}
         </>

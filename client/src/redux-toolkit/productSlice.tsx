@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { getProducts } from '../services/productService';
+import { getProductsService } from '../services/productService';
 import { handleFetchProductError } from '../constants/errorConstant/errorProduct';
 
 interface ProductState {
@@ -9,9 +9,9 @@ interface ProductState {
     error?: string;
 }
 
-export const fetchProductData = createAsyncThunk('fetchProductData', async (token: any) => {
+export const getProducts = createAsyncThunk('getProducts', async (token: any) => {
     try {
-        const response = await getProducts(token);
+        const response = await getProductsService(token);
         return response.data;
     } catch (error: any) {
         handleFetchProductError(error);
@@ -30,16 +30,16 @@ const productSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchProductData.pending, (state) => {
+            .addCase(getProducts.pending, (state) => {
                 state.status = 'loading';
             })
 
-            .addCase(fetchProductData.fulfilled, (state, action) => {
+            .addCase(getProducts.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.data = action.payload;
             })
 
-            .addCase(fetchProductData.rejected, (state, action) => {
+            .addCase(getProducts.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             });

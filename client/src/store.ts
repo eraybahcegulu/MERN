@@ -4,8 +4,8 @@ import productSlice from "./redux-toolkit/productSlice";
 import { combineReducers } from 'redux';
 
 export const rootReducer = combineReducers({
-    company: companySlice,
-    product: productSlice,
+    companies: companySlice,
+    products: productSlice,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

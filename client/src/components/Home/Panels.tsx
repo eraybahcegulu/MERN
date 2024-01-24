@@ -1,14 +1,16 @@
 import React from 'react';
 import { Alert, Card, Divider, Popover, Spin, Steps } from 'antd';
 import { HomeOutlined, InboxOutlined, InfoCircleOutlined, OrderedListOutlined, SwapRightOutlined } from '@ant-design/icons';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store';
+
+
+import useCompany from '../../hooks/useCompany'
+import useProduct from '../../hooks/useProduct'
 
 const Panels = () => {
-
-    const product = useSelector((state: RootState) => state.product.data);
+    const { companies, companiesStatus } = useCompany();
+    const { products, productsStatus } = useProduct();
     
-    const lastAddedThreeProduct = product ? product.slice(-3) : [];
+    const lastAddedThreeProduct = products ? products.slice(-3) : [];
     const productStepsData = lastAddedThreeProduct.map((product) => ({
         title:
             <span className='text-md'>{product.productName}
@@ -29,8 +31,7 @@ const Panels = () => {
             </span>
     }));
 
-    const company = useSelector((state: RootState) => state.company.data);
-    const lastAddedThreeCompanies = company ? company.slice(-3) : [];
+    const lastAddedThreeCompanies = companies ? companies.slice(-3) : [];
     const companyStepsData = lastAddedThreeCompanies.map((company) => ({
         title:
             <span className='text-md'>{company.companyName}
@@ -56,9 +57,6 @@ const Panels = () => {
 
     }));
 
-    const productStatus = useSelector((state: RootState) => state.product.status);
-
-    const companyStatus = useSelector((state: RootState) => state.company.status);
 
 
     return (
@@ -73,13 +71,13 @@ const Panels = () => {
                             <span className='text-md'>TOTAL COMPANY</span>
                             <span className='text-2xl'>
                                 <strong>
-                                    {companyStatus === 'loading' && <div> <Spin size="large" /> </div>}
-                                    {companyStatus === 'succeeded' &&
+                                    {companiesStatus === 'loading' && <div> <Spin size="large" /> </div>}
+                                    {companiesStatus === 'succeeded' &&
                                         (
-                                            <span>{company?.length}</span>
+                                            <span>{companies?.length}</span>
 
                                         )}
-                                    {companyStatus === 'failed' &&
+                                    {companiesStatus === 'failed' &&
                                         <Alert message="Error" type="error" />}
                                 </strong>
                             </span>
@@ -94,12 +92,12 @@ const Panels = () => {
                             <span className='text-md'>TOTAL PRODUCT</span>
                             <span className='text-2xl'>
                                 <strong>
-                                    {productStatus === 'loading' && <div> <Spin size="large" /> </div>}
-                                    {productStatus === 'succeeded' &&
+                                    {productsStatus === 'loading' && <div> <Spin size="large" /> </div>}
+                                    {productsStatus === 'succeeded' &&
                                         (
-                                            <span>{product?.length}</span>
+                                            <span>{products?.length}</span>
                                         )}
-                                    {productStatus === 'failed' &&
+                                    {productsStatus === 'failed' &&
                                         <Alert message="Error" type="error" />}
                                 </strong>
                             </span>
@@ -118,8 +116,8 @@ const Panels = () => {
                     <Divider />
                     <div className='flex flex-col items-center gap-2 '>
                         <span className='text-xl '>LAST ADDED 3 COMPANIES</span>
-                        {companyStatus === 'loading' && <div> <Spin size="large" /> </div>}
-                        {companyStatus === 'failed' &&
+                        {companiesStatus === 'loading' && <div> <Spin size="large" /> </div>}
+                        {companiesStatus === 'failed' &&
                                         <Alert message="Error" type="error" />}
                         <span>  </span>
                         <Steps
@@ -140,8 +138,8 @@ const Panels = () => {
                     <Divider />
                     <div className='flex flex-col items-center gap-2 '>
                         <span className='text-xl '>LAST ADDED 3 PRODUCTS</span>
-                        {productStatus === 'loading' && <div> <Spin size="large" /> </div>}
-                        {productStatus === 'failed' &&
+                        {productsStatus === 'loading' && <div> <Spin size="large" /> </div>}
+                        {productsStatus === 'failed' &&
                                         <Alert message="Error" type="error" />}
                         <Steps
                             className='flex flex-row items-start '

@@ -4,7 +4,7 @@ import { SmileOutlined } from '@ant-design/icons';
 import { Button, Result, Spin } from 'antd';
 import { handleFailedServerUserError } from '../constants/errorConstant/errorUser';
 import { successChangeEmailConfirm } from '../constants/notifyConstant/notifyUser';
-import { changeEmailConfirm } from '../services/userService';
+import { changeEmailConfirmService } from '../services/userService';
 
 export const ChangeEmailConfirmRoute = () => {
     const navigate = useNavigate();
@@ -14,11 +14,10 @@ export const ChangeEmailConfirmRoute = () => {
     const [isChangedMail, setIsChangedMail] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-
     useEffect(() => {
         const handleChangeEmailConfirm = async () => {
             try {
-                const res = await changeEmailConfirm(changeEmailConfirmToken);
+                const res = await changeEmailConfirmService(changeEmailConfirmToken);
                 setIsChangedMail(true);
                 setIsLoading(false);
 

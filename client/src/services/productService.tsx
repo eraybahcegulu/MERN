@@ -1,7 +1,7 @@
 import axios from "axios";
 import { GET_PRODUCTS_API_URL, ADD_PRODUCT_API_URL, DELETE_PRODUCT_API_URL, UPDATE_PRODUCT_API_URL } from '../constants/apiConstant/apiProduct';
 
-const getProducts = async (token : any) => {
+const getProductsService = async (token: any) => {
     return await axios.get
         (
             GET_PRODUCTS_API_URL,
@@ -15,7 +15,7 @@ const getProducts = async (token : any) => {
         );
 };
 
-const createProduct = async (data: any, token: any) => {
+const addProductService = async (data: any, token: any) => {
     return await axios.post
         (
             ADD_PRODUCT_API_URL,
@@ -32,7 +32,7 @@ const createProduct = async (data: any, token: any) => {
         );
 };
 
-const removeProduct = async (id: any, userId: any, token: any) => {
+const deleteProductService = async (id: any, userId: any, token: any) => {
     return await axios.delete
         (
             `${DELETE_PRODUCT_API_URL}/${id}`,
@@ -52,7 +52,7 @@ const removeProduct = async (id: any, userId: any, token: any) => {
         );
 };
 
-const updateProduct = async (id: any, data: any, token: any) => {
+const updateProductService = async (id: any, data: any, token: any) => {
     return await axios.put
         (
             `${UPDATE_PRODUCT_API_URL}/${id}`,
@@ -69,4 +69,9 @@ const updateProduct = async (id: any, data: any, token: any) => {
         );
 };
 
-export { getProducts, createProduct, removeProduct, updateProduct };
+export {
+    getProductsService,
+    addProductService,
+    deleteProductService,
+    updateProductService
+};

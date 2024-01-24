@@ -1,5 +1,5 @@
 import useUserContext from './useUserContext';
-import { changeEmail, changePassword, login, register, registerVisitor } from '../services/userService';
+import { changeEmailService, changePasswordService, loginService, registerService, registerVisitorService } from '../services/userService';
 import { useNavigate } from 'react-router-dom';
 import { handleChangeEmailError, handleChangePasswordError, handleInvalidLoginError, handleRegisterError, handleRegisterVisitorError } from '../constants/errorConstant/errorUser';
 import { errorChangeEmail, errorChangePassword, successChangeEmail, successChangePassword, successRegister, successRegisterVisitor } from '../constants/notifyConstant/notifyUser';
@@ -9,9 +9,9 @@ const useUser = () => {
     const navigate = useNavigate();
     const { user, getUser, setIsFirstLogin } = useUserContext();
 
-    const signin = async (isChecked: any, values: any) => {
+    const login = async (isChecked: any, values: any) => {
         try {
-            const res = await login(values);
+            const res = await loginService(values);
             const token = res.data.token;
 
             if (res.data.isFirstLogin) {
@@ -32,37 +32,37 @@ const useUser = () => {
         }
     };
 
-    const signup = async (values: any) => {
+    const register = async (values: any) => {
         try {
-            const res = await register(values);
+            const res = await registerService(values);
             successRegister(res.data.message);
         } catch (error: any) {
             handleRegisterError(error);
         }
     };
 
-    const changePass = async (values: any) => {
+    const changePassword = async (values: any) => {
         try {
             if (values.currentPassword === values.newPassword) {
                 return errorChangePassword(
                     <span>Current password and new password cannot be the same</span>
                 );
             }
-            const res = await changePassword(user.userId, values, user.token);
+            const res = await changePasswordService(user.userId, values, user.token);
             successChangePassword(res.data.message);
         } catch (error: any) {
             handleChangePasswordError(error);
         }
     };
 
-    const modifyEmail = async (values: any) => {
+    const changeEmail = async (values: any) => {
         try {
             if (values.newEmail === user.email) {
                 return errorChangeEmail(
                     <span>New email and current email cannot be the same</span>
                 );
             }
-            const res = await changeEmail(user.userId, values, user.token);
+            const res = await changeEmailService(user.userId, values, user.token);
             successChangeEmail(res.data.message);
 
         } catch (error: any) {
@@ -70,9 +70,9 @@ const useUser = () => {
         }
     };
 
-    const signupVisitor = async (values: any) => {
+    const registerVisitor = async (values: any) => {
         try {
-            const res = await registerVisitor(user.userId, values, user.token);
+            const res = await registerVisitorService(user.userId, values, user.token);
             successRegisterVisitor(res.data.message);
             getUser(res.data.token);
         } catch (error: any) {
@@ -86,7 +86,7 @@ const useUser = () => {
         navigate('/');
     }
 
-    return { signin, signup, logout, changePass, modifyEmail, signupVisitor};
+    return { login, register, logout, changePassword, changeEmail, registerVisitor};
 };
 
 export default useUser;

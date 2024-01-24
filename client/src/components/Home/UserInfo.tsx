@@ -21,13 +21,13 @@ const UserInfo: React.FC = () => {
     const [changeEmailForm] = Form.useForm();
     const [registerVisitorForm] = Form.useForm();
 
-    const { logout, changePass, modifyEmail, signupVisitor } = useUser();
+    const { logout, changePassword, changeEmail, registerVisitor } = useUser();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const onFinishChangePassword = async (values: any) => {
-        changePass(values);
+        changePassword(values);
         setIsAccountSettingsModalOpen(false);
         setTimeout(() => {
             changePasswordForm.resetFields();
@@ -35,7 +35,7 @@ const UserInfo: React.FC = () => {
     };
 
     const onFinishChangeEmail = async (values: any) => {
-        modifyEmail(values)
+        changeEmail(values)
         setIsAccountSettingsModalOpen(false);
         setTimeout(() => {
             changeEmailForm.resetFields();
@@ -43,7 +43,7 @@ const UserInfo: React.FC = () => {
     };
 
     const onFinishRegisterVisitor = async (values: any) => {
-        signupVisitor(values)
+        registerVisitor(values)
         setIsAccountSettingsModalOpen(false);
         setTimeout(() => {
             registerVisitorForm.resetFields();

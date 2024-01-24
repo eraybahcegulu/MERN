@@ -1,15 +1,15 @@
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
-import { fetchProductData } from '../redux-toolkit/productSlice';
+import { getProducts } from '../redux-toolkit/productSlice';
 
 const useProductSlice = () => {
     const dispatch = useDispatch<AppDispatch>();
 
-    const fetchProduct = (token: any) => {
-        dispatch(fetchProductData(token));
+    const fetchProducts = (token: any) => {
+        dispatch(getProducts(token));
     };
 
-    return { fetchProduct };
+    return { fetchProducts };
 };
 
 export default useProductSlice;

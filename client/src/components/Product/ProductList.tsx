@@ -1,13 +1,12 @@
 import React, { FC } from 'react';
 
-import {  useSelector } from 'react-redux';
-
 import { Spin, Table, Alert } from 'antd';
-import {  RootState } from '../../store';
 
 import type { TableRowSelection } from 'antd/es/table/interface';
 import { columns  } from './columns';
 import { ProductDataType, ProductListProps } from './types';
+
+import useProduct from '../../hooks/useProduct'
 
 const ProductList: FC<ProductListProps> = ({
     search,
@@ -15,6 +14,7 @@ const ProductList: FC<ProductListProps> = ({
     setSelectedRowKeys,
     setSelectedRows,
 }) => {
+    const { products , productsStatus } = useProduct();
 
     const rowSelection: TableRowSelection<ProductDataType> = {
         selectedRowKeys,
@@ -27,10 +27,7 @@ const ProductList: FC<ProductListProps> = ({
         },
     };
 
-    const product = useSelector((state: RootState) => state.product.data);
-    const status = useSelector((state: RootState) => state.product.status);
-
-    const filteredProducts = product?.filter(
+    const filteredProducts = products?.filter(
         (item: any) =>
             item.productName.toLowerCase().includes(search.trim()) ||
             item.productCategory.toLowerCase().includes(search.trim()) ||
@@ -42,13 +39,13 @@ const ProductList: FC<ProductListProps> = ({
 
     return (
         <>
-            {status === 'loading' && (
+            {productsStatus === 'loading' && (
                 <div className="text-center">
                     <Spin size="large" />
                 </div>
             )}
 
-            {status === 'succeeded' && filteredProducts.length > 0 && (
+            {productsStatus === 'succeeded' && filteredProducts.length > 0 && (
                 <Table
                     scroll={{ y: 400 }}
                     className="max-w-[475px] md:max-w-[750px] xl:max-w-[1200px]"
@@ -62,11 +59,11 @@ const ProductList: FC<ProductListProps> = ({
                 />
             )}
 
-            {status === 'succeeded' && filteredProducts.length === 0 && (
+            {productsStatus === 'succeeded' && filteredProducts.length === 0 && (
                 <Alert message="Product not found" type="warning" />
             )}
 
-            {status === 'failed' && (
+            {productsStatus === 'failed' && (
                 <Alert message="Server Error" type="error" />
             )}
         </>

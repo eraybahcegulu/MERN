@@ -7,9 +7,6 @@ import CompanyList from '../components/Company/CompanyList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { useSelector } from 'react-redux';
-import { RootState } from '../store';
-
 import {
     infoEditCompany,
 } from '../constants/notifyConstant/notifyCompany';
@@ -34,11 +31,8 @@ const Company: React.FC = () => {
 
     const navigate = useNavigate();
 
-    const company = useSelector((state: RootState) => state.company.data);
-    const status = useSelector((state: RootState) => state.company.status);
-
     const { user } = useUserContext();
-    const { addCompany, deleteCompany, editCompany } = useCompany();
+    const { companies, companiesStatus, addCompany, deleteCompany, updateCompany } = useCompany();
     const { logout } = useUser();
 
     const onFinishAddCompany = async (values: any) => {
@@ -73,7 +67,7 @@ const Company: React.FC = () => {
     };
 
     const onFinishEditCompany = async (values: any) => {
-        editCompany(selectedRowKeys, values)
+        updateCompany(selectedRowKeys, values)
         editCompanyForm.resetFields();
         setselectedRowKeys([]);
         setSelectedRows([]);
@@ -106,7 +100,7 @@ const Company: React.FC = () => {
 
                         <>
                             {
-                                company?.length === 0 && status === 'succeeded'
+                                companies?.length === 0 && companiesStatus === 'succeeded'
                                     ?
                                     <FontAwesomeIcon onClick={() => setIsAddCompanyModalOpen(true)} className='hover:cursor-pointer text-4xl text-green-700 hover:text-green-600 ' icon={faPlus} bounce />
                                     :

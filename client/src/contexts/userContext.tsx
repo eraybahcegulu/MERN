@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { userInfo } from '../services/userService';
+import { userInfoService } from '../services/userService';
 
 import { handleFailedServerUserError } from '../constants/errorConstant/errorUser';
 
@@ -26,12 +26,12 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [isFirstLogin, setIsFirstLogin] = useState<boolean>(false);
 
-    const { fetchCompany } = useCompanySlice();
-    const { fetchProduct } = useProductSlice();
+    const { fetchCompanies } = useCompanySlice();
+    const { fetchProducts } = useProductSlice();
     //console.log(user)
     const fetchUserData = async (token: string) => {
         try {
-            const response = await userInfo(token);
+            const response = await userInfoService(token);
 
             token = response.data.token;
             setUser(response.data);
@@ -44,8 +44,8 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                 sessionStorage.setItem('token', token);
             }
 
-            fetchProduct(token)
-            fetchCompany(token)
+            fetchProducts(token)
+            fetchCompanies(token)
             setLoading(false);
         } catch (error: any) {
             handleFailedServerUserError(error);

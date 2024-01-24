@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { getCompanies} from '../services/companyService'
+import { getCompaniesService} from '../services/companyService'
 import { handleFetchCompanyError } from '../constants/errorConstant/errorCompany';
 
 interface CompanyState {
@@ -9,9 +9,9 @@ interface CompanyState {
     error?: string;
 }
 
-export const fetchCompanyData = createAsyncThunk('fetchCompanyData', async (token: any) => {
+export const getCompanies = createAsyncThunk('getCompanies', async (token: any) => {
     try {
-        const response = await getCompanies(token);
+        const response = await getCompaniesService(token);
         return response.data;
     }  catch (error: any) {
         handleFetchCompanyError(error);
@@ -30,16 +30,16 @@ const companySlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCompanyData.pending, (state) => {
+            .addCase(getCompanies.pending, (state) => {
                 state.status = 'loading';
             })
 
-            .addCase(fetchCompanyData.fulfilled, (state, action) => {
+            .addCase(getCompanies.fulfilled, (state, action) => {
                 state.status = 'succeeded';
                 state.data = action.payload;
             })
 
-            .addCase(fetchCompanyData.rejected, (state, action) => {
+            .addCase(getCompanies.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             });

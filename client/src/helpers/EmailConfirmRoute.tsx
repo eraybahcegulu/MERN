@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { emailConfirm } from "../services/userService";
+import { emailConfirmService } from "../services/userService";
 import { SmileOutlined } from '@ant-design/icons';
 import { Button, Result, Spin } from 'antd';
 import { handleFailedServerUserError } from '../constants/errorConstant/errorUser';
@@ -14,11 +14,10 @@ export const EmailConfirmRoute = () => {
     const [isConfirmedMail, setIsConfirmedMail] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-
     useEffect(() => {
         const handleEmailConfirm = async () => {
             try {
-                const res = await emailConfirm(emailConfirmToken);
+                const res = await emailConfirmService(emailConfirmToken);
                 setIsConfirmedMail(true);
                 setIsLoading(false);
                 successEmailConfirm(res.data.message)

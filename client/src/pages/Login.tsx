@@ -18,10 +18,10 @@ const Login: React.FC<LoginProps> = () => {
 
   const token = localStorage.getItem('token');
 
-  const { signin, signup, logout } = useUser();
+  const { register, login, logout } = useUser();
 
   const onFinishRegister = async (values: any) => {
-    signup(values)
+    register(values)
     setisRegisterModalOpen(false);
     setTimeout(() => {
       registerForm.resetFields();
@@ -29,7 +29,7 @@ const Login: React.FC<LoginProps> = () => {
   };
 
   const onFinishLogin = async (values: any) => {
-    signin(isChecked, values)
+    login(isChecked, values)
   };
 
   const onChange = () => {

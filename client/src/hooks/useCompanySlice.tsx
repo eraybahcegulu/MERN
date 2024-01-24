@@ -1,15 +1,15 @@
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../store';
-import { fetchCompanyData } from '../redux-toolkit/companySlice';
+import { getCompanies } from '../redux-toolkit/companySlice';
 
 const useCompanySlice = () => {
     const dispatch = useDispatch<AppDispatch>();
 
-    const fetchCompany = (token: any) => {
-        dispatch(fetchCompanyData(token));
+    const fetchCompanies = (token: any) => {
+        dispatch(getCompanies(token));
     };
     
-    return { fetchCompany };
+    return { fetchCompanies };
 };
 
 export default useCompanySlice;

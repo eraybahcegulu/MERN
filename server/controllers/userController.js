@@ -6,7 +6,7 @@ const { generateUserToken, verifyToken, generateEmailConfirmToken , generateChan
 
 const responseHandler = require('../handlers/responseHandler')
 
-const { sendMailEmailConfirm , sendMailChangeEmail} = require('../utils/sendMail');
+const { sendMailEmailConfirm , sendMailChangeEmailConfirm} = require('../utils/sendMail');
 const UserRoles = require("../models/enums/userRoles");
 
 const register = async (req, res) => {
@@ -242,12 +242,12 @@ const changeEmail = async (req, res) => {
             return responseHandler.badRequest(res, `${req.body.newEmail} is already registered, try again`);
         }
 
-        const changeEmailToken = generateChangeEmailConfirmToken(user._id, req.body.newEmail);
+        const changeEmailConfirmToken = generateChangeEmailConfirmToken(user._id, req.body.newEmail);
 
-        user.verificationToken = changeEmailToken;
+        user.verificationToken = changeEmailConfirmToken;
         await user.save();
 
-        sendMailChangeEmail({ userName:user.userName, email: req.body.newEmail, changeEmailToken: user.verificationToken });
+        sendMailChangeEmailConfirm({ userName:user.userName, email: req.body.newEmail, changeEmailConfirmToken: user.verificationToken });
         //console.log(user);
 
         return responseHandler.ok(res, { message: `Check ${req.body.newEmail} for confirm the email change` });
@@ -273,7 +273,7 @@ const changeEmailConfirm = async (req, res) => {
             if (decodedToken.userId === user._id.toString()) {
 
                 user.verificationToken = null;
-                user.email = decodedToken.email;
+                user.email = decodedToken.newEmail;
 
                 await user.save()
                 //console.log(user)

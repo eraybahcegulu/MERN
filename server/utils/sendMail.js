@@ -35,9 +35,9 @@ const sendMailEmailConfirm = async (userData) => {
     }
 }
 
-const sendMailChangeEmail = async (userData) => {
+const sendMailChangeEmailConfirm = async (userData) => {
 
-    const { userName, email, changeEmailToken } = userData;
+    const { userName, email, changeEmailConfirmToken } = userData;
 
     let mailOptions = {
         to: email,
@@ -45,7 +45,7 @@ const sendMailChangeEmail = async (userData) => {
         html:
             `
             <p> Hello, ${userName} </p>
-            <a href="${process.env.CLIENT_URL}/api/user/changeEmailConfirm/${changeEmailToken}"> Confirm Change Email </a>
+            <a href="${process.env.CLIENT_URL}/api/user/changeEmailConfirm/${changeEmailConfirmToken}"> Confirm Change Email </a>
             `
     };
 
@@ -60,5 +60,5 @@ const sendMailChangeEmail = async (userData) => {
 
 module.exports = {
     sendMailEmailConfirm,
-    sendMailChangeEmail
+    sendMailChangeEmailConfirm
 };

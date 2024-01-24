@@ -1,23 +1,28 @@
 import useUserContext from './useUserContext';
 import useCompanySlice from './useCompanySlice';
 import useProductSlice from './useProductSlice';
-import { createProduct, removeProduct, updateProduct } from '../services/productService';
+import { addProductService, deleteProductService, updateProductService } from '../services/productService';
 import { infoDeleteProduct, successAddProduct, successDeleteProduct, successEditProduct } from '../constants/notifyConstant/notifyProduct';
 import { handleAddProductError, handleDeleteProductError, handleEditProductError } from '../constants/errorConstant/errorProduct';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 const useProduct = () => {
     const { user } = useUserContext();
-    const { fetchCompany } = useCompanySlice();
-    const { fetchProduct } = useProductSlice();
+    const { fetchCompanies } = useCompanySlice();
+    const { fetchProducts } = useProductSlice();
+
+    const products = useSelector((state: RootState) => state.products.data);
+    const productsStatus = useSelector((state: RootState) => state.products.status);
 
     const addProduct = async (values: any) => {
         values.creatorId = user.userId;
         try {
-            const res = await createProduct(values, user.token);
+            const res = await addProductService(values, user.token);
             successAddProduct(res.data.message)
-            fetchCompany(user.token)
-            fetchProduct(user.token)
+            fetchCompanies(user.token)
+            fetchProducts(user.token)
         } catch (error: any) {
             handleAddProductError(error);
         }
@@ -30,7 +35,7 @@ const useProduct = () => {
                 return;
             }
 
-            const res = await Promise.all(selectedRowKeys.map((id: any) => removeProduct(id, user.userId, user.token)));
+            const res = await Promise.all(selectedRowKeys.map((id: any) => deleteProductService(id, user.userId, user.token)));
 
             if (res.length > 1) {
                 successDeleteProduct(
@@ -46,26 +51,26 @@ const useProduct = () => {
                     </span>
                 );
             }
-            fetchProduct(user.token)
-            fetchCompany(user.token)
+            fetchProducts(user.token)
+            fetchCompanies(user.token)
         } catch (error: any) {
             handleDeleteProductError(error)
         }
     };
 
-    const editProduct = async (selectedRowKeys: any, values: any) => {
+    const updateProduct = async (selectedRowKeys: any, values: any) => {
         values.lastUpdaterId = user.userId;
         try {
-            const res = await updateProduct(selectedRowKeys, values, user.token);
+            const res = await updateProductService(selectedRowKeys, values, user.token);
             successEditProduct(res.data.message);
-            fetchProduct(user.token)
-            fetchCompany(user.token)
+            fetchProducts(user.token)
+            fetchCompanies(user.token)
         } catch (error: any) {
             handleEditProductError(error);
         }
     };
     
-    return { addProduct, deleteProduct, editProduct };
+    return { products, productsStatus, addProduct, deleteProduct, updateProduct };
 };
 
 export default useProduct;

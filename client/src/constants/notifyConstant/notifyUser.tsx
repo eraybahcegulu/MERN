@@ -77,14 +77,14 @@ const successChangeEmail = (data: any) =>
     message.open({
         type: 'success',
         content: data,
-        duration: 8,
+        duration: 3,
     });
 
     const successEmailConfirm = (data: any) =>
     message.open({
         type: 'success',
         content: data,
-        duration: 8,
+        duration: 3,
     });
 
     const firstLoginNotify= (data: any) => {

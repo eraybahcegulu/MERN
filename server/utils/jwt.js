@@ -34,12 +34,12 @@ const generateEmailConfirmToken = (email) => {
         );
 }
 
-const generateChangeEmailConfirmToken = (userId, email) => {
+const generateChangeEmailConfirmToken = (userId, newEmail) => {
     return jwt.sign
         (
             {
                 userId,
-                email
+                newEmail
             },
 
             process.env.SECRET_KEY
