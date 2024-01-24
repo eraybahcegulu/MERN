@@ -13,6 +13,7 @@ router.get("/api/user/userInfo", userController.userInfo);
 router.put("/api/user/changePassword/:id", auth, sanitize, validLength, userController.changePassword);
 router.post("/api/user/changeEmail/:id", auth, sanitize, validLength, userController.changeEmail);
 router.get("/api/user/changeEmailConfirm/:changeEmailConfirmToken", userController.changeEmailConfirm);
+router.get("/api/user/getPremium", userController.getPremium);
 
 router.get("/auth/google",passport.authenticate("google",{scope:["profile","email"]}));
 router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: process.env.CLIENT_URL }), userController.loginGoogle);

@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
-
+const { paymentPremium} = require('../utils/iyzipay')
 const { generateUserToken, verifyToken, generateEmailConfirmToken , generateChangeEmailConfirmToken  } = require('../utils/jwt');
 
 const responseHandler = require('../handlers/responseHandler')
@@ -290,6 +290,16 @@ const changeEmailConfirm = async (req, res) => {
     }
 }
 
+const getPremium = async (req, res) => {
+    try {
+        paymentPremium();
+
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+};
+
 module.exports = {
     register,
     registerVisitor,
@@ -299,5 +309,6 @@ module.exports = {
     userInfo,
     changePassword,
     changeEmail,
-    changeEmailConfirm
+    changeEmailConfirm,
+    getPremium
 };
