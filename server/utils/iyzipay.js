@@ -1,5 +1,6 @@
 const Iyzipay = require('iyzipay');
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
 
 const iyzipay = new Iyzipay({
     apiKey: process.env.PAYMENT_API_KEY,
@@ -7,11 +8,11 @@ const iyzipay = new Iyzipay({
     uri: 'https://sandbox-api.iyzipay.com'
 });
 
-
-const paymentPremium = () => {
+const paymentPremium = async(userData) => {
     const id = uuidv4();
+    const { userId, email, createdAt, lastLoginAt } = userData;
+    const response = await axios.get('https://api64.ipify.org?format=json');
 
-    console.log("id:", id);
     const request = {
         locale: Iyzipay.LOCALE.TR,
         conversationId: id,
@@ -30,16 +31,16 @@ const paymentPremium = () => {
             registerCard: '0'
         },
         buyer: {
-            id: 'BY789',
+            id: userId,
             name: 'John',
             surname: 'Doe',
             gsmNumber: '+905350000000',
-            email: 'email@email.com',
+            email: email,
             identityNumber: '74300864791',
-            lastLoginDate: '2015-10-05 12:43:35',
-            registrationDate: '2013-04-21 15:12:09',
+            lastLoginDate: lastLoginAt,
+            registrationDate: createdAt,
             registrationAddress: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
-            ip: '85.34.78.112',
+            ip: response.data.ip,
             city: 'Istanbul',
             country: 'Turkey',
             zipCode: '34732'
@@ -70,7 +71,7 @@ const paymentPremium = () => {
         ]
     };
 
-    iyzipay.payment.create(request, function (err, result) {
+    await iyzipay.payment.create(request, function (err, result) {
         console.log(err, result);
     });
 }

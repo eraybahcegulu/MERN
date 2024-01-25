@@ -1,8 +1,8 @@
 import useUserContext from './useUserContext';
-import { changeEmailService, changePasswordService, loginService, registerService, registerVisitorService } from '../services/userService';
+import { changeEmailService, changePasswordService, getPremiumService, loginService, registerService, registerVisitorService } from '../services/userService';
 import { useNavigate } from 'react-router-dom';
-import { handleChangeEmailError, handleChangePasswordError, handleInvalidLoginError, handleRegisterError, handleRegisterVisitorError } from '../constants/errorConstant/errorUser';
-import { errorChangeEmail, errorChangePassword, successChangeEmail, successChangePassword, successRegister, successRegisterVisitor } from '../constants/notifyConstant/notifyUser';
+import { handleChangeEmailError, handleChangePasswordError, handleGetPremiumError, handleInvalidLoginError, handleRegisterError, handleRegisterVisitorError } from '../constants/errorConstant/errorUser';
+import { errorChangeEmail, errorChangePassword, successChangeEmail, successChangePassword, successGetPremium, successRegister, successRegisterVisitor } from '../constants/notifyConstant/notifyUser';
 import React from 'react';
 
 const useUser = () => {
@@ -80,13 +80,23 @@ const useUser = () => {
         }
     };
 
+    const getPremium = async () => {
+        try {
+            const res = await getPremiumService(user.userId, user.token);
+            successGetPremium(res.data.message);
+            getUser(res.data.token);
+        } catch (error: any) {
+            handleGetPremiumError(error);
+        }
+    };
+
     const logout = () => {
         localStorage.clear();
         sessionStorage.clear();
         navigate('/');
     }
 
-    return { login, register, logout, changePassword, changeEmail, registerVisitor};
+    return { login, register, logout, changePassword, changeEmail, registerVisitor, getPremium};
 };
 
 export default useUser;

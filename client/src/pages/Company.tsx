@@ -44,10 +44,8 @@ const Company: React.FC = () => {
     };
 
     const removeCompany = async () => {
-
         deleteCompany(selectedRowKeys)
         setselectedRowKeys([]);
-
     };
 
     const isEditCompany = async () => {

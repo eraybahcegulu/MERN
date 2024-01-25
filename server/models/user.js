@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const UserRoles = require('./enums/userRoles');
+const moment = require('moment');
 
 const UserSchema = mongoose.Schema(
     {
@@ -33,12 +34,12 @@ const UserSchema = mongoose.Schema(
         },
 
         lastLoginAt: {
-            type: Date,
+            type: String,
         },
 
         createdAt: {
-            type: Date,
-            default: Date.now
+            type: String,
+            default: moment().format('YYYY-MM-DD HH:mm:ss')
         },
 
         verificationToken: {

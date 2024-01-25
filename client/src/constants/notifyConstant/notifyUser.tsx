@@ -31,7 +31,7 @@ const errorRegister = (data: any) =>
         duration: 3,
     });
 
-    const successRegisterVisitor = (data: any) =>
+const successRegisterVisitor = (data: any) =>
     message.open({
         type: 'success',
         content: data,
@@ -66,7 +66,7 @@ const successChangePassword = (data: any) =>
         duration: 3,
     });
 
-    const errorChangeEmail = (data: any) =>
+const errorChangeEmail = (data: any) =>
     message.open({
         type: 'error',
         content: data,
@@ -80,30 +80,44 @@ const successChangeEmail = (data: any) =>
         duration: 3,
     });
 
-    const successEmailConfirm = (data: any) =>
+const successEmailConfirm = (data: any) =>
     message.open({
         type: 'success',
         content: data,
         duration: 3,
     });
 
-    const firstLoginNotify= (data: any) => {
-        notification.open({
-            type: 'info',
-            message: (
-                <span>
-                    <strong> Hi {data}, welcome to app </strong>
-                </span>
-            ),
-            duration: 15,
-        });
-    };
+const firstLoginNotify = (data: any) => {
+    notification.open({
+        type: 'info',
+        message: (
+            <span>
+                <strong> Hi {data}, welcome to app </strong>
+            </span>
+        ),
+        duration: 15,
+    });
+};
 
-    const successChangeEmailConfirm = (data: any) =>
+const successChangeEmailConfirm = (data: any) =>
     message.open({
         type: 'success',
         content: data,
         duration: 8,
+    });
+
+const errorGetPremium = (data: any) =>
+    message.open({
+        type: 'error',
+        content: data,
+        duration: 3,
+    });
+
+const successGetPremium = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
     });
 
 export {
@@ -120,5 +134,7 @@ export {
     successChangeEmail,
     successEmailConfirm,
     firstLoginNotify,
-    successChangeEmailConfirm
+    successChangeEmailConfirm,
+    errorGetPremium,
+    successGetPremium
 };

@@ -1,12 +1,13 @@
 const User = require("../models/user");
+const moment = require('moment');
 
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
-const { paymentPremium} = require('../utils/iyzipay')
-const { generateUserToken, verifyToken, generateEmailConfirmToken , generateChangeEmailConfirmToken  } = require('../utils/jwt');
+const { paymentPremium } = require('../utils/iyzipay')
+const { generateUserToken, verifyToken, generateEmailConfirmToken, generateChangeEmailConfirmToken } = require('../utils/jwt');
 
 const responseHandler = require('../handlers/responseHandler')
 
-const { sendMailEmailConfirm , sendMailChangeEmailConfirm} = require('../utils/sendMail');
+const { sendMailEmailConfirm, sendMailChangeEmailConfirm } = require('../utils/sendMail');
 const UserRoles = require("../models/enums/userRoles");
 
 const register = async (req, res) => {
@@ -49,7 +50,7 @@ const registerVisitor = async (req, res) => {
         if (existingUserNameControl) {
             return responseHandler.badRequest(res, "This User Name is already registered");
         }
-        
+
         const existingVisitor = await User.findOne({ _id: req.params.id });
         if (!existingVisitor) {
             return responseHandler.notFound(res, 'User not found.');
@@ -119,7 +120,7 @@ const login = async (req, res) => {
                     //sendMailEmailConfirm({ userName: user.userName, email: user.email, token: user.token });
                 }
 
-                user.lastLoginAt = new Date();
+                user.lastLoginAt = new moment().format('YYYY-MM-DD HH:mm:ss');
 
                 user.activityLevel = Number(user.activityLevel) + 1;
 
@@ -149,7 +150,7 @@ const loginGoogle = async (req, res) => {
 
         if (user) {
 
-            user.lastLoginAt = new Date();
+            user.lastLoginAt = new moment().format('YYYY-MM-DD HH:mm:ss');
 
             user.activityLevel = Number(user.activityLevel) + 1;
 
@@ -242,12 +243,15 @@ const changeEmail = async (req, res) => {
             return responseHandler.badRequest(res, `${req.body.newEmail} is already registered, try again`);
         }
 
+        console.log(user._id)
+
         const changeEmailConfirmToken = generateChangeEmailConfirmToken(user._id, req.body.newEmail);
+        console.log(changeEmailConfirmToken)
 
         user.verificationToken = changeEmailConfirmToken;
         await user.save();
 
-        sendMailChangeEmailConfirm({ userName:user.userName, email: req.body.newEmail, changeEmailConfirmToken: user.verificationToken });
+        sendMailChangeEmailConfirm({ userName: user.userName, email: req.body.newEmail, changeEmailConfirmToken: user.verificationToken });
         //console.log(user);
 
         return responseHandler.ok(res, { message: `Check ${req.body.newEmail} for confirm the email change` });
@@ -291,8 +295,29 @@ const changeEmailConfirm = async (req, res) => {
 }
 
 const getPremium = async (req, res) => {
+    const { id } = req.params
     try {
-        paymentPremium();
+        const user = await User.findOne({ _id: id })
+        if (!user) {
+            return responseHandler.notFound(res, 'User not found. Try register');
+        }
+        if (user.userRole === UserRoles.PREMIUM) {
+            return responseHandler.badRequest(res, 'User already has premium membership')
+        }
+
+        paymentPremium(
+            {
+                userId: user._id.toString(),
+                email: user.email,
+                createdAt: user.createdAt,
+                lastLoginAt: user.lastLoginAt
+            });
+
+        user.userRole = UserRoles.PREMIUM;
+        await user.save()
+        
+        const newTokenAfterGetPremium = generateUserToken(user);
+        return responseHandler.ok(res, { message: 'Premium membership activated', token: newTokenAfterGetPremium });
 
     } catch (error) {
         console.error('Error', error);

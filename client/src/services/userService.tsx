@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL, CHANGE_EMAIL_API_URL, EMAIL_CONFIRM_API_URL, REGISTER_VISITOR_API_URL, CHANGE_EMAIL_CONFIRM_API_URL } from '../constants/apiConstant/apiUser';
+import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL, CHANGE_EMAIL_API_URL, EMAIL_CONFIRM_API_URL, REGISTER_VISITOR_API_URL, CHANGE_EMAIL_CONFIRM_API_URL, GET_PREMIUM_API_URL } from '../constants/apiConstant/apiUser';
 
 const registerService = async (data: any) => {
     return await axios.post
@@ -95,6 +95,20 @@ const registerVisitorService = async (id: any, data: any, token: any) => {
         )
 }
 
+const getPremiumService = async (id: any, token: any) => {
+    return await axios.post
+        (
+            `${GET_PREMIUM_API_URL}/${id}`,
+
+            {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                    api_source: `${GET_PREMIUM_API_URL}`
+                }
+            }
+        )
+}
+
 export {
     registerService,
     emailConfirmService,
@@ -103,5 +117,6 @@ export {
     changePasswordService,
     changeEmailService,
     changeEmailConfirmService,
-    registerVisitorService
+    registerVisitorService,
+    getPremiumService
 };

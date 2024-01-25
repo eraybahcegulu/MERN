@@ -21,7 +21,7 @@ const UserInfo: React.FC = () => {
     const [changeEmailForm] = Form.useForm();
     const [registerVisitorForm] = Form.useForm();
 
-    const { logout, changePassword, changeEmail, registerVisitor } = useUser();
+    const { logout, changePassword, changeEmail, registerVisitor, getPremium} = useUser();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -48,6 +48,10 @@ const UserInfo: React.FC = () => {
         setTimeout(() => {
             registerVisitorForm.resetFields();
         }, 100);
+    };
+
+    const handleGetPremium = async () => {
+        getPremium()
     };
 
     const handleLogout = (): void => {
@@ -252,7 +256,7 @@ const UserInfo: React.FC = () => {
                                 <>
                                     <span> YOU HAVE STANDARD MEMBERSHIP </span>
                                     <span className='text-2xl'> GET PREMIUM NOW </span>
-                                    <FontAwesomeIcon className='hover:cursor-pointer text-4xl text-violet-500 hover:text-violet-400 ' icon={faGem} shake />
+                                    <FontAwesomeIcon onClick={handleGetPremium} className='hover:cursor-pointer text-4xl text-violet-500 hover:text-violet-400 ' icon={faGem} shake />
                                     <Popover placement="bottom"
                                         content={
                                             <div className='flex flex-col gap-2 text-xs'>
