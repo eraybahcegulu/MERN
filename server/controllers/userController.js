@@ -1,14 +1,13 @@
 const User = require("../models/user");
-const moment = require('moment');
+const UserRoles = require("../models/enums/userRoles");
 
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
 const { paymentPremium } = require('../utils/iyzipay')
 const { generateUserToken, verifyToken, generateEmailConfirmToken, generateChangeEmailConfirmToken } = require('../utils/jwt');
+const { sendMailEmailConfirm, sendMailChangeEmailConfirm } = require('../utils/sendMail');
+const { dateNow } = require('../utils/moment');
 
 const responseHandler = require('../handlers/responseHandler')
-
-const { sendMailEmailConfirm, sendMailChangeEmailConfirm } = require('../utils/sendMail');
-const UserRoles = require("../models/enums/userRoles");
 
 const register = async (req, res) => {
     try {
@@ -120,7 +119,7 @@ const login = async (req, res) => {
                     //sendMailEmailConfirm({ userName: user.userName, email: user.email, token: user.token });
                 }
 
-                user.lastLoginAt = new moment().format('YYYY-MM-DD HH:mm:ss');
+                user.lastLoginAt = dateNow();
 
                 user.activityLevel = Number(user.activityLevel) + 1;
 
@@ -150,7 +149,7 @@ const loginGoogle = async (req, res) => {
 
         if (user) {
 
-            user.lastLoginAt = new moment().format('YYYY-MM-DD HH:mm:ss');
+            user.lastLoginAt = dateNow();
 
             user.activityLevel = Number(user.activityLevel) + 1;
 
@@ -298,10 +297,12 @@ const getPremium = async (req, res) => {
     const { id } = req.params
     try {
         const user = await User.findOne({ _id: id })
+
         if (!user) {
             return responseHandler.notFound(res, 'User not found. Try register');
         }
-        if (user.userRole === UserRoles.PREMIUM) {
+
+        if (user.userRole === UserRoles.PREMIUM || user.userRole === UserRoles.ADMIN) {
             return responseHandler.badRequest(res, 'User already has premium membership')
         }
 
