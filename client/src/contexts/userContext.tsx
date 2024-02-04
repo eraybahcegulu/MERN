@@ -3,8 +3,7 @@ import { userInfoService } from '../services/userService';
 
 import { handleFailedServerUserError } from '../constants/errorConstant/errorUser';
 
-import useCompanySlice from '../hooks/useCompanySlice';
-import useProductSlice from '../hooks/useProductSlice';
+import useSlice from '../hooks/useSlice';
 
 interface UserProviderProps {
     children: ReactNode;
@@ -26,8 +25,8 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [isFirstLogin, setIsFirstLogin] = useState<boolean>(false);
 
-    const { fetchCompanies } = useCompanySlice();
-    const { fetchProducts } = useProductSlice();
+    const { fetchCompanies, fetchProducts } = useSlice();
+
     //console.log(user)
     const fetchUserData = async (token: string) => {
         try {

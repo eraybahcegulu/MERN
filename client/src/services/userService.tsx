@@ -1,5 +1,14 @@
 import axios from "axios";
-import { GET_USER_INFO_API_URL, REGISTER_API_URL, LOGIN_API_URL, CHANGE_PASSWORD_API_URL, CHANGE_EMAIL_API_URL, EMAIL_CONFIRM_API_URL, REGISTER_VISITOR_API_URL, CHANGE_EMAIL_CONFIRM_API_URL, GET_PREMIUM_API_URL } from '../constants/apiConstant/apiUser';
+import {
+    GET_USER_INFO_API_URL,
+    REGISTER_API_URL, LOGIN_API_URL,
+    CHANGE_PASSWORD_API_URL,
+    CHANGE_EMAIL_API_URL,
+    EMAIL_CONFIRM_API_URL,
+    REGISTER_VISITOR_API_URL,
+    CHANGE_EMAIL_CONFIRM_API_URL,
+    GET_PREMIUM_API_URL
+} from '../constants/apiConstant/apiUser';
 
 const registerService = async (data: any) => {
     return await axios.post

@@ -1,6 +1,5 @@
 import useUserContext from './useUserContext';
-import useCompanySlice from './useCompanySlice';
-import useProductSlice from './useProductSlice';
+import useSlice from './useSlice';
 import { addProductService, deleteProductService, updateProductService } from '../services/productService';
 import { infoDeleteProduct, successAddProduct, successDeleteProduct, successEditProduct } from '../constants/notifyConstant/notifyProduct';
 import { handleAddProductError, handleDeleteProductError, handleEditProductError } from '../constants/errorConstant/errorProduct';
@@ -10,8 +9,7 @@ import { RootState } from '../store';
 
 const useProduct = () => {
     const { user } = useUserContext();
-    const { fetchCompanies } = useCompanySlice();
-    const { fetchProducts } = useProductSlice();
+    const { fetchCompanies, fetchProducts } = useSlice();
 
     const products = useSelector((state: RootState) => state.products.data);
     const productsStatus = useSelector((state: RootState) => state.products.status);

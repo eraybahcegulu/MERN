@@ -1,5 +1,10 @@
 import axios from "axios";
-import { GET_PRODUCTS_API_URL, ADD_PRODUCT_API_URL, DELETE_PRODUCT_API_URL, UPDATE_PRODUCT_API_URL } from '../constants/apiConstant/apiProduct';
+import {
+    GET_PRODUCTS_API_URL,
+    ADD_PRODUCT_API_URL,
+    DELETE_PRODUCT_API_URL,
+    UPDATE_PRODUCT_API_URL
+} from '../constants/apiConstant/apiProduct';
 
 const getProductsService = async (token: any) => {
     return await axios.get

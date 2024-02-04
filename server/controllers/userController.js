@@ -306,7 +306,7 @@ const getPremium = async (req, res) => {
             return responseHandler.badRequest(res, 'User already has premium membership')
         }
 
-        paymentPremium(
+        await paymentPremium(
             {
                 userId: user._id.toString(),
                 email: user.email,

@@ -71,7 +71,7 @@ const paymentPremium = async(userData) => {
         ]
     };
 
-    await iyzipay.payment.create(request, function (err, result) {
+    iyzipay.payment.create(request, function (err, result) {
         console.log(err, result);
     });
 }

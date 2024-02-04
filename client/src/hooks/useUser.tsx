@@ -1,8 +1,30 @@
 import useUserContext from './useUserContext';
-import { changeEmailService, changePasswordService, getPremiumService, loginService, registerService, registerVisitorService } from '../services/userService';
+import {
+    changeEmailService,
+    changePasswordService,
+    getPremiumService,
+    loginService,
+    registerService,
+    registerVisitorService
+} from '../services/userService';
 import { useNavigate } from 'react-router-dom';
-import { handleChangeEmailError, handleChangePasswordError, handleGetPremiumError, handleInvalidLoginError, handleRegisterError, handleRegisterVisitorError } from '../constants/errorConstant/errorUser';
-import { errorChangeEmail, errorChangePassword, successChangeEmail, successChangePassword, successGetPremium, successRegister, successRegisterVisitor } from '../constants/notifyConstant/notifyUser';
+import {
+    handleChangeEmailError,
+    handleChangePasswordError,
+    handleGetPremiumError,
+    handleInvalidLoginError,
+    handleRegisterError,
+    handleRegisterVisitorError
+} from '../constants/errorConstant/errorUser';
+import {
+    errorChangeEmail,
+    errorChangePassword,
+    successChangeEmail,
+    successChangePassword,
+    successGetPremium,
+    successRegister,
+    successRegisterVisitor
+} from '../constants/notifyConstant/notifyUser';
 import React from 'react';
 
 const useUser = () => {
@@ -96,7 +118,7 @@ const useUser = () => {
         navigate('/');
     }
 
-    return { login, register, logout, changePassword, changeEmail, registerVisitor, getPremium};
+    return { login, register, logout, changePassword, changeEmail, registerVisitor, getPremium };
 };
 
 export default useUser;

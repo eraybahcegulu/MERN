@@ -1,5 +1,10 @@
 import axios from "axios";
-import { ADD_COMPANY_API_URL, DELETE_COMPANY_API_URL, GET_COMPANIES_API_URL, UPDATE_COMPANY_API_URL } from '../constants/apiConstant/apiCompany';
+import {
+    ADD_COMPANY_API_URL,
+    DELETE_COMPANY_API_URL,
+    GET_COMPANIES_API_URL,
+    UPDATE_COMPANY_API_URL
+} from '../constants/apiConstant/apiCompany';
 
 const getCompaniesService = async (token: any) => {
     return await axios.get

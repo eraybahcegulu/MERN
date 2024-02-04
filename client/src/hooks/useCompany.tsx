@@ -1,16 +1,14 @@
 import useUserContext from './useUserContext';
-import useCompanySlice from './useCompanySlice';
 import { handleAddCompanyError, handleDeleteCompanyError, handleEditCompanyError } from '../constants/errorConstant/errorCompany';
 import { addCompanyService, deleteCompanyService, updateCompanyService } from '../services/companyService';
 import { successAddCompany, successDeleteCompany, successEditCompany } from '../constants/notifyConstant/notifyCompany';
-import useProductSlice from './useProductSlice';
+import useSlice from './useSlice';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
 const useCompany = () => {
     const { user } = useUserContext();
-    const { fetchCompanies } = useCompanySlice();
-    const { fetchProducts } = useProductSlice();
+    const { fetchCompanies, fetchProducts } = useSlice();
 
     const companies = useSelector((state: RootState) => state.companies.data);
     const companiesStatus = useSelector((state: RootState) => state.companies.status);
