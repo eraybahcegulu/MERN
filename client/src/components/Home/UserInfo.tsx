@@ -24,9 +24,9 @@ const UserInfo: React.FC = () => {
 
     const { logout, changePassword, changeEmail, registerVisitor, getPremium } = useUser();
     const {  fetchUsers } = useSlice();
+    const navigate = useNavigate();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
-    const navigate = useNavigate();
 
     const onFinishChangePassword = async (values: any) => {
         changePassword(values);
@@ -56,14 +56,14 @@ const UserInfo: React.FC = () => {
         getPremium()
     };
 
-    const handleLogout = (): void => {
-        logout();
-    };
-
     const handleClickUsers = async () => {
         fetchUsers(user.token);
         navigate('/users')
     }
+
+    const handleLogout = (): void => {
+        logout();
+    };
 
     return (
         <>
@@ -86,6 +86,7 @@ const UserInfo: React.FC = () => {
                                         {
                                             user.userRole === 'admin'
                                             &&
+
                                             <TeamOutlined onClick={handleClickUsers} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all text-blue-600' />
                                         }
                                         <SettingOutlined onClick={() => setIsAccountSettingsModalOpen(true)} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />

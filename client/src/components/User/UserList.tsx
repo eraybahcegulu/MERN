@@ -19,7 +19,7 @@ const UserList = () => {
             {usersStatus === 'succeeded' && users.length > 0 && (
                 <Table
                     scroll={{ y: 400 }}
-                    className="max-w-[475px] md:max-w-[750px] xl:max-w-[800px]"
+                    className="max-w-[475px] md:max-w-[750px] xl:max-w-[1000px]"
                     rowKey="_id"
                     columns={userColumns}
                     dataSource={users}
