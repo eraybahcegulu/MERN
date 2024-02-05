@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import useUser from '../hooks/useUser';
 import UserList from '../components/User/UserList';
 
-const User = () => {
+const User: React.FC = () => {
     const navigate = useNavigate();
     const { logout } = useUser();
     const handleLogout = (): void => {
