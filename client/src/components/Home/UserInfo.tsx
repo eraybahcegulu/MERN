@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Radio, Modal, Form, Button, Input, Spin, Carousel, Popover } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ArrowDownOutlined, InfoCircleOutlined, LockOutlined, LogoutOutlined, PlusOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, InfoCircleOutlined, LockOutlined, LogoutOutlined, PlusOutlined, SettingOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGem } from '@fortawesome/free-solid-svg-icons';
 
@@ -21,7 +21,7 @@ const UserInfo: React.FC = () => {
     const [changeEmailForm] = Form.useForm();
     const [registerVisitorForm] = Form.useForm();
 
-    const { logout, changePassword, changeEmail, registerVisitor, getPremium} = useUser();
+    const { logout, changePassword, changeEmail, registerVisitor, getPremium } = useUser();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -76,6 +76,7 @@ const UserInfo: React.FC = () => {
 
 
                                     <div>
+                                        <TeamOutlined onClick={() => navigate('/users')} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all text-blue-600' />
                                         <SettingOutlined onClick={() => setIsAccountSettingsModalOpen(true)} className='ml-2 hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
                                         <LogoutOutlined
                                             onClick={handleLogout}
@@ -90,17 +91,16 @@ const UserInfo: React.FC = () => {
                     </div>
                 }
             >
-                <div className='flex flex-col items-center justify-center'>
-                    {
+                <div className='flex flex-col items-center justify-center '>
 
-                        <Radio.Group>
-                            <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/companies')} value="large">
-                                Companies
-                            </Radio.Button>
-                            <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/products')} value="default">Products</Radio.Button>
-                        </Radio.Group>
 
-                    }
+                    <Radio.Group>
+                        <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/companies')} value="large">
+                            Companies
+                        </Radio.Button>
+                        <Radio.Button className='hover:scale-105 transition duration-700' onClick={() => navigate('/products')} value="default">
+                            Products</Radio.Button>
+                    </Radio.Group>
                 </div>
             </Card>
 

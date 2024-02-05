@@ -10,6 +10,7 @@ import { PrivateRoute } from './helpers/PrivateRoute';
 import { EmailConfirmRoute } from './helpers/EmailConfirmRoute';
 import { GoogleAuthRoute } from './helpers/GoogleAuthRoute';
 import { ChangeEmailConfirmRoute } from './helpers/ChangeEmailConfirmRoute';
+import User from './pages/User';
 
 
 const App = () => {
@@ -30,7 +31,6 @@ const App = () => {
                     </PrivateRoute>
                 } />
 
-
                 <Route path="/companies" element={
                     <PrivateRoute>
                         <Company />
@@ -40,6 +40,12 @@ const App = () => {
                 <Route path="/products" element={
                     <PrivateRoute>
                         <Product />
+                    </PrivateRoute>
+                } />
+
+                <Route path="/users" element={
+                    <PrivateRoute>
+                        <User />
                     </PrivateRoute>
                 } />
 
