@@ -10,7 +10,7 @@ interface LoginFormProps {
 }
 
 const loginWithGoogle = () => {
-    window.open("http://localhost:5000/auth/google/callback", "_self")
+    window.open(`${process.env.REACT_APP_API_URL}/auth/google/callback`, "_self")
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChange, setisRegisterModalOpen }) => {
