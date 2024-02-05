@@ -2,6 +2,7 @@ import { ArrowLeftOutlined, LogoutOutlined } from '@ant-design/icons';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 import useUser from '../hooks/useUser';
+import UserList from '../components/User/UserList';
 
 const User = () => {
     const navigate = useNavigate();
@@ -17,11 +18,10 @@ const User = () => {
 
                 <div className="flex flex-row item-center justify-center mt-10 gap-4">
                     <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer hover:opacity-50 hover:scale-125 transition-all text-2xl mr-4" />
-
-
-
                     <LogoutOutlined onClick={handleLogout} className="hover:cursor-pointer  hover:opacity-50 hover:scale-125 transition-all text-2xl" />
                 </div>
+
+                <UserList/>
                 </div>
             </div>
         </div>

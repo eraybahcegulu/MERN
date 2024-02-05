@@ -63,6 +63,15 @@ const handleGetPremiumError = (error: any) => {
         failedServer(error.message);
     }
 };
+
+const handleFetchUserError = (error: any) => {
+    if (error.response) {
+        failedServer(error.response.data.message);
+    } else {
+        failedServer(error.message);
+    }
+};
+
 export {
     handleRegisterError,
     handleRegisterVisitorError,
@@ -71,5 +80,6 @@ export {
     handleChangePasswordError,
     handleChangeEmailError,
     handleChangeEmailConfirmError,
-    handleGetPremiumError
+    handleGetPremiumError,
+    handleFetchUserError
 };

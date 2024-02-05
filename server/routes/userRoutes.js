@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const { auth } = require('../middlewares/authMiddleware');
+const { auth, requireAdmin } = require('../middlewares/authMiddleware');
 const { validLength, sanitize } = require("../middlewares/validatorMiddleware");
 const passport = require("passport");
 
@@ -14,6 +14,7 @@ router.put("/api/user/changePassword/:id", auth, sanitize, validLength, userCont
 router.post("/api/user/changeEmail/:id", auth, sanitize, validLength, userController.changeEmail);
 router.get("/api/user/changeEmailConfirm/:changeEmailConfirmToken", userController.changeEmailConfirm);
 router.post("/api/user/getPremium/:id", userController.getPremium);
+router.get("/api/user/get-all", auth, requireAdmin, userController.getAllUsers);
 
 router.get("/auth/google",passport.authenticate("google",{scope:["profile","email"]}));
 router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: process.env.CLIENT_URL }), userController.loginGoogle);

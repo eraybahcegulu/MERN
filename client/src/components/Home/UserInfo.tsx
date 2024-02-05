@@ -7,6 +7,7 @@ import { faGem } from '@fortawesome/free-solid-svg-icons';
 
 import useUserContext from '../../hooks/useUserContext';
 import useUser from '../../hooks/useUser';
+import useSlice from '../../hooks/useSlice';
 
 const contentStyle: React.CSSProperties = {
     height: '375px',
@@ -22,6 +23,7 @@ const UserInfo: React.FC = () => {
     const [registerVisitorForm] = Form.useForm();
 
     const { logout, changePassword, changeEmail, registerVisitor, getPremium } = useUser();
+    const {  fetchUsers } = useSlice();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
@@ -58,6 +60,11 @@ const UserInfo: React.FC = () => {
         logout();
     };
 
+    const handleClickUsers = async () => {
+        fetchUsers(user.token);
+        navigate('/users')
+    }
+
     return (
         <>
             <Card
@@ -75,12 +82,16 @@ const UserInfo: React.FC = () => {
                                     </div>
 
 
-                                    <div>
-                                        <TeamOutlined onClick={() => navigate('/users')} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all text-blue-600' />
-                                        <SettingOutlined onClick={() => setIsAccountSettingsModalOpen(true)} className='ml-2 hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
+                                    <div className='flex flex-row gap-3'>
+                                        {
+                                            user.userRole === 'admin'
+                                            &&
+                                            <TeamOutlined onClick={handleClickUsers} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all text-blue-600' />
+                                        }
+                                        <SettingOutlined onClick={() => setIsAccountSettingsModalOpen(true)} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
                                         <LogoutOutlined
                                             onClick={handleLogout}
-                                            className='ml-2 text-2xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-300 transition-all'
+                                            className='text-2xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-300 transition-all'
                                         />
                                     </div>
 

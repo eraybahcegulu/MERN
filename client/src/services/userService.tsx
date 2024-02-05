@@ -7,7 +7,8 @@ import {
     EMAIL_CONFIRM_API_URL,
     REGISTER_VISITOR_API_URL,
     CHANGE_EMAIL_CONFIRM_API_URL,
-    GET_PREMIUM_API_URL
+    GET_PREMIUM_API_URL,
+    GET_USERS_API_URL
 } from '../constants/apiConstant/apiUser';
 
 const registerService = async (data: any) => {
@@ -118,6 +119,20 @@ const getPremiumService = async (id: any, token: any) => {
         )
 }
 
+const getUsersService = async (token: any) => {
+    return await axios.get
+        (
+            GET_USERS_API_URL,
+
+            {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                    api_source: `${GET_USERS_API_URL}`
+                }
+            }
+        );
+};
+
 export {
     registerService,
     emailConfirmService,
@@ -127,5 +142,6 @@ export {
     changeEmailService,
     changeEmailConfirmService,
     registerVisitorService,
-    getPremiumService
+    getPremiumService,
+    getUsersService
 };

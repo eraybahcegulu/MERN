@@ -26,10 +26,15 @@ import {
     successRegisterVisitor
 } from '../constants/notifyConstant/notifyUser';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 const useUser = () => {
     const navigate = useNavigate();
     const { user, getUser, setIsFirstLogin } = useUserContext();
+
+    const users = useSelector((state: RootState) => state.users.data);
+    const usersStatus = useSelector((state: RootState) => state.users.status);
 
     const login = async (isChecked: any, values: any) => {
         try {
@@ -42,7 +47,7 @@ const useUser = () => {
 
             const storageType = isChecked ? localStorage : sessionStorage;
             storageType.setItem('token', token);
-            
+
             await getUser(token);
 
             navigate(`/home`,)
@@ -116,7 +121,7 @@ const useUser = () => {
         navigate('/');
     }
 
-    return { login, register, logout, changePassword, changeEmail, registerVisitor, getPremium };
+    return { users, usersStatus, login, register, logout, changePassword, changeEmail, registerVisitor, getPremium };
 };
 
 export default useUser;

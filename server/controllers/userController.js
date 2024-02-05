@@ -326,6 +326,16 @@ const getPremium = async (req, res) => {
     }
 };
 
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        return responseHandler.ok(res, users);
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+};
+
 module.exports = {
     register,
     registerVisitor,
@@ -336,5 +346,6 @@ module.exports = {
     changePassword,
     changeEmail,
     changeEmailConfirm,
-    getPremium
+    getPremium,
+    getAllUsers
 };

@@ -25,7 +25,7 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [isFirstLogin, setIsFirstLogin] = useState<boolean>(false);
 
-    const { fetchCompanies, fetchProducts } = useSlice();
+    const { fetchCompanies, fetchProducts, fetchUsers } = useSlice();
 
     //console.log(user)
     const fetchUserData = async (token: string) => {
@@ -43,8 +43,10 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                 sessionStorage.setItem('token', token);
             }
 
-            fetchProducts(token)
-            fetchCompanies(token)
+            fetchProducts(token);
+            fetchCompanies(token);
+            fetchUsers(token);
+            
             setLoading(false);
         } catch (error: any) {
             handleFailedServerUserError(error);

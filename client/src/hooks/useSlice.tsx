@@ -2,6 +2,7 @@ import { AppDispatch } from '../store';
 import { useDispatch } from 'react-redux';
 import { getProducts } from '../redux-toolkit/productSlice';
 import { getCompanies } from '../redux-toolkit/companySlice';
+import { getUsers } from '../redux-toolkit/userSlice';
 
 const useSlice = () => {
 
@@ -15,9 +16,14 @@ const useSlice = () => {
         dispatch(getCompanies(token));
     };
 
+    const fetchUsers = (token: any) => {
+        dispatch(getUsers(token));
+    };
+
     return {
         fetchProducts,
-        fetchCompanies
+        fetchCompanies,
+        fetchUsers
     }
 }
 
