@@ -4,7 +4,6 @@ import productSlice from "./redux-toolkit/productSlice";
 import userSlice from "./redux-toolkit/userSlice";
 import { combineReducers } from 'redux';
 
-
 export const rootReducer = combineReducers({
     companies: companySlice,
     products: productSlice,
