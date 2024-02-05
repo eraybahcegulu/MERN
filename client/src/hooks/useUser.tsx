@@ -40,11 +40,9 @@ const useUser = () => {
                 setIsFirstLogin(true);
             }
 
-            if (isChecked === true) {
-                localStorage.setItem('token', token);
-            } else {
-                sessionStorage.setItem('token', token);
-            }
+            const storageType = isChecked ? localStorage : sessionStorage;
+            storageType.setItem('token', token);
+            
             await getUser(token);
 
             navigate(`/home`,)
