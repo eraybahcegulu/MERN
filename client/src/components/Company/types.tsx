@@ -33,3 +33,12 @@ export interface ViewDeletedCompaniesModalProps {
     isViewDeletedCompanies: boolean;
     setIsViewDeletedCompanies: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+export interface BaseModalProps {
+    modalTitle: string;
+    form: any;
+    onFinish: (values: any) => void;
+    open: boolean;
+    setIsModalOpen: (open: boolean) => void;
+    submitButtonText: string;
+}

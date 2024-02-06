@@ -32,3 +32,13 @@ export interface AddProductModalProps {
     setIsAddProductModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
     selectedCompany: any;
 }
+
+export interface BaseModalProps {
+    modalTitle: string;
+    form: any;
+    onFinish: (values: any) => void;
+    isModalOpen: boolean;
+    setIsModalOpen: (open: boolean) => void;
+    submitButtonText: string;
+    selectedCompany: any;
+}
