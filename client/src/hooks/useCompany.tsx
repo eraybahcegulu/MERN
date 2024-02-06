@@ -43,6 +43,7 @@ const useCompany = () => {
         try {
             const res = await updateCompanyService(selectedRowKeys, values, user.token);
             successEditCompany(res.data.message);
+            fetchProducts(user.token)
             fetchCompanies(user.token)
         } catch (error: any) {
             handleEditCompanyError(error);
