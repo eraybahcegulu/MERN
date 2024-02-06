@@ -8,7 +8,7 @@ const EditCompanyModal: React.FC<EditCompanyModalProps> = ({ editCompanyForm, on
             modalTitle="EDIT COMPANY"
             form={editCompanyForm}
             onFinish={onFinishEditCompany}
-            open={isEditCompanyModalOpen}
+            isModalOpen={isEditCompanyModalOpen}
             setIsModalOpen={setIsEditCompanyModalOpen}
             submitButtonText="UPDATE"
         />

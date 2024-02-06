@@ -8,7 +8,7 @@ const AddCompanyModal: React.FC<AddCompanyModalProps> = ({ addCompanyForm, onFin
             modalTitle="ADD COMPANY"
             form={addCompanyForm}
             onFinish={onFinishAddCompany}
-            open={isAddCompanyModalOpen}
+            isModalOpen={isAddCompanyModalOpen}
             setIsModalOpen={setIsAddCompanyModalOpen}
             submitButtonText="ADD"
         />

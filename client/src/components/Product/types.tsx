@@ -38,7 +38,7 @@ export interface BaseModalProps {
     form: any;
     onFinish: (values: any) => void;
     isModalOpen: boolean;
-    setIsModalOpen: (open: boolean) => void;
+    setIsModalOpen: (isModalOpen: boolean) => void;
     submitButtonText: string;
     selectedCompany: any;
 }

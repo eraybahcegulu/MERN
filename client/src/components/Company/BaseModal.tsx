@@ -2,10 +2,10 @@ import { Button, Form, Input, Modal } from 'antd'
 import React from 'react'
 import { BaseModalProps } from './types';
 
-const BaseModal: React.FC<BaseModalProps> = ({ modalTitle, form, onFinish, open, setIsModalOpen, submitButtonText }) => {
+const BaseModal: React.FC<BaseModalProps> = ({ modalTitle, form, onFinish, isModalOpen, setIsModalOpen, submitButtonText }) => {
     return (
         <Modal
-            open={open}
+            open={isModalOpen}
             onCancel={() => setIsModalOpen(false)}
             footer={null}
         >

@@ -5,7 +5,7 @@ import { EditProductModalProps } from './types';
 const EditProductModal: React.FC<EditProductModalProps> = ({ selectedCompany, editProductForm, onFinishEditProduct, isEditProductModalOpen, setIsEditProductModalOpen }) => {
     return (
         <BaseModal
-            modalTitle="EDIT COMPANY"
+            modalTitle="EDIT PRODUCT"
             form={editProductForm}
             onFinish={onFinishEditProduct}
             isModalOpen={isEditProductModalOpen}
