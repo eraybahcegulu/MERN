@@ -58,7 +58,31 @@ const sendMailChangeEmailConfirm = async (userData) => {
     }
 }
 
+const sendMailInvalidLoginAttempt = async (userData) => {
+
+    const { invalidLoginAttempt, email, } = userData;
+
+    let mailOptions = {
+        to: email,
+        subject: `5 Invalid login attempts have been made using ${email} `,
+        html:
+            `
+            <p> Hello </p>
+            <a href="${process.env.CLIENT_URL}"> ${invalidLoginAttempt} Invalid Login Attempts! </a>
+            `
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Mail sent');
+    } catch (err) {
+        console.error('Error', err);
+        return responseHandler.serverError(res, 'Server error');
+    }
+}
+
 module.exports = {
     sendMailEmailConfirm,
-    sendMailChangeEmailConfirm
+    sendMailChangeEmailConfirm,
+    sendMailInvalidLoginAttempt
 };

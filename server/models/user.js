@@ -61,6 +61,11 @@ const UserSchema = mongoose.Schema(
             type: String,
             default: '0'
         },
+
+        invalidLoginAttempt: {
+            type: String,
+            default: '0'
+        },
     },
 );
 

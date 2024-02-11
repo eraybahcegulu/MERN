@@ -4,7 +4,7 @@ const UserRoles = require("../models/enums/userRoles");
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
 const { paymentPremium } = require('../utils/iyzipay')
 const { generateUserToken, verifyToken, generateEmailConfirmToken, generateChangeEmailConfirmToken } = require('../utils/jwt');
-const { sendMailEmailConfirm, sendMailChangeEmailConfirm } = require('../utils/sendMail');
+const { sendMailEmailConfirm, sendMailChangeEmailConfirm, sendMailInvalidLoginAttempt } = require('../utils/sendMail');
 const { dateNow } = require('../utils/moment');
 
 const responseHandler = require('../handlers/responseHandler')
@@ -107,11 +107,22 @@ const login = async (req, res) => {
         const user = await User.findOne({ $or: [{ userName: userNameEmail }, { email: userNameEmail }] });
 
         if (user) {
-            if (!user.password) {
+            const isPasswordMatch = user.password && await comparePassword(password, user.password);
+
+            if (!isPasswordMatch) {
+
+                console.log(user)
+                user.invalidLoginAttempt = Number(user.invalidLoginAttempt) + 1;
+                await user.save();
+
+                if (user.invalidLoginAttempt % 5 === 0 ) {
+                    sendMailInvalidLoginAttempt({ email: user.email, invalidLoginAttempt: user.invalidLoginAttempt })
+                }
+
                 return responseHandler.badRequest(res, "Invalid User Name or Password")
             }
 
-            const isPasswordMatch = await comparePassword(password, user.password);
+
             if (isPasswordMatch) {
 
                 if (!user.isEmailVerified) {
@@ -119,8 +130,8 @@ const login = async (req, res) => {
                     //sendMailEmailConfirm({ userName: user.userName, email: user.email, token: user.token });
                 }
 
+                user.invalidLoginAttempt = 0;
                 user.lastLoginAt = dateNow();
-
                 user.activityLevel = Number(user.activityLevel) + 1;
 
                 let isFirstLogin = false;
@@ -150,7 +161,7 @@ const loginGoogle = async (req, res) => {
         if (user) {
 
             user.lastLoginAt = dateNow();
-
+            user.invalidLoginAttempt = 0;
             user.activityLevel = Number(user.activityLevel) + 1;
 
             res.redirect(`${process.env.CLIENT_URL}/api/auth/google/${user.googleUserToken}`);
@@ -316,7 +327,7 @@ const getPremium = async (req, res) => {
 
         user.userRole = UserRoles.PREMIUM;
         await user.save()
-        
+
         const newTokenAfterGetPremium = generateUserToken(user);
         return responseHandler.ok(res, { message: 'Premium membership activated', token: newTokenAfterGetPremium });
 
