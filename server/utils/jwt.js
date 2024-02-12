@@ -55,6 +55,12 @@ const generateResetPasswordToken = (email) => {
             },
 
             process.env.SECRET_KEY
+
+            /*
+            {
+                expiresIn: '30s'
+            }
+            */
         );
 }
 

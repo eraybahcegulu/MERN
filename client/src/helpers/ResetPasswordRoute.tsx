@@ -35,8 +35,12 @@ const ResetPasswordRoute = () => {
     }, [])
 
     const onFinishResetPassword = async (values: any) => {
-        changePassword(values, token, userId);
-        setPasswordIsChanged(true);
+        const passwordIsChanged = await changePassword(values, token, userId);
+        if (passwordIsChanged) {
+            setPasswordIsChanged(true);
+            setIsLoading(false);
+        }
+        setCanResetPassoword(false);
         setIsLoading(false);
     };
 

@@ -16,7 +16,8 @@ import {
     handleGetPremiumError,
     handleInvalidLoginError,
     handleRegisterError,
-    handleRegisterVisitorError
+    handleRegisterVisitorError,
+    handleResetPasswordError
 } from '../constants/errorConstant/errorUser';
 import {
     errorChangeEmail,
@@ -26,7 +27,8 @@ import {
     successForgotPassword,
     successGetPremium,
     successRegister,
-    successRegisterVisitor
+    successRegisterVisitor,
+    successResetPassword
 } from '../constants/notifyConstant/notifyUser';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -79,15 +81,20 @@ const useUser = () => {
 
             if(resetPasswordToken && resetPasswordUserId)
             {
-                console.log(resetPasswordToken)
-                console.log(resetPasswordUserId)
-                const res = await changePasswordService(resetPasswordUserId, values, resetPasswordToken);
-                return successChangePassword(res.data.message);
+                try{
+                    const res = await changePasswordService(resetPasswordUserId, values, resetPasswordToken);
+                    successResetPassword(res.data.message);
+                    return true;
+                }
+                catch (error: any) {
+                    handleResetPasswordError(error)
+                    return false;
+                }
             }
             const res = await changePasswordService(user.userId, values, user.token);
             successChangePassword(res.data.message);
         } catch (error: any) {
-            handleChangePasswordError(error);
+            return handleChangePasswordError(error);
         }
     };
 

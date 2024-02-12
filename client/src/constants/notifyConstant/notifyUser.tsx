@@ -141,6 +141,13 @@ const successResetPassword = (data: any) =>
         duration: 3,
     });
 
+const errorResetPassword = (data: any) =>
+    message.open({
+        type: 'error',
+        content: data,
+        duration: 3,
+    });
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -160,5 +167,6 @@ export {
     successGetPremium,
     errorForgotPassword,
     successForgotPassword,
-    successResetPassword
+    successResetPassword,
+    errorResetPassword
 };

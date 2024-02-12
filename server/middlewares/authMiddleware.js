@@ -11,6 +11,7 @@ const auth = async (req, res, next) => {
 
         if (token) {
             jwt.verify(token, process.env.SECRET_KEY, (error, decodedToken) => {
+                console.log(decodedToken)
                 if (error) {
                     return responseHandler.unauthorized(res, 'User auth token not valid');
                 } else {
