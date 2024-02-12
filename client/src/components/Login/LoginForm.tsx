@@ -6,14 +6,15 @@ interface LoginFormProps {
     onFinishLogin: (values: any) => void;
     isChecked: boolean;
     onChange: () => void;
-    setisRegisterModalOpen: (isOpen: boolean) => void;
+    setIsRegisterModalOpen: (isOpen: boolean) => void;
+    setIsForgotPasswordModalOpen: (isOpen: boolean) => void;
 }
 
 const loginWithGoogle = () => {
     window.open(`${process.env.REACT_APP_API_URL}/auth/google/callback`, "_self")
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChange, setisRegisterModalOpen }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChange, setIsRegisterModalOpen, setIsForgotPasswordModalOpen }) => {
 
     return (
         <>
@@ -80,24 +81,31 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
 
                 </div>
 
-                <div className='flex flex-row gap-2 mt-4'>
-                    <Form.Item>
+                <div className='flex flex-row gap-2 mt-2'>
+                    <Form.Item className='mb-0'>
                         <Button type="primary" htmlType="submit" className="login-form-button hover:scale-105 transition duration-700">
                             Log in
                         </Button>
                     </Form.Item>
 
-                    <Button className='hover:scale-105 transition duration-700' type="primary" ghost onClick={() => setisRegisterModalOpen(true)}>
+                    <Button className='hover:scale-105 transition duration-700' type="primary" ghost onClick={() => setIsRegisterModalOpen(true)}>
                         Register
                     </Button>
 
+
+
+                </div>
+                <div className='mt-2 '>
+                    <span className='hover:text-blue-600 cursor-pointer transition-all' onClick={() => setIsForgotPasswordModalOpen(true)} >
+                        Forgot Password?
+                    </span>
                 </div>
 
             </Form>
 
-            <div className='flex flex-row border border-black rounded-md 
+            <div className='flex flex-row border border-black rounded-md mt-3
             gap-1 p-2 items-center justify-center cursor-pointer hover:scale-105 transition duration-700'
-            onClick={loginWithGoogle} >
+                onClick={loginWithGoogle} >
                 <GoogleOutlined className='text-3xl' />
                 <span> Login with google</span>
             </div>

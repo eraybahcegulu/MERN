@@ -2,6 +2,7 @@ import useUserContext from './useUserContext';
 import {
     changeEmailService,
     changePasswordService,
+    forgotPasswordService,
     getPremiumService,
     loginService,
     registerService,
@@ -11,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     handleChangeEmailError,
     handleChangePasswordError,
+    handleForgotPasswordError,
     handleGetPremiumError,
     handleInvalidLoginError,
     handleRegisterError,
@@ -21,6 +23,7 @@ import {
     errorChangePassword,
     successChangeEmail,
     successChangePassword,
+    successForgotPassword,
     successGetPremium,
     successRegister,
     successRegisterVisitor
@@ -66,12 +69,20 @@ const useUser = () => {
         }
     };
 
-    const changePassword = async (values: any) => {
+    const changePassword = async (values: any, resetPasswordToken? : any, resetPasswordUserId? : any) => {
         try {
             if (values.currentPassword === values.newPassword) {
                 return errorChangePassword(
                     <span>Current password and new password cannot be the same</span>
                 );
+            }
+
+            if(resetPasswordToken && resetPasswordUserId)
+            {
+                console.log(resetPasswordToken)
+                console.log(resetPasswordUserId)
+                const res = await changePasswordService(resetPasswordUserId, values, resetPasswordToken);
+                return successChangePassword(res.data.message);
             }
             const res = await changePasswordService(user.userId, values, user.token);
             successChangePassword(res.data.message);
@@ -115,13 +126,22 @@ const useUser = () => {
         }
     };
 
+    const forgotPassword = async (values: any) => {
+        try {
+            const res = await forgotPasswordService(values);
+            successForgotPassword(res.data.message);
+        } catch (error: any) {
+            handleForgotPasswordError(error);
+        }
+    };
+
     const logout = () => {
         localStorage.clear();
         sessionStorage.clear();
         navigate('/');
     }
 
-    return { users, usersStatus, login, register, logout, changePassword, changeEmail, registerVisitor, getPremium };
+    return { users, usersStatus, login, register, logout, changePassword, changeEmail, registerVisitor, getPremium, forgotPassword };
 };
 
 export default useUser;

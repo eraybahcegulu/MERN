@@ -8,4 +8,5 @@ export const CHANGE_EMAIL_API_URL = `${process.env.REACT_APP_API_URL}/api/user/c
 export const CHANGE_EMAIL_CONFIRM_API_URL = `${process.env.REACT_APP_API_URL}/api/user/changeEmailConfirm`;
 export const GET_PREMIUM_API_URL = `${process.env.REACT_APP_API_URL}/api/user/getPremium`;
 export const GET_USERS_API_URL = `${process.env.REACT_APP_API_URL}/api/user/get-all`;
-
+export const FORGOT_PASSWORD_API_URL = `${process.env.REACT_APP_API_URL}/api/user/forgotPassword`;
+export const RESET_PASSWORD_API_URL = `${process.env.REACT_APP_API_URL}/api/user/resetPassword`;

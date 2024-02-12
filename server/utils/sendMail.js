@@ -13,7 +13,6 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendMailEmailConfirm = async (userData) => {
-
     const { userName, email, emailConfirmToken } = userData;
 
     let mailOptions = {
@@ -36,7 +35,6 @@ const sendMailEmailConfirm = async (userData) => {
 }
 
 const sendMailChangeEmailConfirm = async (userData) => {
-
     const { userName, email, changeEmailConfirmToken } = userData;
 
     let mailOptions = {
@@ -59,7 +57,6 @@ const sendMailChangeEmailConfirm = async (userData) => {
 }
 
 const sendMailInvalidLoginAttempt = async (userData) => {
-
     const { invalidLoginAttempt, email, } = userData;
 
     let mailOptions = {
@@ -81,8 +78,31 @@ const sendMailInvalidLoginAttempt = async (userData) => {
     }
 }
 
+const sendMailForgotPassword = async (userData) => {
+    const { userName, email, resetPasswordToken } = userData;
+
+    let mailOptions = {
+        to: email,
+        subject: `Forgot Password ${email}`,
+        html:
+            `
+            <p> Hello, ${userName} </p>
+            <a href="${process.env.CLIENT_URL}/api/user/resetPassword/${resetPasswordToken}"> Reset Password </a>
+            `
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Mail sent');
+    } catch (err) {
+        console.error('Error', err);
+        return responseHandler.serverError(res, 'Server error');
+    }
+}
+
 module.exports = {
     sendMailEmailConfirm,
     sendMailChangeEmailConfirm,
-    sendMailInvalidLoginAttempt
+    sendMailInvalidLoginAttempt,
+    sendMailForgotPassword
 };

@@ -8,6 +8,7 @@ import { PrivateRoute } from './helpers/PrivateRoute';
 import { EmailConfirmRoute } from './helpers/EmailConfirmRoute';
 import { GoogleAuthRoute } from './helpers/GoogleAuthRoute';
 import { ChangeEmailConfirmRoute } from './helpers/ChangeEmailConfirmRoute';
+import ResetPasswordRoute from './helpers/ResetPasswordRoute';
 import User from './pages/User';
 
 const PrivateRouter = (Page: any) => (
@@ -40,6 +41,11 @@ export const routes = [
     {
         path: '/api/user/changeEmailConfirm/:changeEmailConfirmToken',
         element: <ChangeEmailConfirmRoute />
+    },
+
+    {
+        path: '/api/user/resetPassword/:resetPasswordToken',
+        element: <ResetPasswordRoute />
     },
 
     {

@@ -8,7 +8,9 @@ import {
     REGISTER_VISITOR_API_URL,
     CHANGE_EMAIL_CONFIRM_API_URL,
     GET_PREMIUM_API_URL,
-    GET_USERS_API_URL
+    GET_USERS_API_URL,
+    FORGOT_PASSWORD_API_URL,
+    RESET_PASSWORD_API_URL
 } from '../constants/apiConstant/apiUser';
 
 const registerService = async (data: any) => {
@@ -133,6 +135,29 @@ const getUsersService = async (token: any) => {
         );
 };
 
+const forgotPasswordService = async (data: any) => {
+    return await axios.post
+        (
+            FORGOT_PASSWORD_API_URL,
+
+            data
+        )
+}
+
+const resetPasswordService = async (resetPasswordToken: any) => {
+    return await axios.get
+        (
+            `${RESET_PASSWORD_API_URL}/${resetPasswordToken}`,
+
+            /* 
+            {
+                 withCredentials: true
+             }
+             */
+        )
+}
+
+
 export {
     registerService,
     emailConfirmService,
@@ -143,5 +168,7 @@ export {
     changeEmailConfirmService,
     registerVisitorService,
     getPremiumService,
-    getUsersService
+    getUsersService,
+    forgotPasswordService,
+    resetPasswordService
 };

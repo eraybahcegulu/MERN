@@ -3,8 +3,8 @@ const UserRoles = require("../models/enums/userRoles");
 
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
 const { paymentPremium } = require('../utils/iyzipay')
-const { generateUserToken, verifyToken, generateEmailConfirmToken, generateChangeEmailConfirmToken } = require('../utils/jwt');
-const { sendMailEmailConfirm, sendMailChangeEmailConfirm, sendMailInvalidLoginAttempt } = require('../utils/sendMail');
+const { generateUserToken, verifyToken, generateVerificationToken, generateResetPasswordToken, generateChangeEmailConfirmToken } = require('../utils/jwt');
+const { sendMailEmailConfirm, sendMailChangeEmailConfirm, sendMailInvalidLoginAttempt, sendMailForgotPassword } = require('../utils/sendMail');
 const { dateNow } = require('../utils/moment');
 
 const responseHandler = require('../handlers/responseHandler')
@@ -23,7 +23,7 @@ const register = async (req, res) => {
 
         const hashedPassword = await hashPassword(req.body.password);
 
-        const emailConfirmToken = generateEmailConfirmToken(req.body.email);
+        const emailConfirmToken = generateVerificationToken(req.body.email);
 
         const newUser = new User({
             userName: req.body.userName,
@@ -115,7 +115,7 @@ const login = async (req, res) => {
                 user.invalidLoginAttempt = Number(user.invalidLoginAttempt) + 1;
                 await user.save();
 
-                if (user.invalidLoginAttempt % 5 === 0 ) {
+                if (user.invalidLoginAttempt % 5 === 0) {
                     sendMailInvalidLoginAttempt({ email: user.email, invalidLoginAttempt: user.invalidLoginAttempt })
                 }
 
@@ -220,6 +220,17 @@ const changePassword = async (req, res) => {
             return responseHandler.notFound(res, 'User not found. Try Again Login');
         }
 
+        if (user.resetPasswordToken) {
+            const decodedToken = verifyToken(req.headers.authorization.split(' ')[1]);
+            if (decodedToken.resetPasswordToken) {
+                const hashedPassword = await hashPassword(req.body.newPassword);
+                user.password = hashedPassword;
+                user.resetPasswordToken = null;
+                await user.save();
+                return responseHandler.ok(res, { message: 'Your password has been changed successfully' });
+            }
+        }
+
         const isPasswordMatch = await comparePassword(req.body.currentPassword, user.password);
 
         if (!isPasswordMatch) {
@@ -253,10 +264,7 @@ const changeEmail = async (req, res) => {
             return responseHandler.badRequest(res, `${req.body.newEmail} is already registered, try again`);
         }
 
-        console.log(user._id)
-
-        const changeEmailConfirmToken = generateChangeEmailConfirmToken(user._id, req.body.newEmail);
-        console.log(changeEmailConfirmToken)
+        const changeEmailConfirmToken = generateChangeEmailConfirmToken(user.email, req.body.newEmail);
 
         user.verificationToken = changeEmailConfirmToken;
         await user.save();
@@ -283,8 +291,7 @@ const changeEmailConfirm = async (req, res) => {
 
         try {
             const decodedToken = verifyToken(changeEmailConfirmToken);
-
-            if (decodedToken.userId === user._id.toString()) {
+            if (decodedToken.oldEmail === user.email) {
 
                 user.verificationToken = null;
                 user.email = decodedToken.newEmail;
@@ -347,6 +354,70 @@ const getAllUsers = async (req, res) => {
     }
 };
 
+const forgotPassword = async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+
+        if (!user || !user.password) {
+            return responseHandler.notFound(res, 'Registered User not found. Try register');
+        }
+
+        user.verificationToken = generateVerificationToken(req.body.email);
+        await user.save();
+
+        sendMailForgotPassword({ userName: user.userName, email: user.email, resetPasswordToken: user.verificationToken })
+
+        return responseHandler.ok(res, { message: `Password reset link sent to ${user.email}` });
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+};
+
+const resetPassword = async (req, res) => {
+    const { resetPasswordToken } = req.params
+    try {
+        const user = await User.findOne({ verificationToken: resetPasswordToken })
+        if (!user) {
+            return responseHandler.notFound(res, 'User not found. Try register');
+        }
+
+        try {
+            const decodedToken = verifyToken(resetPasswordToken);
+            if (decodedToken.email === user.email) {
+
+                user.verificationToken = null;
+                const resetPasswordToken = generateResetPasswordToken(user.email)
+                user.resetPasswordToken = resetPasswordToken;
+                await user.save();
+
+                /*
+                res.cookie(
+
+                    'resetPasswordToken',
+
+                    resetPasswordToken,
+
+                    {
+                        secure: true,
+                        httpOnly: true,
+                    }
+                );
+                */
+
+                return responseHandler.ok(res, { userId: user._id, resetPasswordToken });
+            }
+        }
+        catch (error) {
+            return responseHandler.notFound(res, 'Verification failed. OTP is expired.');
+        }
+
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+};
+
 module.exports = {
     register,
     registerVisitor,
@@ -358,5 +429,7 @@ module.exports = {
     changeEmail,
     changeEmailConfirm,
     getPremium,
-    getAllUsers
+    getAllUsers,
+    forgotPassword,
+    resetPassword
 };

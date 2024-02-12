@@ -120,6 +120,27 @@ const successGetPremium = (data: any) =>
         duration: 3,
     });
 
+const errorForgotPassword = (data: any) =>
+    message.open({
+        type: 'error',
+        content: data,
+        duration: 3,
+    });
+
+const successForgotPassword = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
+const successResetPassword = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -136,5 +157,8 @@ export {
     firstLoginNotify,
     successChangeEmailConfirm,
     errorGetPremium,
-    successGetPremium
+    successGetPremium,
+    errorForgotPassword,
+    successForgotPassword,
+    successResetPassword
 };

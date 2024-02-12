@@ -47,6 +47,11 @@ const UserSchema = mongoose.Schema(
             allowNull: true,
         },
 
+        resetPasswordToken: {
+            type: String,
+            allowNull: true,
+        },
+
         googleUserToken: {
             type: String,
             allowNull: true,
