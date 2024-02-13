@@ -1,6 +1,6 @@
-const Status = {
+const status = {
     ACTIVE: 1,
     DELETED: 2
 };
 
-module.exports = Status;
+module.exports = status;

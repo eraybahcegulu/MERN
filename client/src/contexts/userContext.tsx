@@ -45,11 +45,7 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
             fetchProducts(token);
             fetchCompanies(token);
-
-            if(response.data.userRole === 'admin')
-            {
-                fetchUsers(token);
-            }
+            fetchUsers(token);
             
             setLoading(false);
         } catch (error: any) {

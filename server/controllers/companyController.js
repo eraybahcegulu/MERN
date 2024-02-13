@@ -1,14 +1,13 @@
 const Company = require("../models/company");
 const Product = require("../models/product")
-const Status = require("../models/enums/status");
-
+const status = require("../models/enums/status");
 const responseHandler = require('../handlers/responseHandler');
 
 const getAllCompanies = async (req, res) => {
     try {
         const companies = await Company.aggregate([
             {
-                $match: { status: Status.ACTIVE }
+                $match: { status: status.ACTIVE }
             },
             {
                 $lookup: {
@@ -20,7 +19,7 @@ const getAllCompanies = async (req, res) => {
                                 $expr: {
                                     $and: [
                                         { $eq: ['$company', '$$companyId'] },
-                                        { $eq: ['$status', Status.ACTIVE] }
+                                        { $eq: ['$status', status.ACTIVE] }
                                     ]
                                 }
                             }
@@ -46,17 +45,17 @@ const getAllCompanies = async (req, res) => {
 
 const addCompany = async (req, res, next) => {
     try {
-        const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName.trim(), status: Status.ACTIVE });
+        const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName.trim(), status: status.ACTIVE });
         if (existingCompanyNameControl) {
             return responseHandler.badRequest(res, 'Failed. This Company Name is already registered');
         }
 
-        const existingCompanyCRNControl = await Company.findOne({ crn: req.body.crn.trim(), status: Status.ACTIVE });
+        const existingCompanyCRNControl = await Company.findOne({ crn: req.body.crn.trim(), status: status.ACTIVE });
         if (existingCompanyCRNControl) {
             return responseHandler.badRequest(res, 'Failed. This CRN is already registered');
         }
 
-        const existingCompanyWEBsiteControl = await Company.findOne({ webSite: req.body.webSite.trim(), status: Status.ACTIVE });
+        const existingCompanyWEBsiteControl = await Company.findOne({ webSite: req.body.webSite.trim(), status: status.ACTIVE });
         if (existingCompanyWEBsiteControl) {
             return responseHandler.badRequest(res, 'Failed. This WEB Site is already registered');
         }
@@ -79,16 +78,16 @@ const deleteCompany = async (req, res, next) => {
 
     try {
         const company = await Company.findById(id);
-        const products = await Product.find({ company: id, status: Status.ACTIVE });
+        const products = await Product.find({ company: id, status: status.ACTIVE });
 
         if (products && products.length > 0) {
 
-            company.status = Status.DELETED;
+            company.status = status.DELETED;
             company.lastDeleterId = userId;
             await company.save();
 
             products.forEach(async product => {
-                product.status = Status.DELETED;
+                product.status = status.DELETED;
                 product.lastDeleterId = userId;
                 await product.save();
             });
@@ -100,7 +99,7 @@ const deleteCompany = async (req, res, next) => {
 
         } else {
 
-            company.status = Status.DELETED;
+            company.status = status.DELETED;
             company.lastDeleterId = userId;
             await company.save();
 
@@ -116,17 +115,17 @@ const deleteCompany = async (req, res, next) => {
 const updateCompany = async (req, res, next) => {
     const id = req.params.id;
     try {
-        const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName.trim(), status: Status.ACTIVE, _id: { $ne: id } });
+        const existingCompanyNameControl = await Company.findOne({ companyName: req.body.companyName.trim(), status: status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyNameControl) {
             return responseHandler.badRequest(res, 'Failed. This Company Name is already registered');
         }
 
-        const existingCompanyCRNControl = await Company.findOne({ crn: req.body.crn.trim(), status: Status.ACTIVE, _id: { $ne: id } });
+        const existingCompanyCRNControl = await Company.findOne({ crn: req.body.crn.trim(), status: status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyCRNControl) {
             return responseHandler.badRequest(res, 'Failed. This CRN is already registered');
         }
 
-        const existingCompanyWEBSiteControl = await Company.findOne({ webSite: req.body.webSite.trim(), status: Status.ACTIVE, _id: { $ne: id } });
+        const existingCompanyWEBSiteControl = await Company.findOne({ webSite: req.body.webSite.trim(), status: status.ACTIVE, _id: { $ne: id } });
         if (existingCompanyWEBSiteControl) {
             return responseHandler.badRequest(res, 'Failed. This WEB Site is already registered');
         }

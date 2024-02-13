@@ -1,11 +1,11 @@
 const Product = require("../models/product");
-const Status = require("../models/enums/status");
-
+const status = require("../models/enums/status");
 const responseHandler = require('../handlers/responseHandler');
+
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await Product.find({ status: Status.ACTIVE })
+        const products = await Product.find({ status: status.ACTIVE })
             .populate({
                 path: 'company',
             })
@@ -20,7 +20,7 @@ const getAllProducts = async (req, res) => {
 
 const addProduct = async (req, res, next) => {
     try {
-        const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: Status.ACTIVE, company: req.body.company.trim() });
+        const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: status.ACTIVE, company: req.body.company.trim() });
         if (existingProductNameControl) {
 
             existingProductNameControl.productAmount = Number(existingProductNameControl.productAmount) + Number(req.body.productAmount)
@@ -45,13 +45,13 @@ const deleteProduct = async (req, res, next) => {
     const userId = req.body.userId;
 
     try {
-        const product = await Product.findById(id, { status: Status.ACTIVE });
+        const product = await Product.findById(id, { status: status.ACTIVE });
 
         if (!product) {
             return responseHandler.notFound(res, 'Product not found.');
         }
 
-        product.status = Status.DELETED;
+        product.status = status.DELETED;
         product.lastDeleterId = userId;
 
         await product.save();
@@ -67,7 +67,7 @@ const deleteProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
     const id = req.params.id;
     try {
-        const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: Status.ACTIVE, company: req.body.company.trim(), _id: { $ne: id } });
+        const existingProductNameControl = await Product.findOne({ productName: req.body.productName.trim(), status: status.ACTIVE, company: req.body.company.trim(), _id: { $ne: id } });
         if (existingProductNameControl) {
             return responseHandler.badRequest(res, "Failed. This Product Name is already registered for this Company");
         }

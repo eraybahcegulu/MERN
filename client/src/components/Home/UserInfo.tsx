@@ -8,6 +8,7 @@ import { faGem } from '@fortawesome/free-solid-svg-icons';
 import useUserContext from '../../hooks/useUserContext';
 import useUser from '../../hooks/useUser';
 import useSlice from '../../hooks/useSlice';
+import userRoles from '../../constants/enums';
 
 const contentStyle: React.CSSProperties = {
     height: '375px',
@@ -77,14 +78,14 @@ const UserInfo: React.FC = () => {
                                 ?
                                 <>
                                     <div className='flex flex-col items-center'>
-                                        <span> WELCOME {user.userName} {user.userRole === 'visitor' && <span> VISITOR </span>}</span>
+                                        <span> WELCOME {user.userName} {user.userRole === userRoles.VISITOR && <span> VISITOR </span>}</span>
                                         <span> {user.email} </span>
                                     </div>
 
 
                                     <div className='flex flex-row gap-3'>
                                         {
-                                            user.userRole === 'admin'
+                                            user.userRole === userRoles.ADMIN
                                             &&
 
                                             <TeamOutlined onClick={handleClickUsers} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all text-blue-600' />
@@ -128,7 +129,7 @@ const UserInfo: React.FC = () => {
 
                 <Carousel>
                     {
-                        !(user.userRole === 'visitor')
+                        !(user.userRole === userRoles.VISITOR)
                         &&
                         <div>
                             <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
@@ -197,7 +198,7 @@ const UserInfo: React.FC = () => {
                     }
 
                     {
-                        !(user.userRole === 'visitor')
+                        !(user.userRole === userRoles.VISITOR)
                         &&
 
                         <div>
@@ -257,13 +258,13 @@ const UserInfo: React.FC = () => {
                     <div>
                         <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
                             {
-                                (user.userRole === 'admin' || user.userRole === 'premium')
+                                (user.userRole === userRoles.ADMIN || user.userRole === userRoles.PREMIUM)
                                 &&
                                 <span className='text-2xl'> PREMIUM ACTIVATED </span>
                             }
 
                             {
-                                (user.userRole === 'standard')
+                                (user.userRole === userRoles.STANDARD)
                                 &&
                                 <>
                                     <span> YOU HAVE STANDARD MEMBERSHIP </span>
@@ -282,7 +283,7 @@ const UserInfo: React.FC = () => {
                             }
 
                             {
-                                (user.userRole === 'visitor')
+                                (user.userRole === userRoles.VISITOR)
                                 &&
                                 <>
                                     <span> WELCOME VISITOR </span>

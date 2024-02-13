@@ -5,4 +5,4 @@ const userRoles = {
     PREMIUM: 'premium',
 };
 
-module.exports = userRoles;
+export default userRoles;

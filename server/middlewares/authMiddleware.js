@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const userRole = require("../models/enums/userRoles");
+const userRoles = require("../models/enums/userRoles");
 
 const responseHandler = require('../handlers/responseHandler')
 
@@ -11,7 +11,6 @@ const auth = async (req, res, next) => {
 
         if (token) {
             jwt.verify(token, process.env.SECRET_KEY, (error, decodedToken) => {
-                console.log(decodedToken)
                 if (error) {
                     return responseHandler.unauthorized(res, 'User auth token not valid');
                 } else {
@@ -32,7 +31,7 @@ const requireAdmin = (req, res, next) => {
     //console.log(req.user);
     try {
         //console.log(req.user.userRole);
-        if (req.user.userRole !== userRole.ADMIN) {
+        if (req.user.userRole !== userRoles.ADMIN) {
             return responseHandler.unauthorized(res, `Required Admin Authority ${req.headers.api_source}`);
         }
         next();

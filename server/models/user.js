@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const UserRoles = require('./enums/userRoles');
+const userRoles = require('./enums/userRoles');
 const { dateNow } = require("../utils/moment");
 
-const UserSchema = mongoose.Schema(
+const userSchema = mongoose.Schema(
     {
         userName: {
             type: String,
@@ -29,8 +29,8 @@ const UserSchema = mongoose.Schema(
         userRole: {
             required: true,
             type: String,
-            enum: [UserRoles.ADMIN, UserRoles.VISITOR, UserRoles.STANDARD, UserRoles.PREMIUM],
-            default: UserRoles.ADMIN
+            enum: [userRoles.ADMIN, userRoles.VISITOR, userRoles.STANDARD, userRoles.PREMIUM],
+            default: userRoles.ADMIN
         },
 
         lastLoginAt: {
@@ -74,4 +74,4 @@ const UserSchema = mongoose.Schema(
     },
 );
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', userSchema);

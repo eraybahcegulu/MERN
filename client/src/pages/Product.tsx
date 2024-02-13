@@ -20,6 +20,7 @@ import useUserContext from "../hooks/useUserContext";
 import useUser from '../hooks/useUser';
 import useProduct from '../hooks/useProduct';
 import useCompany from '../hooks/useCompany';
+import userRoles from '../constants/enums';
 
 const Product: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -104,13 +105,13 @@ const Product: React.FC = () => {
                     <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer hover:scale-125 hover:opacity-50 transition-all text-2xl mr-4" />
 
                     {
-                        (user.userRole === 'admin' || user.userRole === 'premium')
+                        (user.userRole === userRoles.ADMIN || user.userRole === userRoles.PREMIUM)
                         &&
                         <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
                     }
 
                     {
-                        (user.userRole === 'admin')
+                        (user.userRole === userRoles.ADMIN)
                         &&
                         <>
                             {

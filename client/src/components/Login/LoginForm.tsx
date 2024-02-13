@@ -107,7 +107,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
             gap-1 p-2 items-center justify-center cursor-pointer hover:scale-105 transition duration-700'
                 onClick={loginWithGoogle} >
                 <GoogleOutlined className='text-3xl' />
-                <span> Login with google</span>
+                <span> Login with Google</span>
             </div>
         </>
     );

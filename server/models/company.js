@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const BaseModel = require("./baseModel");
+const baseModel = require("./baseModel");
 
-const CompanySchema = mongoose.Schema(
+const companySchema = mongoose.Schema(
     {
         companyName: {
             type: String,
@@ -27,8 +27,8 @@ const CompanySchema = mongoose.Schema(
             trim: true,
         },
 
-        ...BaseModel
+        ...baseModel
     },
 );
 
-module.exports = mongoose.model('Company', CompanySchema);
+module.exports = mongoose.model('Company', companySchema);

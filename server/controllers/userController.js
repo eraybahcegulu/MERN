@@ -1,5 +1,6 @@
 const User = require("../models/user");
-const UserRoles = require("../models/enums/userRoles");
+const userRoles = require("../models/enums/userRoles");
+const responseHandler = require('../handlers/responseHandler')
 
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
 const { paymentPremium } = require('../utils/iyzipay')
@@ -7,7 +8,7 @@ const { generateUserToken, verifyToken, generateVerificationToken, generateReset
 const { sendMailEmailConfirm, sendMailChangeEmailConfirm, sendMailInvalidLoginAttempt, sendMailForgotPassword } = require('../utils/sendMail');
 const { dateNow } = require('../utils/moment');
 
-const responseHandler = require('../handlers/responseHandler')
+
 
 const register = async (req, res) => {
     try {
@@ -59,7 +60,7 @@ const registerVisitor = async (req, res) => {
 
         existingVisitor.userName = req.body.userName;
         existingVisitor.password = hashedPassword;
-        existingVisitor.userRole = UserRoles.STANDARD;
+        existingVisitor.userRole = userRoles.STANDARD;
         await existingVisitor.save();
 
         const newTokenAfterRegisterVisitor = generateUserToken(existingVisitor);
@@ -110,8 +111,7 @@ const login = async (req, res) => {
             const isPasswordMatch = user.password && await comparePassword(password, user.password);
 
             if (!isPasswordMatch) {
-
-                console.log(user)
+                //console.log(user)
                 user.invalidLoginAttempt = Number(user.invalidLoginAttempt) + 1;
                 await user.save();
 
@@ -121,7 +121,6 @@ const login = async (req, res) => {
 
                 return responseHandler.badRequest(res, "Invalid User Name or Password")
             }
-
 
             if (isPasswordMatch) {
 
@@ -227,7 +226,7 @@ const changePassword = async (req, res) => {
                 user.password = hashedPassword;
                 user.resetPasswordToken = null;
                 await user.save();
-                return responseHandler.ok(res, { message: 'Your password has been changed successfully' });
+                return responseHandler.ok(res, { message: 'Your password has been reseted successfully' });
             }
         }
 
@@ -320,7 +319,7 @@ const getPremium = async (req, res) => {
             return responseHandler.notFound(res, 'User not found. Try register');
         }
 
-        if (user.userRole === UserRoles.PREMIUM || user.userRole === UserRoles.ADMIN) {
+        if (user.userRole === userRoles.PREMIUM || user.userRole === userRoles.ADMIN) {
             return responseHandler.badRequest(res, 'User already has premium membership')
         }
 
@@ -332,7 +331,7 @@ const getPremium = async (req, res) => {
                 lastLoginAt: user.lastLoginAt
             });
 
-        user.userRole = UserRoles.PREMIUM;
+        user.userRole = userRoles.PREMIUM;
         await user.save()
 
         const newTokenAfterGetPremium = generateUserToken(user);

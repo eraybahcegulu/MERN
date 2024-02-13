@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const BaseModel = require("./baseModel");
+const baseModel = require("./baseModel");
 
-const ProductSchema = mongoose.Schema(
+const productSchema = mongoose.Schema(
     {
         productName: {
             type: String,
@@ -32,8 +32,8 @@ const ProductSchema = mongoose.Schema(
             ref: 'Company'
         },
 
-        ...BaseModel
+        ...baseModel
     },
 );
 
-module.exports = mongoose.model('Product', ProductSchema);
+module.exports = mongoose.model('Product', productSchema);

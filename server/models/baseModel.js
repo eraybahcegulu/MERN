@@ -1,20 +1,20 @@
 const mongoose = require("mongoose");
-const Status = require('./enums/status');
+const status = require('./enums/status');
 
-const BaseModel ={
+const baseModel ={
     
-    creatorId: {
+    createdBy: {
         required: true,
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
 
-    lastUpdaterId: {
+    lastUpdatedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
 
-    lastDeleterId: {
+    lastDeletedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
@@ -27,9 +27,9 @@ const BaseModel ={
     status: {
         required: true,
         type: Number,
-        enum: [Status.ACTIVE, Status.DELETED],
-        default: Status.ACTIVE,
+        enum: [status.ACTIVE, status.DELETED],
+        default: status.ACTIVE,
     }
 };
 
-module.exports = BaseModel;
+module.exports = baseModel;

@@ -17,6 +17,7 @@ import EditCompanyModal from '../components/Company/EditCompanyModal';
 import useUserContext from "../hooks/useUserContext";
 import useCompany from "../hooks/useCompany";
 import useUser from '../hooks/useUser';
+import userRoles from '../constants/enums';
 
 const Company: React.FC = () => {
     const [search, setSearch] = useState<string>("");
@@ -87,13 +88,13 @@ const Company: React.FC = () => {
                     <ArrowLeftOutlined onClick={() => navigate('/home')} className="hover:cursor-pointer hover:opacity-50 hover:scale-125 transition-all text-2xl mr-4" />
 
                     {
-                        (user.userRole === 'admin' || user.userRole === 'premium')
+                        (user.userRole === userRoles.ADMIN || user.userRole === userRoles.PREMIUM)
                         &&
                         <Input className='hover:scale-105' onChange={(e) => setSearch(e.target.value.toLowerCase())} size="large" prefix={<SearchOutlined />} />
                     }
 
                     {
-                        (user.userRole === 'admin')
+                        (user.userRole === userRoles.ADMIN)
                         &&
 
                         <>
