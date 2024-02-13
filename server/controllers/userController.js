@@ -4,7 +4,7 @@ const responseHandler = require('../handlers/responseHandler')
 
 const { hashPassword, comparePassword } = require('../utils/bcrypt');
 const { paymentPremium } = require('../utils/iyzipay')
-const { generateUserToken, verifyToken, generateVerificationToken, generateResetPasswordToken, generateChangeEmailConfirmToken } = require('../utils/jwt');
+const { generateUserToken, verifyToken, generateEmailVerificationToken, generateResetPasswordToken, generateChangeEmailConfirmToken, generateForgotPasswordToken } = require('../utils/jwt');
 const { sendMailEmailConfirm, sendMailChangeEmailConfirm, sendMailInvalidLoginAttempt, sendMailForgotPassword } = require('../utils/sendMail');
 const { dateNow } = require('../utils/moment');
 
@@ -24,16 +24,16 @@ const register = async (req, res) => {
 
         const hashedPassword = await hashPassword(req.body.password);
 
-        const emailConfirmToken = generateVerificationToken(req.body.email);
+        const emailConfirmToken = generateEmailVerificationToken(req.body.email);
 
         const newUser = new User({
             userName: req.body.userName,
             email: req.body.email,
             password: hashedPassword,
-            verificationToken: emailConfirmToken
+            emailConfirmToken: emailConfirmToken
         });
 
-        sendMailEmailConfirm({ userName: newUser.userName, email: newUser.email, emailConfirmToken: newUser.verificationToken });
+        sendMailEmailConfirm({ userName: newUser.userName, email: newUser.email, emailConfirmToken: newUser.emailConfirmToken });
 
         await newUser.save();
 
@@ -76,7 +76,7 @@ const emailConfirm = async (req, res) => {
     const { emailConfirmToken } = req.params
     //console.log(emailConfirmToken)
     try {
-        const user = await User.findOne({ verificationToken: emailConfirmToken })
+        const user = await User.findOne({ emailConfirmToken: emailConfirmToken })
         if (!user) {
             return responseHandler.notFound(res, 'User not found. Try register');
         }
@@ -85,7 +85,7 @@ const emailConfirm = async (req, res) => {
             const decodedToken = verifyToken(emailConfirmToken);
             if (decodedToken.email === user.email) {
                 user.isEmailVerified = true;
-                user.verificationToken = null;
+                user.emailConfirmToken = null;
 
                 await user.save()
                 //console.log(user)
@@ -263,12 +263,20 @@ const changeEmail = async (req, res) => {
             return responseHandler.badRequest(res, `${req.body.newEmail} is already registered, try again`);
         }
 
+        if(user.changeEmailConfirmToken)
+        {
+            const decodedToken = verifyToken(user.changeEmailConfirmToken);
+            if(req.body.newEmail === decodedToken.newEmail){
+                return responseHandler.badRequest(res, `Already sent change email link to ${req.body.newEmail}`);
+            }
+        }
+
         const changeEmailConfirmToken = generateChangeEmailConfirmToken(user.email, req.body.newEmail);
 
-        user.verificationToken = changeEmailConfirmToken;
+        user.changeEmailConfirmToken = changeEmailConfirmToken;
         await user.save();
 
-        sendMailChangeEmailConfirm({ userName: user.userName, email: req.body.newEmail, changeEmailConfirmToken: user.verificationToken });
+        sendMailChangeEmailConfirm({ userName: user.userName, email: req.body.newEmail, changeEmailConfirmToken: user.changeEmailConfirmToken });
         //console.log(user);
 
         return responseHandler.ok(res, { message: `Check ${req.body.newEmail} for confirm the email change` });
@@ -283,7 +291,7 @@ const changeEmailConfirm = async (req, res) => {
     const { changeEmailConfirmToken } = req.params
 
     try {
-        const user = await User.findOne({ verificationToken: changeEmailConfirmToken })
+        const user = await User.findOne({ changeEmailConfirmToken: changeEmailConfirmToken })
         if (!user) {
             return responseHandler.notFound(res, 'User not found. Try register');
         }
@@ -292,7 +300,7 @@ const changeEmailConfirm = async (req, res) => {
             const decodedToken = verifyToken(changeEmailConfirmToken);
             if (decodedToken.oldEmail === user.email) {
 
-                user.verificationToken = null;
+                user.changeEmailConfirmToken = null;
                 user.email = decodedToken.newEmail;
 
                 await user.save()
@@ -361,10 +369,15 @@ const forgotPassword = async (req, res) => {
             return responseHandler.notFound(res, 'Registered User not found. Try register');
         }
 
-        user.verificationToken = generateVerificationToken(req.body.email);
+        if(user.forgotPasswordToken)
+        {
+            return responseHandler.notFound(res, 'Check your email. Password Reset link sent to email.');
+        }
+
+        user.forgotPasswordToken = generateForgotPasswordToken(req.body.email);
         await user.save();
 
-        sendMailForgotPassword({ userName: user.userName, email: user.email, resetPasswordToken: user.verificationToken })
+        sendMailForgotPassword({ userName: user.userName, email: user.email, resetPasswordToken: user.forgotPasswordToken })
 
         return responseHandler.ok(res, { message: `Password reset link sent to ${user.email}` });
     } catch (error) {
@@ -376,7 +389,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
     const { resetPasswordToken } = req.params
     try {
-        const user = await User.findOne({ verificationToken: resetPasswordToken })
+        const user = await User.findOne({ forgotPasswordToken: resetPasswordToken })
         if (!user) {
             return responseHandler.notFound(res, 'User not found. Try register');
         }
@@ -385,7 +398,7 @@ const resetPassword = async (req, res) => {
             const decodedToken = verifyToken(resetPasswordToken);
             if (decodedToken.email === user.email) {
 
-                user.verificationToken = null;
+                user.forgotPasswordToken = null;
                 const resetPasswordToken = generateResetPasswordToken(user.email)
                 user.resetPasswordToken = resetPasswordToken;
                 await user.save();

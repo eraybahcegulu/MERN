@@ -23,7 +23,7 @@ const verifyToken = (token) => {
         );
 };
 
-const generateVerificationToken = (email) => {
+const generateEmailVerificationToken = (email) => {
     return jwt.sign
         (
             {
@@ -34,12 +34,26 @@ const generateVerificationToken = (email) => {
         );
 }
 
+
 const generateChangeEmailConfirmToken = (oldEmail, newEmail) => {
     return jwt.sign
         (
             {
                 oldEmail,
-                newEmail
+                newEmail,
+                ChangeEmailConfirmToken: true
+            },
+
+            process.env.SECRET_KEY
+        );
+}
+
+const generateForgotPasswordToken = (email) => {
+    return jwt.sign
+        (
+            {
+                email,
+                forgotPasswordToken: true
             },
 
             process.env.SECRET_KEY
@@ -96,7 +110,8 @@ const generateEmailConfirmToken = (email, expiresIn = '30s') => {
 module.exports = {
     generateUserToken,
     verifyToken,
-    generateVerificationToken,
+    generateEmailVerificationToken,
+    generateForgotPasswordToken,
     generateChangeEmailConfirmToken,
     generateGoogleUserToken,
     generateResetPasswordToken

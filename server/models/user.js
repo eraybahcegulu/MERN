@@ -42,7 +42,18 @@ const userSchema = mongoose.Schema(
             default: dateNow()
         },
 
-        verificationToken: {
+        emailConfirmToken: {
+            type: String,
+            allowNull: true,
+        },
+
+        changeEmailConfirmToken: {
+            type: String,
+            allowNull: true,
+        },
+
+
+        forgotPasswordToken: {
             type: String,
             allowNull: true,
         },

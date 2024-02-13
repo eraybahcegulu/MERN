@@ -7,7 +7,6 @@ import { faGem } from '@fortawesome/free-solid-svg-icons';
 
 import useUserContext from '../../hooks/useUserContext';
 import useUser from '../../hooks/useUser';
-import useSlice from '../../hooks/useSlice';
 import userRoles from '../../constants/enums';
 
 const contentStyle: React.CSSProperties = {
@@ -24,7 +23,6 @@ const UserInfo: React.FC = () => {
     const [registerVisitorForm] = Form.useForm();
 
     const { logout, changePassword, changeEmail, registerVisitor, getPremium } = useUser();
-    const {  fetchUsers } = useSlice();
     const navigate = useNavigate();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
@@ -57,11 +55,6 @@ const UserInfo: React.FC = () => {
         getPremium()
     };
 
-    const handleClickUsers = async () => {
-        fetchUsers(user.token);
-        navigate('/users')
-    }
-
     const handleLogout = (): void => {
         logout();
     };
@@ -88,7 +81,7 @@ const UserInfo: React.FC = () => {
                                             user.userRole === userRoles.ADMIN
                                             &&
 
-                                            <TeamOutlined onClick={handleClickUsers} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all text-blue-600' />
+                                            <TeamOutlined onClick={() => navigate('/users')} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all text-blue-600' />
                                         }
                                         <SettingOutlined onClick={() => setIsAccountSettingsModalOpen(true)} className='hover:scale-125 cursor-pointer text-2xl hover:opacity-50 transition-all' />
                                         <LogoutOutlined
