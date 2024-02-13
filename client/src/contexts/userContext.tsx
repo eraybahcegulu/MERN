@@ -4,12 +4,17 @@ import { userInfoService } from '../services/userService';
 import { handleFailedServerUserError } from '../constants/errorConstant/errorUser';
 
 import useSlice from '../hooks/useSlice';
+import userRoles from '../constants/enums';
 
 interface UserProviderProps {
     children: ReactNode;
 }
 
-interface User { }
+interface User {
+    userName: string,
+    email: string,
+    userRole: string,
+}
 
 interface UserContextType {
     user: User[];
@@ -45,8 +50,11 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
             fetchProducts(token);
             fetchCompanies(token);
-            fetchUsers(token);
-            
+
+            if (response.data.userRole === userRoles.ADMIN) {
+                fetchUsers(token);
+            }
+
             setLoading(false);
         } catch (error: any) {
             handleFailedServerUserError(error);
