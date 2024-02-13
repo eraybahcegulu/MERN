@@ -10,7 +10,7 @@ router.use("/api/product", subRouter);
 
 subRouter.get("/get-all", auth, productController.getAllProducts);
 subRouter.post("/add", auth, requireAdmin, validLength, productController.addProduct, logger);
-subRouter.delete("/:id", auth, requireAdmin, productController.deleteProduct, logger);
+subRouter.delete("/delete/:id", auth, requireAdmin, productController.deleteProduct, logger);
 subRouter.put("/update/:id", auth, requireAdmin, validLength, productController.updateProduct, logger);
 
 module.exports = router;

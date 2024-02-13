@@ -15,7 +15,7 @@ const useProduct = () => {
     const productsStatus = useSelector((state: RootState) => state.products.status);
 
     const addProduct = async (values: any) => {
-        values.creatorId = user.userId;
+        values.createdBy = user.userId;
         try {
             const res = await addProductService(values, user.token);
             successAddProduct(res.data.message)
@@ -57,7 +57,7 @@ const useProduct = () => {
     };
 
     const updateProduct = async (selectedRowKeys: any, values: any) => {
-        values.lastUpdaterId = user.userId;
+        values.lastUpdatedBy = user.userId;
         try {
             const res = await updateProductService(selectedRowKeys, values, user.token);
             successEditProduct(res.data.message);

@@ -14,7 +14,7 @@ const useCompany = () => {
     const companiesStatus = useSelector((state: RootState) => state.companies.status);
 
     const addCompany = async (values: any) => {
-        values.creatorId = user.userId;
+        values.createdBy = user.userId;
         try {
             const res = await addCompanyService(values, user.token);
             successAddCompany(res.data.message)
@@ -39,7 +39,7 @@ const useCompany = () => {
     };
 
     const updateCompany = async (selectedRowKeys: any, values: any) => {
-        values.lastUpdaterId = user.userId;
+        values.lastUpdatedBy = user.userId;
         try {
             const res = await updateCompanyService(selectedRowKeys, values, user.token);
             successEditCompany(res.data.message);

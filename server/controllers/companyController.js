@@ -83,12 +83,12 @@ const deleteCompany = async (req, res, next) => {
         if (products && products.length > 0) {
 
             company.status = status.DELETED;
-            company.lastDeleterId = userId;
+            company.lastDeletedBy = userId;
             await company.save();
 
             products.forEach(async product => {
                 product.status = status.DELETED;
-                product.lastDeleterId = userId;
+                product.lastDeletedBy = userId;
                 await product.save();
             });
 
@@ -100,7 +100,7 @@ const deleteCompany = async (req, res, next) => {
         } else {
 
             company.status = status.DELETED;
-            company.lastDeleterId = userId;
+            company.lastDeletedBy = userId;
             await company.save();
 
             responseHandler.ok(res, { message: `${company.companyName} company had no product. Company was deleted successfully` });

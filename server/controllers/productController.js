@@ -52,7 +52,7 @@ const deleteProduct = async (req, res, next) => {
         }
 
         product.status = status.DELETED;
-        product.lastDeleterId = userId;
+        product.lastDeletedBy = userId;
 
         await product.save();
 
