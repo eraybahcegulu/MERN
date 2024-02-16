@@ -32,7 +32,7 @@ const requireAdmin = (req, res, next) => {
     try {
         //console.log(req.user.userRole);
         if (req.user.userRole !== userRoles.ADMIN) {
-            return responseHandler.unauthorized(res, `Required Admin Authority ${req.headers.api_source}`);
+            return responseHandler.unauthorized(res, `Required admin authority ${req.headers.api_source}`);
         }
         next();
     } catch (error) {
@@ -41,4 +41,18 @@ const requireAdmin = (req, res, next) => {
     }
 };
 
-module.exports = { auth, requireAdmin };
+const requirePremium = (req, res, next) => {
+    //console.log(req.user);
+    try {
+        //console.log(req.user.userRole);
+        if (req.user.userRole !== userRoles.PREMIUM && req.user.userRole !== userRoles.ADMIN) {
+            return responseHandler.unauthorized(res, `Required premium membership authority ${req.headers.api_source}`);
+        }
+        next();
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, `Unauthorized ${req.headers.api_source}`);
+    }
+};
+
+module.exports = { auth, requireAdmin, requirePremium };

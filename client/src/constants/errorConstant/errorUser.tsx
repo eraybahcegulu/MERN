@@ -1,4 +1,4 @@
-import { errorChangeEmail, errorChangePassword, errorForgotPassword, errorGetPremium, errorRegister, errorRegisterVisitor, errorResetPassword, failedServer, invalidLogin } from "../notifyConstant/notifyUser";
+import { errorChangeAvatar, errorChangeEmail, errorChangePassword, errorForgotPassword, errorGetPremium, errorRegister, errorRegisterVisitor, errorResetPassword, failedServer, invalidLogin } from "../notifyConstant/notifyUser";
 
 const handleRegisterError = (error: any) => {
     if (error.response) {
@@ -88,6 +88,14 @@ const handleResetPasswordError = (error: any) => {
     }
 };
 
+const handleChangeAvatarError = (error: any) => {
+    if (error.response) {
+        errorChangeAvatar(error.response.data.message);
+    } else {
+        failedServer(error.message);
+    }
+};
+
 export {
     handleRegisterError,
     handleRegisterVisitorError,
@@ -99,5 +107,6 @@ export {
     handleGetPremiumError,
     handleFetchUserError,
     handleForgotPasswordError,
-    handleResetPasswordError
+    handleResetPasswordError,
+    handleChangeAvatarError
 };

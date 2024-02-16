@@ -1,6 +1,6 @@
 const status = {
-    ACTIVE: 1,
-    DELETED: 2
+    ACTIVE: 'active',
+    DELETED: 'deleted'
 };
 
 module.exports = status;

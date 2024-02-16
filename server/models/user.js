@@ -21,9 +21,18 @@ const userSchema = mongoose.Schema(
             trim: true,
         },
 
+        avatar: {
+            type: String,
+        },
+
         isEmailVerified: {
             type: Boolean,
             default: false
+        },
+
+        emailVerifiedAt: {
+            type: String,
+            allowNull: true,
         },
 
         userRole: {
@@ -31,6 +40,15 @@ const userSchema = mongoose.Schema(
             type: String,
             enum: [userRoles.ADMIN, userRoles.VISITOR, userRoles.STANDARD, userRoles.PREMIUM],
             default: userRoles.ADMIN
+        },
+
+        premiumStartDate: {
+            type: String,
+        },
+
+        premiumCount:{
+            type: String,
+            default: '0'
         },
 
         lastLoginAt: {
@@ -51,7 +69,6 @@ const userSchema = mongoose.Schema(
             type: String,
             allowNull: true,
         },
-
 
         forgotPasswordToken: {
             type: String,

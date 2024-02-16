@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Radio, Modal, Form, Button, Input, Spin, Carousel, Popover } from 'antd';
+import { Card, Radio, Modal, Form, Button, Input, Spin, Carousel, Popover, Avatar } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { ArrowDownOutlined, InfoCircleOutlined, LockOutlined, LogoutOutlined, PlusOutlined, SettingOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,11 +21,13 @@ const UserInfo: React.FC = () => {
     const [changePasswordForm] = Form.useForm();
     const [changeEmailForm] = Form.useForm();
     const [registerVisitorForm] = Form.useForm();
+    const [changeAvatarForm] = Form.useForm();
 
-    const { logout, changePassword, changeEmail, registerVisitor, getPremium } = useUser();
+    const { logout, changePassword, changeEmail, registerVisitor, getPremium, changeAvatar } = useUser();
     const navigate = useNavigate();
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
+    const [newAvatarName, setNewAvatarName] = useState<String | null>(null);
 
     const onFinishChangePassword = async (values: any) => {
         changePassword(values);
@@ -55,6 +57,17 @@ const UserInfo: React.FC = () => {
         getPremium()
     };
 
+    const handleChangeAvatar = (e: any) => {
+        const avatarName = `https://api.multiavatar.com/${e.target.value}.png`
+        setNewAvatarName(avatarName);
+    };
+
+    const onFinishChangeAvatar = async (values: any) => {
+        changeAvatar(values);
+        changeAvatarForm.resetFields();
+        setNewAvatarName(null);
+    };
+
     const handleLogout = (): void => {
         logout();
     };
@@ -71,6 +84,12 @@ const UserInfo: React.FC = () => {
                                 ?
                                 <>
                                     <div className='flex flex-col items-center'>
+
+                                        <Avatar
+                                            size={100}
+                                            src={user.avatar}
+
+                                            className='mb-2' />
                                         <span> WELCOME {user.userName} {user.userRole === userRoles.VISITOR && <span> VISITOR </span>}</span>
                                         <span> {user.email} </span>
                                     </div>
@@ -121,6 +140,55 @@ const UserInfo: React.FC = () => {
                 </h2>
 
                 <Carousel>
+                    {
+                        (user.userRole === userRoles.ADMIN || user.userRole === userRoles.PREMIUM)
+                        &&
+                        <div>
+                            <div style={contentStyle} className='flex flex-col items-center justify-center gap-2'>
+                                {
+                                    <>
+                                        <Avatar size={100} src={user.avatar} />
+                                        <ArrowDownOutlined className='text-white text-2xl mt-0 justify-center' />
+                                        <span> Preview New Avatar</span>
+
+                                        <Avatar size={40} src={newAvatarName} />
+
+                                        <Form
+                                            className="flex flex-col gap-4 mb-6"
+                                            layout="vertical"
+                                            onFinish={onFinishChangeAvatar}
+                                            form={changeAvatarForm}
+                                        >
+                                            <Form.Item
+                                                className='mb-0'
+                                                name="newAvatarName"
+                                                rules={[
+                                                    { required: true, message: "New Avatar Name required" },
+                                                    { max: 40, message: "Max. 40 characters." },
+                                                ]}
+                                            >
+                                                <Input onChange={handleChangeAvatar} className='text-center w-[250px]' style={{ borderRadius: "0" }} size="large" placeholder='New Avatar Name' />
+                                            </Form.Item>
+
+                                            <Form.Item className="flex justify-center mb-0">
+                                                <Button
+                                                    className='hover:scale-105 transition duration-700'
+                                                    style={{ borderRadius: "0" }}
+                                                    type="primary"
+                                                    htmlType="submit"
+                                                    size="large"
+                                                >
+                                                    <strong>CHANGE AVATAR</strong>
+                                                </Button>
+                                            </Form.Item>
+                                        </Form>
+                                    </>
+                                }
+
+                            </div>
+                        </div>
+                    }
+
                     {
                         !(user.userRole === userRoles.VISITOR)
                         &&
@@ -267,6 +335,7 @@ const UserInfo: React.FC = () => {
                                         content={
                                             <div className='flex flex-col gap-2 text-xs'>
                                                 <span className='text-xs'> <PlusOutlined /> <strong>Premium Search</strong> </span>
+                                                <span className='text-xs'> <PlusOutlined /> <strong>Change Avatar</strong> </span>
                                             </div>
                                         }
                                     >

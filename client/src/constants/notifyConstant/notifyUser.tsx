@@ -148,6 +148,20 @@ const errorResetPassword = (data: any) =>
         duration: 3,
     });
 
+const successChangeAvatar = (data: any) =>
+    message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+    });
+
+const errorChangeAvatar = (data: any) =>
+    message.open({
+        type: 'error',
+        content: data,
+        duration: 3,
+    });
+
 export {
     failedServer,
     failedGetUserInfo,
@@ -168,5 +182,7 @@ export {
     errorForgotPassword,
     successForgotPassword,
     successResetPassword,
-    errorResetPassword
+    errorResetPassword,
+    successChangeAvatar,
+    errorChangeAvatar
 };

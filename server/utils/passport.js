@@ -4,6 +4,8 @@ const User = require("../models/user")
 const UserRole = require("../models/enums/userRoles")
 
 const { generateGoogleUserToken } = require('../utils/jwt');
+const { dateNow } = require("./moment");
+const { generateRandomDefaultAvatar } = require("./multiavatar");
 
 passport.use(
     new GoogleStrategy({
@@ -19,9 +21,11 @@ passport.use(
                 if (!user) {
                     user = new User({
                         isEmailVerified: true,
+                        emailVerifiedAt: dateNow(),
                         userName: null,
                         password: null,
                         email: profile.emails[0].value,
+                        avatar: generateRandomDefaultAvatar(),
                         userRole: UserRole.VISITOR
                     });
 

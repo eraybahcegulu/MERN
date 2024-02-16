@@ -1,6 +1,6 @@
 const Iyzipay = require('iyzipay');
-const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
+const { generateId } = require('./uuid');
 
 const iyzipay = new Iyzipay({
     apiKey: process.env.PAYMENT_API_KEY,
@@ -9,7 +9,7 @@ const iyzipay = new Iyzipay({
 });
 
 const paymentPremium = async(userData) => {
-    const id = uuidv4();
+    const id = generateId();
     const { userId, email, createdAt, lastLoginAt } = userData;
     const response = await axios.get('https://api64.ipify.org?format=json');
 
@@ -23,7 +23,7 @@ const paymentPremium = async(userData) => {
         paymentChannel: "WEB",
         paymentGroup: "PRODUCT",
         paymentCard: {
-            cardHolderName: 'John Doe',
+            cardHolderName: 'TestName TestSurname',
             cardNumber: '5528790000000008',
             expireMonth: '12',
             expireYear: '2030',
@@ -32,40 +32,40 @@ const paymentPremium = async(userData) => {
         },
         buyer: {
             id: userId,
-            name: 'John',
-            surname: 'Doe',
+            name: 'Test',
+            surname: 'Test',
             gsmNumber: '+905350000000',
             email: email,
             identityNumber: '74300864791',
             lastLoginDate: lastLoginAt,
             registrationDate: createdAt,
-            registrationAddress: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+            registrationAddress: 'İzmir',
             ip: response.data.ip,
-            city: 'Istanbul',
+            city: 'İzmir',
             country: 'Turkey',
             zipCode: '34732'
         },
         shippingAddress: {
-            contactName: 'Jane Doe',
-            city: 'Istanbul',
+            contactName: 'TestName TestSurname',
+            city: 'İzmir',
             country: 'Turkey',
-            address: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+            address: 'İzmir',
             zipCode: '34742'
         },
         billingAddress: {
-            contactName: 'Jane Doe',
-            city: 'Istanbul',
+            contactName: 'TestName TestSurname',
+            city: 'İzmir',
             country: 'Turkey',
-            address: 'Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1',
+            address: 'İzmir',
             zipCode: '34742'
         },
         basketItems: [
             {
-                id: 'BI101',
-                name: 'Binocular',
-                category1: 'Collectibles',
-                category2: 'Accessories',
-                itemType: Iyzipay.BASKET_ITEM_TYPE.PHYSICAL,
+                id: 'P100',
+                name: 'Premium Membership',
+                category1: 'Membership',
+                category2: 'Premium',
+                itemType: Iyzipay.BASKET_ITEM_TYPE.VIRTUAL,
                 price: '1'
             },
         ]

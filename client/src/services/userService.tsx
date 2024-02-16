@@ -10,7 +10,8 @@ import {
     GET_PREMIUM_API_URL,
     GET_USERS_API_URL,
     FORGOT_PASSWORD_API_URL,
-    RESET_PASSWORD_API_URL
+    RESET_PASSWORD_API_URL,
+    CHANGE_AVATAR_API_URL
 } from '../constants/apiConstant/apiUser';
 
 const registerService = async (data: any) => {
@@ -144,6 +145,22 @@ const forgotPasswordService = async (data: any) => {
         )
 }
 
+const changeAvatarService = async (id: any, data: any, token: any) => {
+    return await axios.post
+        (
+            `${CHANGE_AVATAR_API_URL}/${id}`,
+
+            data,
+
+            {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                    api_source: `${CHANGE_AVATAR_API_URL}`
+                }
+            }
+        )
+}
+
 const resetPasswordService = async (resetPasswordToken: any) => {
     return await axios.get
         (
@@ -151,8 +168,8 @@ const resetPasswordService = async (resetPasswordToken: any) => {
 
             /* 
             {
-                 withCredentials: true
-             }
+                withCredentials: true
+            }
              */
         )
 }
@@ -170,5 +187,6 @@ export {
     getPremiumService,
     getUsersService,
     forgotPasswordService,
-    resetPasswordService
+    resetPasswordService,
+    changeAvatarService
 };

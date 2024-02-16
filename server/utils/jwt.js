@@ -7,6 +7,7 @@ const generateUserToken = (user) => {
                 userId: user._id,
                 userName: user.userName,
                 email: user.email,
+                avatar: user.avatar,
                 userRole: user.userRole
             },
 
@@ -23,14 +24,19 @@ const verifyToken = (token) => {
         );
 };
 
-const generateEmailVerificationToken = (email) => {
+const generateEmailVerificationToken = (email, userName) => {
     return jwt.sign
         (
             {
-                email
+                email,
+                userName
             },
 
-            process.env.SECRET_KEY
+            process.env.SECRET_KEY,
+
+            {
+                expiresIn: '1h'
+            }
         );
 }
 
@@ -44,7 +50,11 @@ const generateChangeEmailConfirmToken = (oldEmail, newEmail) => {
                 ChangeEmailConfirmToken: true
             },
 
-            process.env.SECRET_KEY
+            process.env.SECRET_KEY,
+
+            {
+                expiresIn: '1h'
+            }
         );
 }
 
@@ -56,7 +66,11 @@ const generateForgotPasswordToken = (email) => {
                 forgotPasswordToken: true
             },
 
-            process.env.SECRET_KEY
+            process.env.SECRET_KEY,
+
+            {
+                expiresIn: '1h'
+            }
         );
 }
 
@@ -68,13 +82,12 @@ const generateResetPasswordToken = (email) => {
                 resetPasswordToken: true
             },
 
-            process.env.SECRET_KEY
+            process.env.SECRET_KEY,
 
-            /*
             {
-                expiresIn: '30s'
+                expiresIn: '1h'
             }
-            */
+            
         );
 }
 
@@ -85,27 +98,18 @@ const generateGoogleUserToken = (user) => {
                 userId: user._id,
                 userName: user.userName,
                 email: user.email,
+                avatar: user.avatar,
                 userRole: user.userRole,
                 isGoogleAuth: true
             },
 
-            process.env.SECRET_KEY
+            process.env.SECRET_KEY,
+
+            {
+                expiresIn: '30s'
+            }
         );
 }
-
-
-/*
-const generateEmailConfirmToken = (email, expiresIn = '30s') => {
-    return jwt.sign
-    (
-        { email }, 
-
-        process.env.SECRET_KEY,
-
-        { expiresIn }
-    );
-}
-*/
 
 module.exports = {
     generateUserToken,

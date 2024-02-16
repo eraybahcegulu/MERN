@@ -7,33 +7,48 @@ const { paymentPremium } = require('../utils/iyzipay')
 const { generateUserToken, verifyToken, generateEmailVerificationToken, generateResetPasswordToken, generateChangeEmailConfirmToken, generateForgotPasswordToken } = require('../utils/jwt');
 const { sendMailEmailConfirm, sendMailChangeEmailConfirm, sendMailInvalidLoginAttempt, sendMailForgotPassword } = require('../utils/sendMail');
 const { dateNow } = require('../utils/moment');
-
-
+const { generateRandomDefaultAvatar, generateNewAvatar } = require("../utils/multiavatar");
 
 const register = async (req, res) => {
     try {
-        const existingUserNameControl = await User.findOne({ userName: req.body.userName });
-        if (existingUserNameControl) {
+        const existingVerifiedUserNameControl = await User.findOne({ userName: req.body.userName, isEmailVerified: true });
+        if (existingVerifiedUserNameControl) {
             return responseHandler.badRequest(res, "This User Name is already registered");
         }
 
-        const existingEmailControl = await User.findOne({ email: req.body.email });
-        if (existingEmailControl) {
+        const existingVerifiedEmailControl = await User.findOne({ email: req.body.email, isEmailVerified: true });
+        if (existingVerifiedEmailControl) {
             return responseHandler.badRequest(res, "This Email is already registered");
+        }
+
+        const existingNotVerifiedEmailControl = await User.findOne({ email: req.body.email, isEmailVerified: false });
+        if (existingNotVerifiedEmailControl) {
+            try {
+                const decodedToken = verifyToken(existingNotVerifiedEmailControl.emailConfirmToken)
+                if(decodedToken)
+                {
+                    return responseHandler.badRequest(res, 'Check your e-mail address for registration')
+                }
+
+            } catch (error) {
+                await sendMailEmailConfirm({ userName: existingNotVerifiedEmailControl.userName, email: existingNotVerifiedEmailControl.email, emailConfirmToken: existingNotVerifiedEmailControl.emailConfirmToken });
+                return responseHandler.created(res, { message: `Email confirmation required, link sent to ${existingNotVerifiedEmailControl.email}` });
+            }
         }
 
         const hashedPassword = await hashPassword(req.body.password);
 
-        const emailConfirmToken = generateEmailVerificationToken(req.body.email);
+        const emailConfirmToken = generateEmailVerificationToken(req.body.email, req.body.userName);
 
         const newUser = new User({
             userName: req.body.userName,
             email: req.body.email,
             password: hashedPassword,
+            avatar: generateRandomDefaultAvatar(),
             emailConfirmToken: emailConfirmToken
         });
 
-        sendMailEmailConfirm({ userName: newUser.userName, email: newUser.email, emailConfirmToken: newUser.emailConfirmToken });
+        await sendMailEmailConfirm({ userName: newUser.userName, email: newUser.email, emailConfirmToken: newUser.emailConfirmToken });
 
         await newUser.save();
 
@@ -83,8 +98,22 @@ const emailConfirm = async (req, res) => {
 
         try {
             const decodedToken = verifyToken(emailConfirmToken);
+
+            const existingUserNameControl = await User.findOne({ userName: decodedToken.userName, isEmailVerified: true });
+            if (existingUserNameControl) {
+                await User.deleteOne({ emailConfirmToken: emailConfirmToken })
+                return responseHandler.badRequest(res, "Failed email confirming. Your User Name is already registered. Try register again");
+            }
+    
+            const existingEmailControl = await User.findOne({ email: decodedToken.email, isEmailVerified: true });
+            if (existingEmailControl) {
+                await User.deleteOne({ emailConfirmToken: emailConfirmToken })
+                return responseHandler.badRequest(res, "Failed email confirming. Your Email is already registered.  Try register again");
+            }
+
             if (decodedToken.email === user.email) {
                 user.isEmailVerified = true;
+                user.emailVerifiedAt = dateNow();
                 user.emailConfirmToken = null;
 
                 await user.save()
@@ -116,7 +145,7 @@ const login = async (req, res) => {
                 await user.save();
 
                 if (user.invalidLoginAttempt % 5 === 0) {
-                    sendMailInvalidLoginAttempt({ email: user.email, invalidLoginAttempt: user.invalidLoginAttempt })
+                    await sendMailInvalidLoginAttempt({ email: user.email, invalidLoginAttempt: user.invalidLoginAttempt })
                 }
 
                 return responseHandler.badRequest(res, "Invalid User Name or Password")
@@ -192,6 +221,7 @@ const userInfo = async (req, res) => {
         const userId = decodedToken.userId;
         const userName = decodedToken.userName;
         const email = decodedToken.email;
+        const avatar = decodedToken.avatar;
         const userRole = decodedToken.userRole;
         const isGoogleAuth = decodedToken.isGoogleAuth;
 
@@ -199,6 +229,7 @@ const userInfo = async (req, res) => {
             userId,
             userName,
             email,
+            avatar,
             userRole,
             token,
             isGoogleAuth
@@ -263,11 +294,21 @@ const changeEmail = async (req, res) => {
             return responseHandler.badRequest(res, `${req.body.newEmail} is already registered, try again`);
         }
 
-        if(user.changeEmailConfirmToken)
-        {
-            const decodedToken = verifyToken(user.changeEmailConfirmToken);
-            if(req.body.newEmail === decodedToken.newEmail){
-                return responseHandler.badRequest(res, `Already sent change email link to ${req.body.newEmail}`);
+        if (user.changeEmailConfirmToken) {
+            try {
+                const decodedToken = verifyToken(user.changeEmailConfirmToken);
+                if (req.body.newEmail === decodedToken.newEmail) {
+                    return responseHandler.badRequest(res, `Already sent change email link to ${req.body.newEmail}`);
+                }
+            } catch (error) {
+                const changeEmailConfirmToken = generateChangeEmailConfirmToken(user.email, req.body.newEmail);
+
+                user.changeEmailConfirmToken = changeEmailConfirmToken;
+                await user.save();
+
+                await sendMailChangeEmailConfirm({ userName: user.userName, email: req.body.newEmail, changeEmailConfirmToken: user.changeEmailConfirmToken });
+
+                return responseHandler.ok(res, { message: `Check ${req.body.newEmail} for confirm the email change` });
             }
         }
 
@@ -276,7 +317,7 @@ const changeEmail = async (req, res) => {
         user.changeEmailConfirmToken = changeEmailConfirmToken;
         await user.save();
 
-        sendMailChangeEmailConfirm({ userName: user.userName, email: req.body.newEmail, changeEmailConfirmToken: user.changeEmailConfirmToken });
+        await sendMailChangeEmailConfirm({ userName: user.userName, email: req.body.newEmail, changeEmailConfirmToken: user.changeEmailConfirmToken });
         //console.log(user);
 
         return responseHandler.ok(res, { message: `Check ${req.body.newEmail} for confirm the email change` });
@@ -302,7 +343,7 @@ const changeEmailConfirm = async (req, res) => {
 
                 user.changeEmailConfirmToken = null;
                 user.email = decodedToken.newEmail;
-
+                user.emailVerifiedAt = dateNow();
                 await user.save()
                 //console.log(user)
 
@@ -340,6 +381,8 @@ const getPremium = async (req, res) => {
             });
 
         user.userRole = userRoles.PREMIUM;
+        user.premiumStartDate = dateNow();
+        user.premiumCount = Number(user.premiumCount) + 1;
         await user.save()
 
         const newTokenAfterGetPremium = generateUserToken(user);
@@ -369,15 +412,26 @@ const forgotPassword = async (req, res) => {
             return responseHandler.notFound(res, 'Registered User not found. Try register');
         }
 
-        if(user.forgotPasswordToken)
-        {
-            return responseHandler.notFound(res, 'Check your email. Password Reset link sent to email.');
+        if (user.forgotPasswordToken) {
+            try {
+                const decodedToken = verifyToken(user.forgotPasswordToken);
+                if (decodedToken) {
+                    return responseHandler.notFound(res, 'Check your email. Password Reset link sent to email.');
+                }
+            } catch (error) {
+                user.forgotPasswordToken = generateForgotPasswordToken(req.body.email);
+                await user.save();
+
+                await sendMailForgotPassword({ userName: user.userName, email: user.email, resetPasswordToken: user.forgotPasswordToken })
+
+                return responseHandler.ok(res, { message: `Password reset link sent to ${user.email}` });
+            }
         }
 
         user.forgotPasswordToken = generateForgotPasswordToken(req.body.email);
         await user.save();
 
-        sendMailForgotPassword({ userName: user.userName, email: user.email, resetPasswordToken: user.forgotPasswordToken })
+        await sendMailForgotPassword({ userName: user.userName, email: user.email, resetPasswordToken: user.forgotPasswordToken })
 
         return responseHandler.ok(res, { message: `Password reset link sent to ${user.email}` });
     } catch (error) {
@@ -430,6 +484,32 @@ const resetPassword = async (req, res) => {
     }
 };
 
+const changeAvatar = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const user = await User.findOne({ _id: id })
+
+        if (!user) {
+            return responseHandler.notFound(res, 'User not found. Try register');
+        }
+
+        const newAvatarName = generateNewAvatar(req.body.newAvatarName);
+
+        if (user.avatar === newAvatarName) {
+            return responseHandler.badRequest(res, `Your avatar's name is already ${req.body.newAvatarName}`);
+        }
+
+        user.avatar = newAvatarName;
+        await user.save();
+
+        const newTokenAfterChangeAvatar = generateUserToken(user);
+        return responseHandler.ok(res, { message: `Avatar changed. New avatar name: ${req.body.newAvatarName}`, token: newTokenAfterChangeAvatar });
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+};
+
 module.exports = {
     register,
     registerVisitor,
@@ -443,5 +523,6 @@ module.exports = {
     getPremium,
     getAllUsers,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    changeAvatar
 };

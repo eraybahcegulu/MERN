@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import useUser from '../hooks/useUserContext';
+import useUserContext from '../hooks/useUserContext';
 import NotAuth from '../pages/NotAuth';
 import { Spin } from 'antd';
 
 export const PrivateRoute = ({ children }: any) => {
-    const { user, loading, setLoading } = useUser();
+    const { user, loading, setLoading } = useUserContext();
 
     useEffect(() => {
         if (!(localStorage.getItem('token') || sessionStorage.getItem('token'))) {

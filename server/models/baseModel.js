@@ -26,7 +26,7 @@ const baseModel ={
 
     status: {
         required: true,
-        type: Number,
+        type: String,
         enum: [status.ACTIVE, status.DELETED],
         default: status.ACTIVE,
     }

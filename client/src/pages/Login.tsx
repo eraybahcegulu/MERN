@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRightOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Form, Modal } from 'antd';
+import { Form, Modal, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 import RegisterForm from '../components/Login/RegisterForm';
@@ -22,14 +22,17 @@ const Login: React.FC<LoginProps> = () => {
 
   const token = localStorage.getItem('token');
 
-  const { register, login, forgotPassword, logout } = useUser();
+  const { register, login, forgotPassword, logout, userResponseLoading } = useUser();
 
   const onFinishRegister = async (values: any) => {
-    register(values)
-    setIsRegisterModalOpen(false);
-    setTimeout(() => {
-      registerForm.resetFields();
-    }, 200);
+    await register(values);
+
+    if (!userResponseLoading) {
+      setTimeout(() => {
+        setIsRegisterModalOpen(false);
+        registerForm.resetFields();
+      }, 200);
+    }
   };
 
   const onFinishLogin = async (values: any) => {
@@ -56,9 +59,9 @@ const Login: React.FC<LoginProps> = () => {
     <div className='bg-slate-400 h-screen w-screen flex items-center justify-center'>
       <div className='pt-10 pr-20 pl-20 w-[400px] h-[375px] drop-shadow-2xl bg-indigo-100' style={{ borderRadius: '20px' }}>
         {token ? (
-          <div className='flex flex-col items-center gap-5'>
+          <div className='flex flex-col items-center justify-center gap-5 mt-20'>
             <p className='text-2xl'>Open session found</p>
-            <div className='flex gap-5'>
+            <div className='flex flex-row gap-5'>
               <ArrowRightOutlined
                 onClick={() => navigate('/home')}
                 className='text-5xl hover:scale-125 cursor-pointer text-blue-500 hover:text-blue-400 transition-all'
@@ -68,7 +71,6 @@ const Login: React.FC<LoginProps> = () => {
                 className='text-5xl hover:scale-125 cursor-pointer text-red-500 hover:text-red-400 transition-all'
               />
             </div>
-
           </div>
         ) : (
           <>
@@ -85,6 +87,11 @@ const Login: React.FC<LoginProps> = () => {
                 <strong>REGISTER</strong>
               </h2>
               <RegisterForm onFinishRegister={onFinishRegister} registerForm={registerForm} />
+              {
+                userResponseLoading
+                &&
+                <div className='flex justify-center items-center'> <Spin size="large" /> </div>
+              }
             </Modal>
 
             <Modal className='pb-0' open={isForgotPasswordModalOpen} onCancel={() => setIsForgotPasswordModalOpen(false)} centered footer={false}>

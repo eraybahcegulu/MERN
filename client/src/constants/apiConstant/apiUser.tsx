@@ -10,3 +10,4 @@ export const GET_PREMIUM_API_URL = `${process.env.REACT_APP_API_URL}/api/user/ge
 export const GET_USERS_API_URL = `${process.env.REACT_APP_API_URL}/api/user/get-all`;
 export const FORGOT_PASSWORD_API_URL = `${process.env.REACT_APP_API_URL}/api/user/forgotPassword`;
 export const RESET_PASSWORD_API_URL = `${process.env.REACT_APP_API_URL}/api/user/resetPassword`;
+export const CHANGE_AVATAR_API_URL = `${process.env.REACT_APP_API_URL}/api/user/changeAvatar`;

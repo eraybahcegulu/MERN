@@ -1,5 +1,6 @@
 import useUserContext from './useUserContext';
 import {
+    changeAvatarService,
     changeEmailService,
     changePasswordService,
     forgotPasswordService,
@@ -10,6 +11,7 @@ import {
 } from '../services/userService';
 import { useNavigate } from 'react-router-dom';
 import {
+    handleChangeAvatarError,
     handleChangeEmailError,
     handleChangePasswordError,
     handleForgotPasswordError,
@@ -22,6 +24,7 @@ import {
 import {
     errorChangeEmail,
     errorChangePassword,
+    successChangeAvatar,
     successChangeEmail,
     successChangePassword,
     successForgotPassword,
@@ -30,7 +33,7 @@ import {
     successRegisterVisitor,
     successResetPassword
 } from '../constants/notifyConstant/notifyUser';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 
@@ -38,11 +41,14 @@ const useUser = () => {
     const navigate = useNavigate();
     const { user, getUser, setIsFirstLogin } = useUserContext();
 
+    const [userResponseLoading, setUserResponseLoading] = useState<boolean>();
+
     const users = useSelector((state: RootState) => state.users.data);
     const usersStatus = useSelector((state: RootState) => state.users.status);
 
     const login = async (isChecked: any, values: any) => {
         try {
+
             const res = await loginService(values);
             const token = res.data.token;
 
@@ -63,11 +69,14 @@ const useUser = () => {
     };
 
     const register = async (values: any) => {
+        setUserResponseLoading(true);
         try {
             const res = await registerService(values);
             successRegister(res.data.message);
+            setUserResponseLoading(false);
         } catch (error: any) {
             handleRegisterError(error);
+            setUserResponseLoading(false);
         }
     };
 
@@ -142,13 +151,23 @@ const useUser = () => {
         }
     };
 
+    const changeAvatar = async (values: any) => {
+        try {
+            const res = await changeAvatarService(user.userId, values, user.token);
+            successChangeAvatar(res.data.message);
+            getUser(res.data.token);
+        } catch (error: any) {
+            handleChangeAvatarError(error);
+        }
+    };
+
     const logout = () => {
         localStorage.clear();
         sessionStorage.clear();
         navigate('/');
     }
 
-    return { users, usersStatus, login, register, logout, changePassword, changeEmail, registerVisitor, getPremium, forgotPassword };
+    return { users, usersStatus, userResponseLoading, login, register, logout, changePassword, changeEmail, registerVisitor, getPremium, forgotPassword, changeAvatar };
 };
 
 export default useUser;

@@ -7,9 +7,7 @@ import CompanyList from '../components/Company/CompanyList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import {
-    infoEditCompany,
-} from '../constants/notifyConstant/notifyCompany';
+import { infoEditCompany } from '../constants/notifyConstant/notifyCompany';
 
 import AddCompanyModal from '../components/Company/AddCompanyModal';
 import EditCompanyModal from '../components/Company/EditCompanyModal';
