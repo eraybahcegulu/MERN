@@ -57,6 +57,7 @@ export const columns = (companyData: CompanyDataType[]) => {
         },
         {
             title: 'Total Product',
+            dataIndex: 'products',
             width: '25%',
             sorter: (a, b) => a.products.length - b.products.length,
             render: (_, record) => (
