@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Card, Radio, Modal, Form, Button, Input, Spin, Carousel, Popover, Avatar } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { ArrowDownOutlined, InfoCircleOutlined, LockOutlined, LogoutOutlined, PlusOutlined, SettingOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
@@ -28,6 +28,8 @@ const UserInfo: React.FC = () => {
 
     const [isAccountSettingsModalOpen, setIsAccountSettingsModalOpen] = useState<boolean>(false);
     const [newAvatarName, setNewAvatarName] = useState<String | null>(null);
+    const timeoutRef = useRef<number | null>(null);
+    const [avatarLoading, setAvatarLoading] = useState<boolean>();
 
     const onFinishChangePassword = async (values: any) => {
         changePassword(values);
@@ -58,8 +60,18 @@ const UserInfo: React.FC = () => {
     };
 
     const handleChangeAvatar = (e: any) => {
-        const avatarName = `https://api.multiavatar.com/${e.target.value}.png`
-        setNewAvatarName(avatarName);
+        setAvatarLoading(true);
+        if (timeoutRef.current !== null) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        timeoutRef.current = setTimeout(() => {
+            console.log("test")
+            const avatarName = `https://api.multiavatar.com/${e.target.value}.png`;
+            setNewAvatarName(avatarName);
+            timeoutRef.current = null;
+            setAvatarLoading(false)
+        }, 3000) as any;
     };
 
     const onFinishChangeAvatar = async (values: any) => {
@@ -151,7 +163,16 @@ const UserInfo: React.FC = () => {
                                         <ArrowDownOutlined className='text-white text-2xl mt-0 justify-center' />
                                         <span> Preview New Avatar</span>
 
-                                        <Avatar size={40} src={newAvatarName} />
+                                        <Avatar
+                                            size={40}
+                                            src={
+                                                avatarLoading
+                                                    ?
+                                                    <Spin size="large" />
+                                                    :
+                                                    newAvatarName
+                                            }
+                                        />
 
                                         <Form
                                             className="flex flex-col gap-4 mb-6"
@@ -172,11 +193,12 @@ const UserInfo: React.FC = () => {
 
                                             <Form.Item className="flex justify-center mb-0">
                                                 <Button
-                                                    className='hover:scale-105 transition duration-700'
-                                                    style={{ borderRadius: "0" }}
+                                                    className="hover:scale-105 transition duration-700"
+                                                    style={{ border: 'none', color:'white', borderRadius: "0", opacity: avatarLoading ? 0.5 : 1, pointerEvents: avatarLoading ? 'none' : 'auto' }}
                                                     type="primary"
                                                     htmlType="submit"
                                                     size="large"
+                                                    disabled={avatarLoading}
                                                 >
                                                     <strong>CHANGE AVATAR</strong>
                                                 </Button>
