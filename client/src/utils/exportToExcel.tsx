@@ -1,4 +1,3 @@
-
 import ExcelJS from 'exceljs';
 
 const exportToExcel = async (rows: any, columns: any[], filename: string) => {
