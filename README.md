@@ -12,9 +12,12 @@
 - JWT Auth
 - Remember My Session
 - Soft Delete
+- Forgot-Reset Password
+- Email Verification
+- Sign in With Google
 ```
 
-![1](https://github.com/eraybahcegulu/MERN/assets/84785201/5a830bc1-39f9-49fc-8f23-8802020ee39a)
+![1](https://github.com/eraybahcegulu/MERN/assets/84785201/80c010dc-c222-4cb2-88fd-a526a4d112ea)
 
 ![2](https://github.com/eraybahcegulu/MERN/assets/84785201/f18da083-e316-46ef-baa1-3183a985f7f2)
 
@@ -31,5 +34,3 @@
 ![7](https://github.com/eraybahcegulu/MERN/assets/84785201/fb9b1294-cf2c-465d-b67a-ab099de301f2)
 
 ![8](https://github.com/eraybahcegulu/MERN/assets/84785201/a5f48323-670f-43e1-ac2a-674089d6206f)
-
-![9](https://github.com/eraybahcegulu/MERN/assets/84785201/02734e5e-afe6-4222-82f7-868e91eac241)
