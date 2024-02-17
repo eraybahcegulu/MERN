@@ -55,7 +55,7 @@ const ProductList: FC<ProductListProps> = ({
             {productsStatus === 'succeeded' && filteredProducts.length > 0 && (
                 <>
                     <Table
-                        scroll={{ y: 630, x: 800 }}
+                        scroll={{ y: 500, x: 800 }}
                         className="max-w-[475px] md:max-w-[750px] xl:max-w-[1200px]"
                         rowSelection={{
                             type: 'checkbox',
@@ -65,9 +65,10 @@ const ProductList: FC<ProductListProps> = ({
                         columns={productColumns}
                         dataSource={filteredProducts}
                     />
-                    <div className='flex flex-row justify-end items-center'> <Button className=' flex items-center hover:scale-105 transition-all' type="primary" icon={<DownloadOutlined />} onClick={handleExportExcel}>
-                        Export to Excel <FileExcelOutlined />
-                    </Button>
+                    <div className='flex flex-row justify-end items-center'>
+                        <Button className=' flex items-center hover:scale-105 transition-all' type="primary" icon={<DownloadOutlined />} onClick={handleExportExcel}>
+                            Export to Excel <FileExcelOutlined />
+                        </Button>
                     </div>
                 </>
             )}

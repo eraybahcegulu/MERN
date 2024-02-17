@@ -66,7 +66,7 @@ const UserInfo: React.FC = () => {
         }
 
         timeoutRef.current = setTimeout(() => {
-            console.log("test")
+            //console.log("test")
             const avatarName = `https://api.multiavatar.com/${e.target.value}.png`;
             setNewAvatarName(avatarName);
             timeoutRef.current = null;

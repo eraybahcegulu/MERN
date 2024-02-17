@@ -67,9 +67,10 @@ const CompanyList: FC<CompanyListProps> = ({
                         columns={columnsCompany}
                         dataSource={filteredCompanies}
                     />
-                    <div className='flex flex-row justify-end items-center'> <Button className=' flex items-center hover:scale-105 transition-all' type="primary" icon={<DownloadOutlined />} onClick={handleExportExcel}>
-                        Export to Excel <FileExcelOutlined />
-                    </Button>
+                    <div className='flex flex-row justify-end items-center'>
+                        <Button className=' flex items-center hover:scale-105 transition-all' type="primary" icon={<DownloadOutlined />} onClick={handleExportExcel}>
+                            Export to Excel <FileExcelOutlined />
+                        </Button>
                     </div>
                 </>
             )}
