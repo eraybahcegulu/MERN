@@ -26,6 +26,8 @@ const useCompany = () => {
 
     const deleteCompany = async (selectedRowKeys: any) => {
         try {
+
+
             const res = await Promise.all(selectedRowKeys.map((id: any) => deleteCompanyService(id, user.userId, user.token)));
             const messages = res.map(res => res.data.message);
             messages.forEach(message => {

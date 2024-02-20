@@ -7,7 +7,7 @@ import CompanyList from '../components/Company/CompanyList';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { infoEditCompany } from '../constants/notifyConstant/notifyCompany';
+import { infoDeleteCompany, infoEditCompany } from '../constants/notifyConstant/notifyCompany';
 
 import AddCompanyModal from '../components/Company/AddCompanyModal';
 import EditCompanyModal from '../components/Company/EditCompanyModal';
@@ -43,6 +43,11 @@ const Company: React.FC = () => {
     };
 
     const removeCompany = async () => {
+        if (selectedRowKeys.length === 0) {
+            infoDeleteCompany();
+            return;
+        }
+        
         deleteCompany(selectedRowKeys)
         setselectedRowKeys([]);
     };
@@ -76,7 +81,7 @@ const Company: React.FC = () => {
     };
 
     return (
-        <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
+        <div className="bg-gradient-to-b from-[#a774e9] to-[#30164e] py-20 min-h-screen min-w-screen flex flex-col items-center">
 
             <div className='flex flex-col items-center gap-4'>
 

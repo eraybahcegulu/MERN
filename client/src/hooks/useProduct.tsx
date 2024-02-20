@@ -1,7 +1,7 @@
 import useUserContext from './useUserContext';
 import useSlice from './useSlice';
 import { addProductService, deleteProductService, updateProductService } from '../services/productService';
-import { infoDeleteProduct, successAddProduct, successDeleteProduct, successEditProduct } from '../constants/notifyConstant/notifyProduct';
+import { successAddProduct, successDeleteProduct, successEditProduct } from '../constants/notifyConstant/notifyProduct';
 import { handleAddProductError, handleDeleteProductError, handleEditProductError } from '../constants/errorConstant/errorProduct';
 import React from 'react';
 import { useSelector } from 'react-redux';
@@ -28,10 +28,7 @@ const useProduct = () => {
 
     const deleteProduct = async (selectedRowKeys: any) => {
         try {
-            if (selectedRowKeys.length === 0) {
-                infoDeleteProduct();
-                return;
-            }
+
 
             const res = await Promise.all(selectedRowKeys.map((id: any) => deleteProductService(id, user.userId, user.token)));
 

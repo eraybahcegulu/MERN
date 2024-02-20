@@ -6,6 +6,7 @@ import { ArrowLeftOutlined, DeleteOutlined, EditOutlined, LogoutOutlined, Search
 import ProductList from '../components/Product/ProductList';
 
 import {
+    infoDeleteProduct,
     infoEditProduct,
     notFoundCompany
 } from '../constants/notifyConstant/notifyProduct';
@@ -54,6 +55,11 @@ const Product: React.FC = () => {
     };
 
     const removeProduct = async () => {
+        if (selectedRowKeys.length === 0) {
+            infoDeleteProduct();
+            return;
+        }
+        
         deleteProduct(selectedRowKeys)
         setSelectedRowKeys([]);
     };
@@ -97,7 +103,7 @@ const Product: React.FC = () => {
     };
 
     return (
-        <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
+        <div className="bg-gradient-to-b from-[#a774e9] to-[#30164e] py-20 min-h-screen min-w-screen flex flex-col items-center">
             <div className='flex flex-col items-center gap-4'>
                 <span><strong className='text-2xl'>PRODUCTS</strong></span>
 

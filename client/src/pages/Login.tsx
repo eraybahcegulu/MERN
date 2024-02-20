@@ -56,7 +56,7 @@ const Login: React.FC<LoginProps> = () => {
   };
 
   return (
-    <div className='bg-slate-400 h-screen w-screen flex items-center justify-center'>
+    <main className='bg-gradient-to-b from-[#a774e9] to-[#30164e] py-20 min-h-screen min-w-screen flex items-center justify-center'>
       <div className='pt-10 pr-20 pl-20 w-[400px] h-[375px] drop-shadow-2xl bg-indigo-100' style={{ borderRadius: '20px' }}>
         {token ? (
           <div className='flex flex-col items-center justify-center gap-5 mt-20'>
@@ -105,7 +105,7 @@ const Login: React.FC<LoginProps> = () => {
           </>
         )}
       </div>
-    </div>
+    </main>
   );
 };
 
