@@ -28,5 +28,7 @@ passportRouter.get("/google", passport.authenticate("google", { scope: ["profile
 passportRouter.get("/google/callback", passport.authenticate("google", { failureRedirect: process.env.CLIENT_URL }), userController.loginGoogle);
 passportRouter.get("/discord", passport.authenticate("discord", { scope: ["identify", "email"] }));
 passportRouter.get("/discord/callback", passport.authenticate("discord", { failureRedirect: process.env.CLIENT_URL }), userController.loginDiscord);
+passportRouter.get("/github", passport.authenticate("github"));
+passportRouter.get("/github/callback", passport.authenticate("github", { failureRedirect: process.env.CLIENT_URL }), userController.loginGithub);
 
 module.exports = router;

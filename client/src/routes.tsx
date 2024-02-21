@@ -11,6 +11,7 @@ import { ChangeEmailConfirmRoute } from './helpers/ChangeEmailConfirmRoute';
 import ResetPasswordRoute from './helpers/ResetPasswordRoute';
 import User from './pages/User';
 import { DiscordAuthRoute } from './helpers/DiscordAuthRoute';
+import { GithubAuthRoute } from './helpers/GithubAuthRoute';
 
 const PrivateRouter = (Page: any) => (
     <PrivateRoute>
@@ -57,6 +58,11 @@ export const routes = [
     {
         path: '/api/auth/discord/:discordUserToken',
         element: <DiscordAuthRoute />
+    },
+
+    {
+        path: '/api/auth/github/:githubUserToken',
+        element: <GithubAuthRoute />
     },
 
     {

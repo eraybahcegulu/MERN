@@ -46,7 +46,7 @@ const userSchema = mongoose.Schema(
             type: String,
         },
 
-        premiumCount:{
+        premiumCount: {
             type: String,
             default: '0'
         },
@@ -86,6 +86,15 @@ const userSchema = mongoose.Schema(
         },
 
         discordUserToken: {
+            type: String,
+            allowNull: true,
+        },
+
+        githubId: {
+            type: String,
+        },
+
+        githubUserToken: {
             type: String,
             allowNull: true,
         },

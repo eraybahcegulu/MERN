@@ -1,12 +1,14 @@
 const passport = require("passport");
 var GoogleStrategy = require('passport-google-oauth20').Strategy
 var DiscordStrategy = require('passport-discord').Strategy;
+var GitHubStrategy = require('passport-github2').Strategy;
 const User = require("../models/user")
 const UserRole = require("../models/enums/userRoles")
 
-const { generateGoogleUserToken, generateDiscordUserToken } = require('../utils/jwt');
+const { generateGoogleUserToken, generateDiscordUserToken, generateGithubUserToken } = require('../utils/jwt');
 const { dateNow } = require("./moment");
 const { generateRandomDefaultAvatar } = require("./multiavatar");
+const { generateShortId } = require("./uuid");
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -94,3 +96,41 @@ passport.use(
             }
         }));
 
+
+passport.use(
+    new GitHubStrategy({
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: "/auth/github/callback"
+    },
+        async (accessToken, refreshToken, profile, done) => {
+            console.log(profile)
+            try {
+
+                let user = await User.findOne({ githubId: profile.id });
+
+                if (!user) {
+                    profile.username = profile.username + generateShortId();
+                    user = new User({
+                        githubId: profile.id,
+                        userName: profile.username,
+                        password: null,
+                        avatar: generateRandomDefaultAvatar(),
+                        userRole: UserRole.VISITOR
+                    });
+
+                    await user.save();
+                }
+
+                const githubUserToken = generateGithubUserToken(user);
+
+                user.verificationToken = null;
+                user.githubUserToken = githubUserToken;
+                await user.save();
+
+                return done(null, user);
+            } catch (error) {
+                return done(error, null)
+            }
+        }
+    ));
