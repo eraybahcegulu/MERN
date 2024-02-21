@@ -1,5 +1,5 @@
 import React from 'react';
-import { GithubOutlined, GoogleOutlined, InfoCircleOutlined, LockOutlined, TwitterOutlined, UserOutlined } from '@ant-design/icons';
+import { GithubOutlined, GoogleOutlined, InfoCircleOutlined, LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Popover, Switch } from 'antd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons'
