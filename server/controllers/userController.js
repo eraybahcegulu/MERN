@@ -272,6 +272,7 @@ const userInfo = async (req, res) => {
             return responseHandler.notFound(res, 'User not found. Try Again Login');
         }
 
+        const userToken = generateUserToken(user);
         const userId = decodedToken.userId;
         const userName = decodedToken.userName;
         const email = decodedToken.email;
@@ -279,6 +280,7 @@ const userInfo = async (req, res) => {
         const userRole = decodedToken.userRole;
         const isGoogleAuth = decodedToken.isGoogleAuth;
         const isDiscordAuth = decodedToken.isDiscordAuth;
+        const isGithubAuth = decodedToken.isGithubAuth;
 
         return responseHandler.ok(res, {
             userId,
@@ -286,9 +288,10 @@ const userInfo = async (req, res) => {
             email,
             avatar,
             userRole,
-            token,
+            userToken,
             isGoogleAuth,
-            isDiscordAuth
+            isDiscordAuth,
+            isGithubAuth
         });
 
     } catch (error) {

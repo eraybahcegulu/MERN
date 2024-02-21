@@ -1,18 +1,22 @@
 import { Spin } from 'antd';
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import useUserContext from '../hooks/useUserContext';
 
 export const GoogleAuthRoute = () => {
     const navigate = useNavigate();
-
+    const { getUser, } = useUserContext();
     const { googleUserToken } = useParams();
 
-    useEffect(() => {
-
+    const googleAuth = async () => {
         if (googleUserToken) {
-            sessionStorage.setItem('token', googleUserToken);
+            await getUser(googleUserToken)
             navigate("/home")
         }
+    }
+
+    useEffect(() => {
+        googleAuth();
     }, []);
 
 

@@ -1,18 +1,21 @@
 import { Spin } from 'antd';
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import useUserContext from '../hooks/useUserContext';
 
 export const DiscordAuthRoute = () => {
     const navigate = useNavigate();
-
+    const { getUser } = useUserContext();
     const { discordUserToken } = useParams();
 
-    useEffect(() => {
-
+    const discordAuth = async () => {
         if (discordUserToken) {
-            sessionStorage.setItem('token', discordUserToken);
+            await getUser(discordUserToken)
             navigate("/home")
         }
+    }
+    useEffect(() => {
+        discordAuth()
     }, []);
 
 

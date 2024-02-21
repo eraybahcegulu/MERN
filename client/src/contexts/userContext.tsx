@@ -36,9 +36,13 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const fetchUserData = async (token: string) => {
         try {
             const response = await userInfoService(token);
-
-            token = response.data.token;
+            token = response.data.userToken;
             setUser(response.data);
+
+            if(response.data.isGithubAuth || response.data.isGoogleAuth || response.data.isDiscordAuth || response.data.isTwitterAuth)
+            {
+                sessionStorage.setItem('token', token);
+            }
 
             if (localStorage.getItem('token')) {
                 localStorage.setItem('token', token);
