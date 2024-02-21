@@ -111,6 +111,26 @@ const generateGoogleUserToken = (user) => {
         );
 }
 
+const generateDiscordUserToken = (user) => {
+    return jwt.sign
+        (
+            {
+                userId: user._id,
+                userName: user.userName,
+                email: user.email,
+                avatar: user.avatar,
+                userRole: user.userRole,
+                isDiscordAuth: true
+            },
+
+            process.env.SECRET_KEY,
+
+            {
+                expiresIn: '30s'
+            }
+        );
+}
+
 module.exports = {
     generateUserToken,
     verifyToken,
@@ -118,5 +138,6 @@ module.exports = {
     generateForgotPasswordToken,
     generateChangeEmailConfirmToken,
     generateGoogleUserToken,
-    generateResetPasswordToken
+    generateResetPasswordToken,
+    generateDiscordUserToken
 };

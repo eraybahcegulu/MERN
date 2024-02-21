@@ -208,6 +208,33 @@ const loginGoogle = async (req, res) => {
     }
 };
 
+const loginDiscord = async (req, res) => {
+    try {
+        const user = req.user;
+        //console.log(user)
+
+        if (user) {
+
+            user.lastLoginAt = dateNow();
+            user.invalidLoginAttempt = 0;
+            user.activityLevel = Number(user.activityLevel) + 1;
+
+            res.redirect(`${process.env.CLIENT_URL}/api/auth/discord/${user.discordUserToken}`);
+
+            user.discordUserToken = null;
+
+            await user.save();
+
+        } else {
+            console.error("User not found");
+            return responseHandler.badRequest(res, "User not found");
+        }
+    } catch (error) {
+        console.error('Error', error);
+        return responseHandler.serverError(res, 'Server error');
+    }
+};
+
 const userInfo = async (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
@@ -224,6 +251,7 @@ const userInfo = async (req, res) => {
         const avatar = decodedToken.avatar;
         const userRole = decodedToken.userRole;
         const isGoogleAuth = decodedToken.isGoogleAuth;
+        const isDiscordAuth = decodedToken.isDiscordAuth;
 
         return responseHandler.ok(res, {
             userId,
@@ -232,7 +260,8 @@ const userInfo = async (req, res) => {
             avatar,
             userRole,
             token,
-            isGoogleAuth
+            isGoogleAuth,
+            isDiscordAuth
         });
 
     } catch (error) {
@@ -516,6 +545,7 @@ module.exports = {
     emailConfirm,
     login,
     loginGoogle,
+    loginDiscord,
     userInfo,
     changePassword,
     changeEmail,

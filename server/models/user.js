@@ -85,6 +85,11 @@ const userSchema = mongoose.Schema(
             allowNull: true,
         },
 
+        discordUserToken: {
+            type: String,
+            allowNull: true,
+        },
+
         isFirstLogin: {
             type: Boolean,
             default: true

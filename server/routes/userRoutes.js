@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const subRouter = express.Router();
+const passportRouter = express.Router();
 const userController = require("../controllers/userController");
 const { auth, requireAdmin, requirePremium } = require('../middlewares/authMiddleware');
 const { validLength, sanitize } = require("../middlewares/validatorMiddleware");
@@ -22,7 +23,10 @@ subRouter.post("/forgotPassword", userController.forgotPassword);
 subRouter.get("/resetPassword/:resetPasswordToken", userController.resetPassword);
 subRouter.post("/changeAvatar/:id", auth, requirePremium, sanitize, validLength, userController.changeAvatar);
 
-router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: process.env.CLIENT_URL }), userController.loginGoogle);
+router.use("/auth", passportRouter);
+passportRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+passportRouter.get("/google/callback", passport.authenticate("google", { failureRedirect: process.env.CLIENT_URL }), userController.loginGoogle);
+passportRouter.get("/discord", passport.authenticate("discord", { scope: ["identify", "email"] }));
+passportRouter.get("/discord/callback", passport.authenticate("discord", { failureRedirect: process.env.CLIENT_URL }), userController.loginDiscord);
 
 module.exports = router;

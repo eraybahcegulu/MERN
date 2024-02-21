@@ -2,15 +2,15 @@ import { Spin } from 'antd';
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-export const GoogleAuthRoute = () => {
+export const DiscordAuthRoute = () => {
     const navigate = useNavigate();
 
-    const { googleUserToken } = useParams();
+    const { discordUserToken } = useParams();
 
     useEffect(() => {
 
-        if (googleUserToken) {
-            sessionStorage.setItem('token', googleUserToken);
+        if (discordUserToken) {
+            sessionStorage.setItem('token', discordUserToken);
             navigate("/home")
         }
     }, []);

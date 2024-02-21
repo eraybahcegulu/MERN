@@ -10,6 +10,7 @@ import { GoogleAuthRoute } from './helpers/GoogleAuthRoute';
 import { ChangeEmailConfirmRoute } from './helpers/ChangeEmailConfirmRoute';
 import ResetPasswordRoute from './helpers/ResetPasswordRoute';
 import User from './pages/User';
+import { DiscordAuthRoute } from './helpers/DiscordAuthRoute';
 
 const PrivateRouter = (Page: any) => (
     <PrivateRoute>
@@ -51,6 +52,11 @@ export const routes = [
     {
         path: '/api/auth/google/:googleUserToken',
         element: <GoogleAuthRoute />
+    },
+
+    {
+        path: '/api/auth/discord/:discordUserToken',
+        element: <DiscordAuthRoute />
     },
 
     {

@@ -36,7 +36,7 @@ export const EmailConfirmRoute = () => {
     };
 
     return (
-        <div className="bg-slate-400 h-screen w-screen flex flex-col items-center pt-20">
+        <div className="bg-gradient-to-b from-[#a774e9] to-[#30164e] py-20 min-h-screen min-w-screen flex flex-col items-center">
             {
                 !isLoading ? (
                     isConfirmedMail ? (

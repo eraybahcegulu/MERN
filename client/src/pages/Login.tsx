@@ -57,9 +57,9 @@ const Login: React.FC<LoginProps> = () => {
 
   return (
     <main className='bg-gradient-to-b from-[#a774e9] to-[#30164e] py-20 min-h-screen min-w-screen flex items-center justify-center'>
-      <div className='pt-10 pr-20 pl-20 w-[400px] h-[375px] drop-shadow-2xl bg-indigo-100' style={{ borderRadius: '20px' }}>
+      <div className='py-10 px-20 w-[400px] drop-shadow-2xl bg-gradient-to-b from-[#4a2674] to-[#ab7ee6]' style={{ borderRadius: '20px' }}>
         {token ? (
-          <div className='flex flex-col items-center justify-center gap-5 mt-20'>
+          <div className='flex flex-col items-center justify-center gap-5'>
             <p className='text-2xl'>Open session found</p>
             <div className='flex flex-row gap-5'>
               <ArrowRightOutlined
