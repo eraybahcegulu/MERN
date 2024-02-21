@@ -8,7 +8,7 @@ const UserRole = require("../models/enums/userRoles")
 const { generateGoogleUserToken, generateDiscordUserToken, generateGithubUserToken } = require('../utils/jwt');
 const { dateNow } = require("./moment");
 const { generateRandomDefaultAvatar } = require("./multiavatar");
-const { generateShortId } = require("./uuid");
+const { generateShortId } = require("./id");
 
 passport.serializeUser((user, done) => {
     done(null, user);
@@ -104,13 +104,12 @@ passport.use(
         callbackURL: "/auth/github/callback"
     },
         async (accessToken, refreshToken, profile, done) => {
-            console.log(profile)
             try {
 
                 let user = await User.findOne({ githubId: profile.id });
 
                 if (!user) {
-                    profile.username = profile.username + generateShortId();
+                    profile.username = `${profile.username}-${generateShortId()}`;
                     user = new User({
                         githubId: profile.id,
                         userName: profile.username,

@@ -1,4 +1,4 @@
-const { generateId } = require("./uuid");
+const { generateId } = require("./id");
 
 const apiAvatar = 'https://api.multiavatar.com/'
 
