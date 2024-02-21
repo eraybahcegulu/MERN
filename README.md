@@ -14,10 +14,17 @@
 - Soft Delete
 - Forgot-Reset Password
 - Email Verification
+- Export data to excel
+- Iyzipay payment
+- Passport
+- Nodemailer
 - Sign in With Google
+- Sign in With Discord
+- Sign in With Github
+- Sign in With Twitter
 ```
 
-![1](https://github.com/eraybahcegulu/MERN/assets/84785201/80c010dc-c222-4cb2-88fd-a526a4d112ea)
+![1](https://github.com/eraybahcegulu/MERN/assets/84785201/bb103699-1b4d-4944-9f5a-84ee36b0a3da)
 
 ![2](https://github.com/eraybahcegulu/MERN/assets/84785201/f18da083-e316-46ef-baa1-3183a985f7f2)
 
