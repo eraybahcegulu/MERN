@@ -23,7 +23,6 @@ const loginWithGithub = () => {
     window.open(`${process.env.REACT_APP_API_URL}/auth/github/callback`, "_self")
 }
 
-
 const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChange, setIsRegisterModalOpen, setIsForgotPasswordModalOpen }) => {
 
     return (
@@ -134,17 +133,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinishLogin, isChecked, onChang
                     <GithubOutlined className='text-3xl' />
                     <span> Visit with Github</span>
                 </div>
-
-
-                <div className='flex flex-row  border border-black rounded-md
-            gap-1 p-2 items-center justify-center cursor-pointer hover:scale-105 transition duration-700'
-                    onClick={loginWithDiscord} >
-                    <TwitterOutlined className='text-3xl' />
-                    <span> Visit with Twitter</span>
-                </div>
             </div>
-
-
         </>
     );
 };

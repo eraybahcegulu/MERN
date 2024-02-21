@@ -21,7 +21,6 @@
 - Sign in With Google
 - Sign in With Discord
 - Sign in With Github
-- Sign in With Twitter
 ```
 
 ![1](https://github.com/eraybahcegulu/MERN/assets/84785201/bb103699-1b4d-4944-9f5a-84ee36b0a3da)
