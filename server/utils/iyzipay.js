@@ -1,6 +1,6 @@
 const Iyzipay = require('iyzipay');
 const axios = require('axios');
-const { generateId } = require('./uuid');
+const { generateId } = require('./id');
 
 const iyzipay = new Iyzipay({
     apiKey: process.env.PAYMENT_API_KEY,
