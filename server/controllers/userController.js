@@ -264,15 +264,15 @@ const loginGithub = async (req, res) => {
 
 const userInfo = async (req, res) => {
     try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = verifyToken(token);
+        const userToken = req.headers.authorization.split(' ')[1];
+        const decodedToken = verifyToken(userToken);
 
         const user = await User.findById(decodedToken.userId);
         if (!user) {
             return responseHandler.notFound(res, 'User not found. Try Again Login');
         }
 
-        const userToken = generateUserToken(user);
+        const token = generateUserToken(user);
         const userId = decodedToken.userId;
         const userName = decodedToken.userName;
         const email = decodedToken.email;
@@ -288,7 +288,7 @@ const userInfo = async (req, res) => {
             email,
             avatar,
             userRole,
-            userToken,
+            token,
             isGoogleAuth,
             isDiscordAuth,
             isGithubAuth
