@@ -11,9 +11,7 @@ interface UserProviderProps {
 }
 
 interface User {
-    userName: string,
-    email: string,
-    userRole: string,
+
 }
 
 interface UserContextType {
@@ -36,7 +34,8 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     const fetchUserData = async (token: string) => {
         try {
             const response = await userInfoService(token);
-            token = response.data.userToken;
+            token = response.data.token;
+            console.log(response.data)
             setUser(response.data);
 
             if(response.data.isGithubAuth || response.data.isGoogleAuth || response.data.isDiscordAuth || response.data.isTwitterAuth)
